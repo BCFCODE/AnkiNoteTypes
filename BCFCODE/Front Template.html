@@ -111,11 +111,11 @@
   var createdAt = "{{info-Date_Created:}}";
   var daysAgo = timeAgo(createdAt);
   var avgTime = "{{info-TimeAvg:}}";
-  var avgTimeInSeconds = 10;
+  var avgTimeInSeconds;
 
   if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
     // New card
-    avgTimeInSeconds *= 1.5; // Longer for new cards
+    avgTimeInSeconds = 60;
   }
 
   if (/\d/.test(avgTime)) {
