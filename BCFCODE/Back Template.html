@@ -1,0 +1,79 @@
+<br />
+<div class="awesome-tts">{{tts ar_AR voices=AwesomeTTS:AwesomeTTS (Back)}}</div>
+
+<div>{{#Back}}</div>
+
+<div class="front">
+  <div class="typeBack">
+    Check your answer:{{type:Answer}}
+    <div class="correct">
+      <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
+    </div>
+  </div>
+  {{Back}}
+</div>
+
+{{/Back}}
+
+<br />
+
+{{#Answer}}
+<div class="front">
+  <div class="typeBack">
+    Check your answer:{{type:Answer}}
+    <div class="correct">
+      <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
+    </div>
+  </div>
+
+  <div>{{Front}}</div>
+
+  <div class="correct-single">
+    <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
+  </div>
+
+  {{/Answer}}
+
+  <div class="hidden">
+    {{#Audio (Both Sides)}} {{Audio (Both Sides)}} {{/Audio (Both Sides)}}
+    {{#Audio (Back)}} {{Audio (Back)}} {{/Audio (Back)}} {{#Video (Back)}}
+    {{Video (Back)}} {{/Video (Back)}}
+  </div>
+
+  <h6>
+    <center>
+      <br />
+      <!--  <a href="https://bcfcode.ir/"
+        ><img
+          class="logo"
+          src="Background-1920-1080-BCFCODE-LOGO-680c80a376ae65c925a1b162827459c6cc670d35.png"
+      /></a> -->
+      <br />
+      کلیه حقوق برای
+      <br />
+      <a href="https://bakhshandehmorteza.ir/">- BCFCODE TEAM -</a>
+      <br />
+      محفوظ و هر گونه انتشار یا ارسال کارت ها بدون اجازه رسمی از
+      <br />
+      <a href="https://bakhshandehmorteza.ir/">مرتضی بخشنده</a>
+      <br />
+      🚨
+      <br />
+      ممنوع و موجب پیگرد قانونی توسط وکلای مجموعه و نیز ناشران کتاب ها و مطالب
+      خواهد بود
+      <br />
+      طراحی، ایده پردازی و تهیه شده توسط
+      <a href="https://bakhshandehmorteza.ir/">مرتضی بخشنده</a>
+
+      <br />
+      <div class="Deck">Deck Address: <span id="Deck">{{Deck}}</span></div>
+      <script>
+        document.getElementById("Deck").innerHTML = "{{Deck}}".replace(
+          "::",
+          " &minus; ",
+        );
+      </script>
+      <br />
+    </center>
+  </h6>
+</div>

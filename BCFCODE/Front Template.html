@@ -1,0 +1,411 @@
+<div class="front">
+  <div class="image">{{Image}}</div>
+  <div class="awesome-tts">
+    {{tts ar_AR voices=AwesomeTTS:AwesomeTTS (Front)}}
+  </div>
+  <div class="top-count-up-timer" id="top-count-up-timer">00:00</div>
+  <div class="top-count-down-timer" id="top-count-down-timer">00:00</div>
+
+  {{#Front}}
+  <div>{{Front}}</div>
+  {{/Front}}
+
+  <div class="deckInfo">
+    <h6 id="created-at">Created at: {{info-Date_Created:}}</h6>
+    <h6 id="avg-time-label">Average Time: {{info-TimeAvg:}}</h6>
+    {{#Links}}
+    <h6>{{Links}}</h6>
+    {{/Links}}
+    <h6>Subdeck: {{Subdeck}}</h6>
+    {{#Tags}}
+    <h6>Tags: {{Tags}}</h6>
+    {{/Tags}}
+    <h6 class="Deck">Deck Address: <span id="Deck">{{Deck}}</span></h6>
+  </div>
+
+  {{#Answer}}
+  <div class="type-answer">
+    <p class="type-back-tip">Press TAB to see the input...</p>
+    <!-- <div class="typeBackImage">{{Image}}</div> -->
+    <div class="type-answer-input-container">
+      <div class="input-progress-bar" id="input-progress-bar"></div>
+      <div>{{type:Answer}}</div>
+      <div class="type-answer-timers">
+        <div class="count-up-timer" id="count-up-timer">00:00</div>
+        <div class="count-down-timer" id="count-down-timer">00:00</div>
+      </div>
+    </div>
+  </div>
+  {{/Answer}}
+
+  <div class="front-footer-container">
+    <div class="front-footer">
+      <a
+        href="https://bcfcode.ir/"
+        alt="Explore the powerful and elegant digital world of BCFCODE"
+        class="bcfcode"
+        ><p>&copy;BCFCODE</p></a
+      >
+
+      <a
+        alt="See your Codewars achievements at BCFCODE"
+        href="https://www.codewars.com/users/www.BCFCODE.ir"
+      >
+        <img
+          class="codewarsBadge"
+          src="https://www.codewars.com/users/www.BCFCODE.ir/badges/large"
+        />
+      </a>
+
+      <p class="bottom-right-little-label" id="bottom-right-little-label">
+        {{Subdeck}}
+      </p>
+    </div>
+
+    <div class="card-progress-bar" id="card-progress-bar"></div>
+  </div>
+</div>
+
+<div class="hidden">
+  {{#Audio (Both Sides)}} {{Audio (Both Sides)}} {{/Audio (Both Sides)}}
+  {{#Audio (Front)}} {{Audio (Front)}} {{/Audio (Front)}} {{#Video (Front)}}
+  {{Video (Front)}} {{/Video (Front)}}
+</div>
+
+<script>
+  // Clear any pending timeouts from previous cards
+  if (window.timerTimeouts) {
+    window.timerTimeouts.forEach(clearTimeout);
+  }
+  window.timerTimeouts = [];
+
+  var ids = {
+    countUpTimer: ["count-up-timer", "top-count-up-timer"],
+    countDownTimer: ["count-down-timer", "top-count-down-timer"],
+    createdAt: "created-at",
+    bottomRightLittleLabel: "bottom-right-little-label",
+    avgTimeLabel: "avg-time-label",
+  };
+
+  function extractNumberFromString(string) {
+    return +string.replace(/[^\d.]/g, "") || 0;
+  }
+
+  function timeAgo(d) {
+    d = new Date(d);
+    if (isNaN(d)) return "?";
+    const delta = Math.floor((Date.now() - d) / 864e5);
+    return delta === 0
+      ? "today"
+      : delta === 1
+        ? "yesterday"
+        : delta < 7
+          ? delta + "d ago"
+          : delta < 31
+            ? Math.round(delta / 7) + "w ago"
+            : delta < 365
+              ? Math.round(delta / 30.4) + "mo ago"
+              : Math.round(delta / 365.25) + "y ago";
+  }
+
+  var createdAt = "{{info-Date_Created:}}";
+  var daysAgo = timeAgo(createdAt);
+  var avgTime = "{{info-TimeAvg:}}";
+  var avgTimeInSeconds = 10;
+
+  if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
+    // New card
+    avgTimeInSeconds *= 1.5; // Longer for new cards
+  }
+
+  if (/\d/.test(avgTime)) {
+    var num = extractNumberFromString(avgTime);
+    if (/minute/i.test(avgTime)) num *= 60;
+    if (num > 0) avgTimeInSeconds = Math.round(num);
+  }
+
+  function twoDigits(n) {
+    return n <= 9 ? `0${n}` : n;
+  }
+
+  function getDeckName() {
+    var deckAddressArr = "{{Deck}}".split("::");
+    return deckAddressArr[deckAddressArr.length - 1] || "Deck";
+  }
+
+  function updateInnerHTML(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = value;
+  }
+
+  function updateInputPlaceholder(inputId, value) {
+    var input = document.getElementById(inputId);
+    if (input) input.placeholder = value;
+  }
+
+  function addClass(id, className) {
+    var el = document.getElementById(id);
+    if (el) el.classList.add(className);
+  }
+
+  // Countdown timer
+  function countdownTimer(id, minutes, seconds) {
+    const totalSec = minutes * 60 + seconds;
+    const totalMs = totalSec * 1000;
+    const cardProgressEl = document.getElementById("card-progress-bar");
+    const inputProgressEl = document.getElementById("input-progress-bar");
+
+    if (totalSec <= 0) return;
+
+    const end = Date.now() + totalSec * 1000;
+
+    function tick() {
+      const leftMs = end - Date.now();
+
+      if (cardProgressEl) {
+        const progress = (leftMs / totalMs) * 100;
+        cardProgressEl.style.width = Math.abs(progress - 100) + "%";
+        // if (progress < 20) cardProgressEl.style.background = "yellow"; // Red when low
+        if (progress < 40) cardProgressEl.style.background = "yellow";
+        if (progress < 20) cardProgressEl.style.background = "orange";
+        // if (progress < 10) cardProgressEl.style.width = "10%";
+      }
+
+      if (inputProgressEl) {
+        const progress = (leftMs / totalMs) * 120;
+        inputProgressEl.style.width = Math.abs(progress - 120) + "%";
+        // if (progress < 20) inputProgressEl.style.background = "yellow"; // Red when low
+        if (progress < 40) inputProgressEl.style.background = "yellow";
+        if (progress < 20) inputProgressEl.style.background = "orange";
+        // if (progress < 10) inputProgressEl.style.width = "10%";
+      }
+
+      if (leftMs <= 0) {
+        ids.countDownTimer.forEach((countDownId) => {
+          updateInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
+          addClass(countDownId, "over-time");
+        });
+        // inputProgressEl.style.width = "0%"
+        cardProgressEl.style.background = "red";
+        inputProgressEl.style.background = "red";
+        return;
+      }
+
+      const secLeft = Math.ceil(leftMs / 1000);
+      const m = Math.floor(secLeft / 60);
+      const s = secLeft % 60;
+      updateInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
+
+      const msToNext = 1000 - (leftMs % 1000);
+      const timeoutId = setTimeout(tick, msToNext > 50 ? msToNext : 1000);
+      window.timerTimeouts.push(timeoutId);
+    }
+
+    tick();
+  }
+
+  // Count-up timer
+  function countUpTimer(id, minutes, seconds) {
+    const targetSec = minutes * 60 + seconds;
+    const start = Date.now();
+
+    function tick() {
+      const elapsedMs = Date.now() - start;
+      const sec = Math.floor(elapsedMs / 1000);
+
+      if (sec >= targetSec) {
+        updateInnerHTML(id, `+${sec - targetSec}s`);
+      } else {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        updateInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
+      }
+
+      const msInto = elapsedMs % 1000;
+      const timeoutId = setTimeout(tick, 1000 - msInto);
+      window.timerTimeouts.push(timeoutId);
+    }
+
+    tick();
+  }
+
+  // Start timers
+  ids.countUpTimer.forEach((id) => countUpTimer(id, 0, avgTimeInSeconds));
+  ids.countDownTimer.forEach((id) => countdownTimer(id, 0, avgTimeInSeconds));
+
+  // Deck name etc.
+  var deckName = getDeckName();
+  updateInputPlaceholder("typeans", deckName);
+  updateInnerHTML(ids.bottomRightLittleLabel, deckName);
+
+  if (!/\d/.test(avgTime)) {
+    updateInnerHTML(
+      ids.avgTimeLabel,
+      "Average Time: Calculating... (new card)",
+    );
+  }
+
+  if (ids.createdAt)
+    updateInnerHTML(ids.createdAt, `Created ${daysAgo} at ${createdAt}`);
+
+  // Initial visual reset
+  ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
+  ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));
+</script>
+
+<!-- https://ankiweb.net/shared/info/744725736
+
+Details (for version Anki 2.1.20 or later)
+You can include information about the current card:
+
+- {{info-FirstReview:}} - the first day that this card got reviewed
+- {{info-LastReview:}} - the last reviewed day
+- {{info-TimeAvg:}} - average time spent on this card
+- {{info-TimeTotal:}} - total time spent
+- {{info-overdue_fmt:}} - overdue days formatted
+- {{info-overdue_days:}} - overdue days
+- {{info-Ord:}} - the number of the template. The first template gets the number 0, the second the number 1, etc. Useful e.g. for clozed cards, where you want Javascript code to behave different for certain cards
+- {{info-Did:}} - deck id
+- {{info-Due:}} - due date
+- {{info-Id:}} - card id
+- {{info-Ivl:}} - current interval
+- {{info-Queue:}} - 0=new, 1=learning, 2=due, 3=(re)learning - next day or later, -1=suspended, -2=user buried, -3=sched buried
+- {{info-Reviews:}} - number of reviews that you had on a card
+- {{info-Lapses:}} - number of lapses
+- {{info-Type:}} - 0=suspended, 1=learning, 2=normal, 3=relearning
+- {{info-Nid:}} - note id
+- {{info-Mod:}} - last modification date
+- {{info-Usn:}} - universal serial number which is incremented everytime you upload to AnkiWeb
+- {{info-Factor:}} - the easiness of a card, e.g. 2500 would be 250%
+- {{info-Ease:}} - the easiness of a card, e.g. 250 is the default Anki uses for new cards. More readable version of "Factor"
+- {{info-Review?:}} - is this card being reviewed?
+- {{info-New?:}} - is this card new?
+- {{info-Learning?:}} - is this card being learned?
+- {{info-TodayLearning?:}} - shown if card in learning and in queue 1
+- {{info-DayLearning?:}} - shown if card in learning and in queue 3
+- {{info-Young:}} - shown if card in "review" and interval shorter than 21 days
+- {{info-Mature:}} - shown if card in "review" and interval longer than 21 days
+- {{info-Date_Created:}} - Date of card creation = noteID formatted
+
+
+If you enable it in the settings of this add-on you can also show some deck options. I don't use this. To view deck options I prefer the add-ons deck and card info sidebar during review or Extended Card Stats During Review because these work for all note types.
+
+- {{info-Options_Group_ID:}}
+- {{info-Options_Group_Name:}}
+- {{info-Ignore_answer_times_longer_than:}}
+- {{info-Show_answer_time:}}
+- {{info-Auto_play_audio:}}
+- {{info-When_answer_shown_replay_q:}}
+- {{info-is_filtered_deck:}}
+- {{info-deck_usn:}}
+- {{info-deck_mod_time:}}
+- {{info-new__steps_in_minutes:}}
+- {{info-new__order_of_new_cards:}}
+- {{info-new__cards_per_day:}}
+- {{info-graduating_interval:}}
+- {{info-easy_interval:}}
+- {{info-Starting_ease:}}
+- {{info-bury_related_new_cards:}}
+- {{info-MaxiumReviewsPerDay:}}
+- {{info-EasyBonus:}}
+- {{info-IntervalModifier:}}
+- {{info-MaximumInterval:}}
+- {{info-bur_related_reviews_until_next_day:}}
+- {{info-lapse_learning_steps:}}
+- {{info-lapse_new_ivl:}}
+- {{info-lapse_min_ivl:}}
+- {{info-lapse_leech_threshold:}}
+- {{info-lapse_leech_action:}}
+
+<div id="lastReview">{{info-LastReview:}}</div>
+<div id="avgTime">{{info-TimeAvg:}}</div>
+
+<script>
+  // This script runs after the HTML is rendered
+  const lastReview = document.getElementById('lastReview').textContent.trim();
+  const avgTime = document.getElementById('avgTime').textContent.trim();
+
+  console.log('Last review date:', lastReview);
+  console.log('Average time spent:', avgTime);
+
+  // You can now use these variables in any JS logic
+</script>
+
+<!-- === Anki Additional Card Fields Output === -->
+<!-- 
+<div id="info-first-review" class="anki-info">First Review: {{info-FirstReview:}}</div>
+<div id="info-last-review" class="anki-info">Last Review: {{info-LastReview:}}</div>
+<div id="info-time-avg" class="anki-info">Average Time (sec): {{info-TimeAvg:}}</div>
+<div id="info-time-total" class="anki-info">Total Time (sec): {{info-TimeTotal:}}</div>
+<div id="info-overdue-fmt" class="anki-info">Overdue (formatted): {{info-overdue_fmt:}}</div>
+<div id="info-overdue-days" class="anki-info">Overdue (days): {{info-overdue_days:}}</div>
+<div id="info-ord" class="anki-info">Template Number: {{info-Ord:}}</div>
+<div id="info-did" class="anki-info">Deck ID: {{info-Did:}}</div>
+<div id="info-due" class="anki-info">Due Date: {{info-Due:}}</div>
+<div id="info-id" class="anki-info">Card ID: {{info-Id:}}</div>
+<div id="info-ivl" class="anki-info">Current Interval: {{info-Ivl:}}</div>
+<div id="info-queue" class="anki-info">Queue (status): {{info-Queue:}}</div>
+<div id="info-reviews" class="anki-info">Number of Reviews: {{info-Reviews:}}</div>
+<div id="info-lapses" class="anki-info">Number of Lapses: {{info-Lapses:}}</div>
+<div id="info-type" class="anki-info">Card Type: {{info-Type:}}</div>
+<div id="info-nid" class="anki-info">Note ID: {{info-Nid:}}</div>
+<div id="info-mod" class="anki-info">Last Modification Date: {{info-Mod:}}</div>
+<div id="info-usn" class="anki-info">USN: {{info-Usn:}}</div>
+<div id="info-factor" class="anki-info">Factor: {{info-Factor:}}</div>
+<div id="info-ease" class="anki-info">Ease: {{info-Ease:}}</div>
+
+<div id="info-review-q" class="anki-info">Currently Reviewed? {{info-Review?:}}</div>
+<div id="info-new-q" class="anki-info">Is New? {{info-New?:}}</div>
+<div id="info-learning-q" class="anki-info">Is Learning? {{info-Learning?:}}</div>
+<div id="info-today-learning-q" class="anki-info">Today Learning? {{info-TodayLearning?:}}</div>
+<div id="info-day-learning-q" class="anki-info">Day Learning? {{info-DayLearning?:}}</div>
+<div id="info-young" class="anki-info">Young Card? {{info-Young:}}</div>
+<div id="info-mature" class="anki-info">Mature Card? {{info-Mature:}}</div>
+<div id="info-date-created" class="anki-info">Date Created: {{info-Date_Created:}}</div>
+-->
+<!-- Deck options group -->
+<!-- 
+<div id="info-options-group-id" class="anki-info">Options Group ID: {{info-Options_Group_ID:}}</div>
+<div id="info-options-group-name" class="anki-info">Options Group Name: {{info-Options_Group_Name:}}</div>
+-->
+<!-- Some deck configuration settings -->
+<!-- 
+<div id="info-ignore-answer-times-longer-than" class="anki-info">Ignore answer times longer than: {{info-Ignore_answer_times_longer_than:}}</div>
+<div id="info-show-answer-time" class="anki-info">Show Answer Time: {{info-Show_answer_time:}}</div>
+<div id="info-auto-play-audio" class="anki-info">Auto Play Audio: {{info-Auto_play_audio:}}</div>
+<div id="info-when-answer-shown-replay-q" class="anki-info">Replay Question When Answer Shown: {{info-When_answer_shown_replay_q:}}</div>
+<div id="info-is-filtered-deck" class="anki-info">Is Filtered Deck? {{info-is_filtered_deck:}}</div>
+<div id="info-deck-usn" class="anki-info">Deck USN: {{info-deck_usn:}}</div>
+<div id="info-deck-mod-time" class="anki-info">Deck Mod Time: {{info-deck_mod_time:}}</div>
+<div id="info-new-steps" class="anki-info">New Steps (minutes): {{info-new__steps_in_minutes:}}</div>
+<div id="info-new-order" class="anki-info">Order of New Cards: {{info-new__order_of_new_cards:}}</div>
+<div id="info-new-cards-per-day" class="anki-info">New Cards per Day: {{info-new__cards_per_day:}}</div>
+<div id="info-graduating-interval" class="anki-info">Graduating Interval: {{info-graduating_interval:}}</div>
+<div id="info-easy-interval" class="anki-info">Easy Interval: {{info-easy_interval:}}</div>
+<div id="info-starting-ease" class="anki-info">Starting Ease: {{info-Starting_ease:}}</div>
+<div id="info-bury-related-new-cards" class="anki-info">Bury Related New Cards: {{info-bury_related_new_cards:}}</div>
+<div id="info-maximum-reviews-per-day" class="anki-info">Maximum Reviews per Day: {{info-MaxiumReviewsPerDay:}}</div>
+<div id="info-easy-bonus" class="anki-info">Easy Bonus: {{info-EasyBonus:}}</div>
+<div id="info-interval-modifier" class="anki-info">Interval Modifier: {{info-IntervalModifier:}}</div>
+<div id="info-maximum-interval" class="anki-info">Maximum Interval: {{info-MaximumInterval:}}</div>
+<div id="info-bury-related-reviews-until-next-day" class="anki-info">Bury Related Reviews Until Next Day: {{info-bur_related_reviews_until_next_day:}}</div>
+<div id="info-lapse-learning-steps" class="anki-info">Lapse Learning Steps: {{info-lapse_learning_steps:}}</div>
+<div id="info-lapse-new-ivl" class="anki-info">Lapse New Interval: {{info-lapse_new_ivl:}}</div>
+<div id="info-lapse-min-ivl" class="anki-info">Lapse Minimum Interval: {{info-lapse_min_ivl:}}</div>
+<div id="info-lapse-leech-threshold" class="anki-info">Lapse Leech Threshold: {{info-lapse_leech_threshold:}}</div>
+<div id="info-lapse-leech-action" class="anki-info">Lapse Leech Action: {{info-lapse_leech_action:}}</div>
+-->
+<!-- Example JavaScript to capture them -->
+<!-- 
+<script>
+  // Grab all .anki-info divs into an object
+  const infoFields = {};
+  document.querySelectorAll('.anki-info').forEach(div => {
+    infoFields[div.id] = div.textContent.trim();
+  });
+
+  console.log('All Additional Card Fields:', infoFields);
+
+  // Now you can use infoFields['info-last-review'] etc.
+</script>
+-->
