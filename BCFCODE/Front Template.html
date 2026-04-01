@@ -10,8 +10,14 @@
   <div>{{Front}}</div>
   {{/Front}}
 
+  <div class="total-time" id="total-time-big-badge">{{info-TimeTotal:}}</div>
+
   <div class="deckInfo">
-    <h6 id="created-at">Created at: {{info-Date_Created:}}</h6>
+    <h6>
+      Created <span id="days-ago" class="days-ago"></span> at
+      <span id="created-at"></span>
+    </h6>
+    <h6 class="total-time" id="total-time">Total time: {{info-TimeTotal:}}</h6>
     <h6 id="avg-time-label">Average Time: {{info-TimeAvg:}}</h6>
     {{#Links}}
     <h6>{{Links}}</h6>
@@ -80,11 +86,25 @@
   window.timerTimeouts = [];
 
   var ids = {
+    cardProgressBar: "card-progress-bar",
+    inputProgressBar: "input-progress-bar",
     countUpTimer: ["count-up-timer", "top-count-up-timer"],
     countDownTimer: ["count-down-timer", "top-count-down-timer"],
     createdAt: "created-at",
+    daysAgo: "days-ago",
     bottomRightLittleLabel: "bottom-right-little-label",
+    totalTime: "total-time",
+    totalTimeBigBadge: "total-time-big-badge",
     avgTimeLabel: "avg-time-label",
+  };
+
+  var animation = {
+    sizePulse: "size-pulse-animation",
+    opacityPulse: "opacity-pulse-animation-1s-80",
+    colorPulse: {
+      "1s": "color-pulse-animation-1s",
+      "2s": "color-pulse-animation-2s",
+    },
   };
 
   function extractNumberFromString(string) {
@@ -111,6 +131,7 @@
   var createdAt = "{{info-Date_Created:}}";
   var daysAgo = timeAgo(createdAt);
   var avgTime = "{{info-TimeAvg:}}";
+  var totalTime = "{{info-TimeTotal:}}";
   var avgTimeInSeconds;
 
   if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -148,12 +169,17 @@
     if (el) el.classList.add(className);
   }
 
+  function changeStyle(id, className, newValue) {
+    var el = document.getElementById(id);
+    if (el) el.style[className] = newValue;
+  }
+
   // Countdown timer
   function countdownTimer(id, minutes, seconds) {
     const totalSec = minutes * 60 + seconds;
     const totalMs = totalSec * 1000;
-    const cardProgressEl = document.getElementById("card-progress-bar");
-    const inputProgressEl = document.getElementById("input-progress-bar");
+    const cardProgressEl = document.getElementById(ids.cardProgressBar);
+    const inputProgressEl = document.getElementById(ids.inputProgressBar);
 
     if (totalSec <= 0) return;
 
@@ -164,30 +190,35 @@
 
       if (cardProgressEl) {
         const progress = (leftMs / totalMs) * 100;
-        cardProgressEl.style.width = Math.abs(progress - 100) + "%";
-        // if (progress < 20) cardProgressEl.style.background = "yellow"; // Red when low
-        if (progress < 40) cardProgressEl.style.background = "yellow";
-        if (progress < 20) cardProgressEl.style.background = "orange";
-        // if (progress < 10) cardProgressEl.style.width = "10%";
+        const newWidth = Math.abs(progress - 100) + "%";
+        changeStyle(ids.cardProgressBar, "width", newWidth);
+
+        if (progress < 40)
+          changeStyle(ids.cardProgressBar, "background", "yellow");
+        if (progress < 20)
+          changeStyle(ids.cardProgressBar, "background", "orange");
       }
 
       if (inputProgressEl) {
         const progress = (leftMs / totalMs) * 120;
-        inputProgressEl.style.width = Math.abs(progress - 120) + "%";
-        // if (progress < 20) inputProgressEl.style.background = "yellow"; // Red when low
-        if (progress < 40) inputProgressEl.style.background = "yellow";
-        if (progress < 20) inputProgressEl.style.background = "orange";
-        // if (progress < 10) inputProgressEl.style.width = "10%";
+        const newWidth = Math.abs(progress - 120) + "%";
+        changeStyle(ids.inputProgressBar, "width", newWidth);
+
+        if (progress < 40)
+          changeStyle(ids.inputProgressBar, "background", "yellow");
+        if (progress < 20)
+          changeStyle(ids.inputProgressBar, "background", "orange");
       }
 
       if (leftMs <= 0) {
         ids.countDownTimer.forEach((countDownId) => {
           updateInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
-          addClass(countDownId, "over-time");
+          addClass(countDownId, animation.sizePulse);
         });
         // inputProgressEl.style.width = "0%"
-        cardProgressEl.style.background = "red";
-        inputProgressEl.style.background = "red";
+
+        changeStyle(ids.inputProgressBar, "background", "red");
+        changeStyle(ids.cardProgressBar, "background", "red");
         return;
       }
 
@@ -238,16 +269,32 @@
   updateInputPlaceholder("typeans", deckName);
   updateInnerHTML(ids.bottomRightLittleLabel, deckName);
 
+  // Deck info
   if (!/\d/.test(avgTime)) {
     updateInnerHTML(
       ids.avgTimeLabel,
-      "Average Time: Calculating... (new card)",
+      "Average Time: Calculating...",
     );
   }
 
-  if (ids.createdAt)
-    updateInnerHTML(ids.createdAt, `Created ${daysAgo} at ${createdAt}`);
+  if (ids.daysAgo) {
+    updateInnerHTML(ids.daysAgo, daysAgo);
+    addClass(ids.daysAgo, animation.colorPulse["1s"]);
+  }
 
+  if (ids.createdAt) updateInnerHTML(ids.createdAt, createdAt);
+  // addClass(ids.createdAt, animation.opacityPulse);
+
+  if (ids.totalTime) {
+    updateInnerHTML(ids.totalTime, `Total time: ${totalTime || `0 (new card)`}`);
+    addClass(ids.totalTime, animation.colorPulse["2s"]);
+  }
+
+  if (ids.totalTimeBigBadge) {
+    updateInnerHTML(ids.totalTimeBigBadge, `${totalTime || `New card...`}`);
+    addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
+  }
+ 
   // Initial visual reset
   ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
   ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));
@@ -258,7 +305,7 @@
 Details (for version Anki 2.1.20 or later)
 You can include information about the current card:
 
-- {{info-FirstReview:}} - the first day that this card got reviewed
+- {{info-FirstReview:}} - the first day that this card got reviewed 
 - {{info-LastReview:}} - the last reviewed day
 - {{info-TimeAvg:}} - average time spent on this card
 - {{info-TimeTotal:}} - total time spent
