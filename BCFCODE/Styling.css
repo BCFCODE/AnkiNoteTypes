@@ -490,16 +490,16 @@ input#typeans {
 
 .number-of-reviews {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
+  top: 3rem;
+  right: 3rem;
   min-width: unset;
   width: auto;
-  padding: 5px 1rem;
+  padding: 0.4rem 1.5rem;
   font-size: 4rem;
   background-color: rgba(0, 0, 0, 1);
   border: 0.31rem solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
+  border-radius: 35%;
   transition: opacity 500ms;
   opacity: 30%;
   /* display: flex; */
