@@ -521,8 +521,13 @@ input#typeans {
 .type-answer-nOfReviews {
   font-size: 3.75rem;
   opacity: 0%;
-  transition: opacity 1500ms;
+  transition: opacity 2000ms;
   position: initial;
+}
+
+.type-answer-nOfReviews:hover {
+  cursor: unset;
+  opacity: 0;
 }
 
 .count-down-timer,
@@ -530,6 +535,7 @@ input#typeans {
   opacity: 0;
   width: 180px;
   padding: 1px;
+  border: 0.31rem solid rgba(255, 255, 255, 0.5);
 }
 
 .count-down-timer {
