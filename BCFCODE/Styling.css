@@ -375,23 +375,38 @@ input#typeans {
     transform 0.5s ease;
 }
 
+.top-container {
+  /* background-color: rgba(100, 0, 0, 0.5); */
+  position: absolute;
+  top: -57.5px;
+  left: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  bottom: initial;
+  width: 100%;
+  height: auto;
+}
+
 .top-count-down-timer,
+.number-of-reviews,
 .top-count-up-timer,
 .count-down-timer,
 .count-up-timer {
   display: flex;
   justify-content: center;
-  min-width: 130px;
+  /* min-width: 100px; */
+  /* max-width: 20px; */
   background-color: rgba(0, 0, 0, 1);
   border: 2px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   text-shadow: 0 0 5px rgba(255, 255, 255, 1);
   border-radius: 20%;
   transition: opacity 2100ms;
-  padding: 0 15px;
+  /* padding: 0 15px; */
   font-size: 2.7rem;
   z-index: 2;
-  bottom: 0;
+  /* bottom: 0; */
 }
 
 .card-progress-bar,
@@ -462,27 +477,47 @@ input#typeans {
 }
 
 .top-count-down-timer,
+.number-of-reviews,
 .top-count-up-timer {
-  width: 80px;
-  position: absolute;
+  width: 1rem;
   border: 6px solid hsl(60, 100%, 50%, 0.4);
   box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3);
-  top: -57.5px;
-  bottom: initial;
-  font-size: 5rem;
+  font-size: 4rem;
   padding: 3px 115px;
   transition: opacity 500ms;
   opacity: 100%;
 }
 
-.top-count-down-timer {
-  right: 14%;
-  /* z-index: 1; */
+.number-of-reviews {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  min-width: unset;
+  width: auto;
+  padding: 5px 1rem;
+  font-size: 4rem;
+   /* border: 3px solid hsl(60, 100%, 50%, 0.4);
+  box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3); */
+  background-color: rgba(0, 0, 0, 1);
+  border: 0.31rem solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* text-shadow: 0 0 5px rgba(255, 255, 255, 1); */
+  /* transition: opacity 2100ms; */
+  /* padding: 0 15px; */
+  /* z-index: 2; */
+  /* border: 6px solid hsl(60, 100%, 50%, 0.4); */
+  /* box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3); */
+  /* font-size: 5rem; */
+  transition: opacity 500ms;
+  opacity: 30%;
 }
 
-.top-count-up-timer {
-  left: 14%;
-  /* z-index: 3; */
+.number-of-reviews:hover {
+  cursor: pointer;
+  opacity: 100%;
 }
 
 .count-down-timer,

@@ -3,8 +3,11 @@
   <div class="awesome-tts">
     {{tts ar_AR voices=AwesomeTTS:AwesomeTTS (Front)}}
   </div>
-  <div class="top-count-up-timer" id="top-count-up-timer">00:00</div>
-  <div class="top-count-down-timer" id="top-count-down-timer">00:00</div>
+  <div class="number-of-reviews" id="number-of-reviews"></div>
+  <div class="top-container">
+    <div class="top-count-up-timer" id="top-count-up-timer">00:00</div>
+    <div class="top-count-down-timer" id="top-count-down-timer">00:00</div>
+  </div>
 
   {{#Front}}
   <div>{{Front}}</div>
@@ -96,6 +99,7 @@
     totalTime: "total-time",
     totalTimeBigBadge: "total-time-big-badge",
     avgTimeLabel: "avg-time-label",
+    numberOfReviews: "number-of-reviews",
   };
 
   var animation = {
@@ -132,6 +136,7 @@
   var daysAgo = timeAgo(createdAt);
   var avgTime = "{{info-TimeAvg:}}";
   var totalTime = "{{info-TimeTotal:}}";
+  var numberOfReviews = "{{info-Reviews:}}";
   var avgTimeInSeconds;
 
   if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -271,10 +276,7 @@
 
   // Deck info
   if (!/\d/.test(avgTime)) {
-    updateInnerHTML(
-      ids.avgTimeLabel,
-      "Average Time: Calculating...",
-    );
+    updateInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
   }
 
   if (ids.daysAgo) {
@@ -286,7 +288,10 @@
   // addClass(ids.createdAt, animation.opacityPulse);
 
   if (ids.totalTime) {
-    updateInnerHTML(ids.totalTime, `Total time: ${totalTime || `0 (new card)`}`);
+    updateInnerHTML(
+      ids.totalTime,
+      `Total time: ${totalTime || `0 (new card)`}`,
+    );
     addClass(ids.totalTime, animation.colorPulse["2s"]);
   }
 
@@ -294,7 +299,12 @@
     updateInnerHTML(ids.totalTimeBigBadge, `${totalTime || `New card...`}`);
     addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
   }
- 
+
+  if (ids.numberOfReviews) {
+    updateInnerHTML(ids.numberOfReviews, `${numberOfReviews || `0`}`);
+    addClass(ids.numberOfReviews, animation.colorPulse["2s"]);
+  }
+
   // Initial visual reset
   ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
   ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));
