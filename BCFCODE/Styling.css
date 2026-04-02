@@ -369,7 +369,7 @@ input#typeans {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  bottom: 0;
+  bottom: -25px;
   transition:
     opacity 4s color 0.3s ease,
     transform 0.5s ease;
@@ -378,7 +378,7 @@ input#typeans {
 .top-container {
   /* background-color: rgba(100, 0, 0, 0.5); */
   position: absolute;
-  top: -57.5px;
+  top: -50px;
   left: 0;
   display: flex;
   justify-content: space-around;
@@ -518,6 +518,13 @@ input#typeans {
   opacity: 100%;
 }
 
+.type-answer-nOfReviews {
+  font-size: 3.75rem;
+  opacity: 0%;
+  transition: opacity 1500ms;
+  position: initial;
+}
+
 .count-down-timer,
 .count-up-timer {
   opacity: 0;
@@ -544,7 +551,8 @@ input#typeans {
 /* Here I want to opacity of these top timers be 0, but why doesn't work? */
 .front:focus-within .top-count-down-timer,
 .front:focus-within .top-count-up-timer,
-.front:focus-within .card-progress-bar {
+.front:focus-within .card-progress-bar,
+.front:focus-within .number-of-reviews {
   opacity: 0;
 }
 
@@ -553,8 +561,9 @@ input#typeans {
 } */
 
 .type-answer:focus-within .count-down-timer,
+.type-answer:focus-within .type-answer-nOfReviews,
 .type-answer:focus-within .count-up-timer {
-  opacity: 1;
+  opacity: 100%;
 }
 
 .type-answer:focus-within .input-progress-bar {
