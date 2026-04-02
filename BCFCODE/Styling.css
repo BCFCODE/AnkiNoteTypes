@@ -496,12 +496,12 @@ input#typeans {
   width: auto;
   padding: 5px 1rem;
   font-size: 4rem;
-   /* border: 3px solid hsl(60, 100%, 50%, 0.4);
-  box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3); */
   background-color: rgba(0, 0, 0, 1);
   border: 0.31rem solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
   border-radius: 50%;
+  transition: opacity 500ms;
+  opacity: 30%;
   /* display: flex; */
   /* justify-content: center; */
   /* text-shadow: 0 0 5px rgba(255, 255, 255, 1); */
@@ -511,8 +511,6 @@ input#typeans {
   /* border: 6px solid hsl(60, 100%, 50%, 0.4); */
   /* box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3); */
   /* font-size: 5rem; */
-  transition: opacity 500ms;
-  opacity: 30%;
 }
 
 .number-of-reviews:hover {
@@ -523,6 +521,8 @@ input#typeans {
 .count-down-timer,
 .count-up-timer {
   opacity: 0;
+  width: 180px;
+  padding: 1px;
 }
 
 .count-down-timer {
