@@ -13,7 +13,7 @@
   <div>{{Front}}</div>
   {{/Front}}
 
-  <div class="total-time" id="total-time-big-badge">{{info-TimeTotal:}}</div>
+  <!-- <div class="total-time" id="total-time-big-badge">{{info-TimeTotal:}}</div> -->
 
   <div class="deckInfo">
     <h6>
@@ -133,7 +133,7 @@
   function summarizeTotalTime(string) {
     const digits = extractNumberFromString(totalTime);
     const summarizedTimeText = /minutes/.test(string) ? "m" : "s";
-    return `${digits}${summarizedTimeText}`;
+    return digits ? `${digits}${summarizedTimeText}`: 'New'
   }
 
   function timeAgo(d) {
@@ -335,7 +335,7 @@
   if (ids.numberOfReviewsOnTypeAnswer) {
     updateInnerHTML(
       ids.numberOfReviewsOnTypeAnswer,
-      `${numberOfReviews || `0`}`,
+      `${numberOfReviews || `New Card`}`,
     );
   }
 
