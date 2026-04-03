@@ -38,12 +38,21 @@
     <!-- <div class="typeBackImage">{{Image}}</div> -->
     <div class="type-answer-input-container">
       <div class="input-progress-bar" id="input-progress-bar"></div>
-      <div>{{type:Answer}}</div>
-      <div class="type-answer-timers">
-        <div class="count-up-timer" id="count-up-timer">00:00</div>
+      <div class="type-answer-top-container">
+        <!-- <div class="count-up-timer" >00:00</div> -->
         <div
           class="number-of-reviews type-answer-nOfReviews"
           id="type-answer-nOfReviews"
+        ></div>
+
+        <!-- <div class="count-down-timer" >00:00</div> -->
+      </div>
+      <div>{{type:Answer}}</div>
+      <div class="type-answer-bottom-container">
+        <div class="count-up-timer" id="count-up-timer">00:00</div>
+        <div
+          class="type-answer-total-time-middle-badge total-time number-of-reviews type-answer-nOfReviews"
+          id="type-answer-total-time-badge"
         ></div>
         <div class="count-down-timer" id="count-down-timer">00:00</div>
       </div>
@@ -102,6 +111,7 @@
     bottomRightLittleLabel: "bottom-right-little-label",
     totalTime: "total-time",
     totalTimeBigBadge: "total-time-big-badge",
+    typeAnswerTotalTimeBadge: "type-answer-total-time-badge",
     avgTimeLabel: "avg-time-label",
     numberOfReviews: "number-of-reviews",
     numberOfReviewsOnTypeAnswer: "type-answer-nOfReviews",
@@ -118,6 +128,12 @@
 
   function extractNumberFromString(string) {
     return +string.replace(/[^\d.]/g, "") || 0;
+  }
+
+  function summarizeTotalTime(string) {
+    const digits = extractNumberFromString(totalTime);
+    const summarizedTimeText = /minutes/.test(string) ? "m" : "s";
+    return `${digits}${summarizedTimeText}`;
   }
 
   function timeAgo(d) {
@@ -303,6 +319,14 @@
   if (ids.totalTimeBigBadge) {
     updateInnerHTML(ids.totalTimeBigBadge, `${totalTime || `New card...`}`);
     addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
+  }
+
+  if (ids.typeAnswerTotalTimeBadge) {
+    updateInnerHTML(
+      ids.typeAnswerTotalTimeBadge,
+      `${summarizeTotalTime(totalTime) || `New`}`,
+    );
+    addClass(ids.typeAnswerTotalTimeBadge, animation.colorPulse["2s"]);
   }
 
   if (ids.numberOfReviews) {

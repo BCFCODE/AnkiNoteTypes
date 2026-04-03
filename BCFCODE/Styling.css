@@ -303,16 +303,6 @@ code#typeans {
   height: 100px;
 }
 
-.type-answer-input-container {
-  /* background-color: rgba(255, 0, 0, 0.581); */
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 950px;
-  transition: margin 3s;
-  margin-top: -6rem;
-}
-
 input {
   position: relative;
   font-size: 100px !important;
@@ -362,7 +352,18 @@ input#typeans {
   text-align: center;
 }
 
-.type-answer-timers {
+.type-answer-input-container {
+  /* background-color: rgba(255, 230, 0, 0.581); */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 950px;
+  transition: margin 3s;
+  margin-top: -6rem;
+}
+
+.type-answer-top-container,
+.type-answer-bottom-container {
   /* background-color: rgba(255, 255, 0, 0.629); */
   position: absolute;
   display: flex;
@@ -373,6 +374,12 @@ input#typeans {
   transition:
     opacity 4s color 0.3s ease,
     transform 0.5s ease;
+}
+
+.type-answer-top-container {
+  /* background-color: rgba(255, 255, 0, 0.629); */
+  justify-content: center;
+  bottom: 330px;
 }
 
 .top-container {
@@ -490,8 +497,8 @@ input#typeans {
 
 .number-of-reviews {
   position: absolute;
-  top: 3rem;
-  right: 3rem;
+  top: 50px;
+  right: 50px;
   min-width: unset;
   width: auto;
   padding: 0.4rem 1.5rem;
@@ -658,7 +665,45 @@ input#typeans {
 }
 
 .total-time {
-  color: orange;
+  color: yellowgreen;
+  /* font-size: 3rem; */
+  /* opacity: 0%; */
+  /* transition: opacity 2000ms; */
+  /* position: initial; */
+  /* position: absolute; */
+  /* top: 50px; */
+  /* right: 50px; */
+  /* min-width: unset; */
+  /* width: auto; */
+  /* padding: 0.4rem 1.5rem; */
+  /* background-color: rgba(0, 0, 0, 1); */
+  /* border: 0.31rem solid rgba(255, 255, 255, 0.5); */
+  /* box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); */
+  /* border-radius: 35%; */
+  /* transition: opacity 500ms; */
+  /* opacity: 30%; */
+}
+
+.type-answer-total-time-middle-badge {
+  font-size: 2.5rem;
+  border-radius: 30%;
+  padding: 0.4rem 1rem;
+  padding-left: 1.3rem;
+  text-align: center;
+  /* color: rgb(255, 88, 88); */
+  /* opacity: 0%; */
+  /* transition: opacity 2000ms; */
+  /* position: initial; */
+  /* position: absolute; */
+  /* top: 50px; */
+  /* right: 50px; */
+  /* min-width: unset; */
+  /* width: auto; */
+  /* background-color: rgba(0, 0, 0, 1); */
+  /* border: 0.31rem solid rgba(255, 255, 255, 0.5); */
+  /* box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); */
+  /* transition: opacity 500ms; */
+  /* opacity: 30%; */
 }
 
 /* Mobile Responsive Adjustments */
