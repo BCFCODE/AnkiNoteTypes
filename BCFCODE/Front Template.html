@@ -132,8 +132,12 @@
 
   function summarizeTotalTime(string) {
     const digits = extractNumberFromString(totalTime);
-    const summarizedTimeText = /minutes/.test(string) ? "m" : "s";
-    return digits ? `${digits}${summarizedTimeText}`: 'New'
+    const summarizedTimeText = /hours?/.test(string)
+      ? "h"
+      : /minutes?/.test(string)
+        ? "m"
+        : "s";
+    return digits ? `${digits}${summarizedTimeText}` : "New";
   }
 
   function timeAgo(d) {
