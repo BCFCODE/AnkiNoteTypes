@@ -17,7 +17,7 @@
 
   <div class="deckInfo">
     <h6>
-      Created <span id="days-ago" class="days-ago"></span> ago at
+      Created <span id="time-ago"></span> ago at
       <span id="created-at"></span>
     </h6>
     <h6 class="total-time" id="total-time">Total time: {{info-TimeTotal:}}</h6>
@@ -131,7 +131,7 @@
       countUpTimer: ["type-answer-bottom-left-box", "top-left-box"],
       countDownTimer: ["type-answer-bottom-right-box", "top-right-box"],
       createdAt: "created-at",
-      daysAgo: "days-ago",
+      timeAgo: "time-ago",
       bottomRightLittleLabel: "bottom-right-little-label",
       totalTime: "total-time",
       avgTimeLabel: "avg-time-label",
@@ -190,21 +190,11 @@
 
     function getNumberOfDaysAgo(date) {
       const d = new Date(date);
-      if (isNaN(d)) return "N/A";
+      if (isNaN(d)) return 0;
       return Math.floor((Date.now() - d) / 864e5);
     }
 
-    function timeAgoTextFormat(
-      nOfDaysAgo,
-      textFormat = {
-        today: "today",
-        yesterday: "yesterday",
-        daysAgo: "d",
-        weeksAgo: "w",
-        monthAgo: "mo",
-        yearsAgo: "y",
-      },
-    ) {
+    function timeAgoTextFormat(nOfDaysAgo, textFormat) {
       const nOfWeeks = Math.round(nOfDaysAgo / 7);
       const nOfMonths = Math.round(nOfDaysAgo / 30.4);
       const nOfYears = Math.round(nOfDaysAgo / 365.25);
@@ -375,10 +365,20 @@
       updateInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
     }
 
-    if (ids.daysAgo) {
+    if (ids.timeAgo) {
       const nOfDaysAgo = getNumberOfDaysAgo(createdAt);
-      updateInnerHTML(ids.daysAgo, timeAgoTextFormat(nOfDaysAgo));
-      addClass(ids.daysAgo, animation.colorPulse["1s"]);
+      const [day, week, month, year] = [1, 7, 30, 365];
+      const textFormat = {
+        today: "today",
+        yesterday: "yesterday",
+        daysAgo: ` day${nOfDaysAgo >= 2 * day ? "s" : ""}`,
+        weeksAgo: `week${nOfDaysAgo >= 2 * week ? "s" : ""}`,
+        monthAgo: ` month${nOfDaysAgo >= 2 * month ? "s" : ""}`,
+        yearsAgo: ` year${nOfDaysAgo >= 2 * year ? "s" : ""}`,
+      };
+      updateInnerHTML(ids.timeAgo, timeAgoTextFormat(nOfDaysAgo, textFormat));
+      addClass(ids.timeAgo, color.success);
+      addClass(ids.timeAgo, animation.colorPulse["1s"]);
     }
 
     if (ids.createdAt) updateInnerHTML(ids.createdAt, createdAt);
@@ -416,17 +416,104 @@
       );
     }
 
+    if (ids.typeAnswerTopLeftBox) {
+      const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
+      const year = 365;
+      const textFormat = {
+        today: "Today",
+        yesterday: "24h",
+        daysAgo: "d",
+        weeksAgo: "w",
+        monthAgo: "mo",
+        yearsAgo: `y${nOfDaysAgo >= 2 * year ? "s" : ""}`,
+      };
+      const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
+      updateInnerText(ids.typeAnswerTopLeftBox, timesAgoText);
+
+      if (/SentenceMemory/.test(tags)) {
+        if (ids.typeAnswerTopLeftBox) {
+          if (nOfDaysAgo === 0) {
+            addClass(ids.typeAnswerTopLeftBox, color.danger);
+            addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["500ms"]);
+          } else if (nOfDaysAgo === 1) {
+            addClass(ids.typeAnswerTopLeftBox, color.warning);
+            addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
+          } else {
+            addClass(ids.typeAnswerTopLeftBox, color.success);
+            addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
+          }
+        }
+      }
+    }
+
+    if (ids.typeAnswerTopRightBox) {
+      const parsed = parseString(totalTime);
+      const totalSeconds = convertTotalTimeToSeconds(parsed);
+      updateInnerHTML(
+        ids.typeAnswerTopRightBox,
+        `${summarizeTotalTime(parsed) || `New`}`,
+      );
+
+      const minute = 60;
+
+      if (/SentenceMemory/.test(tags)) {
+        if (/Partial/.test(tags)) {
+          if (totalSeconds < 3 * minute) {
+            addClass(ids.typeAnswerTopRightBox, color.success);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
+          } else if (totalSeconds < 6 * minute) {
+            addClass(ids.typeAnswerTopRightBox, color.warning);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          } else {
+            addClass(ids.typeAnswerTopRightBox, color.danger);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+          }
+        }
+        if (/Full/.test(tags)) {
+          if (totalSeconds < 6 * minute) {
+            addClass(ids.typeAnswerTopRightBox, color.success);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
+          } else if (totalSeconds < 12 * minute) {
+            addClass(ids.typeAnswerTopRightBox, color.warning);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          } else {
+            addClass(ids.typeAnswerTopRightBox, color.danger);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+          }
+        }
+      }
+    }
+
+    if (ids.typeAnswerBottomMiddleBox) {
+      const { number: nLaps } = parseString(numberOfLapses);
+      let lapsText;
+      if (nLaps === 0) {
+        lapsText = "0 laps";
+        addClass(ids.typeAnswerBottomMiddleBox, color.success);
+        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
+      } else if (nLaps === 1) {
+        lapsText = `${nLaps} lap`;
+        addClass(ids.typeAnswerBottomMiddleBox, color.warning);
+        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
+      } else {
+        lapsText = `${nLaps} laps`;
+        addClass(ids.typeAnswerBottomMiddleBox, color.danger);
+        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["500ms"]);
+      }
+      updateInnerText(ids.typeAnswerBottomMiddleBox, `${lapsText}`);
+    }
+
     if (/DigitMemory/.test(tags)) {
       const digitsText = tags.match(/\b\d+Digits\b/);
 
       let topLeftText, topRightText;
-      if (tags.includes("Forward")) {
+      if (/Forward/i.test(tags)) {
         topRightText = ">";
         topLeftText = digitsText;
         addClass(ids.typeAnswerTopRightBox, color.danger);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
       }
-      if (tags.includes("Backward")) {
+      if (/Backward/i.test(tags)) {
         topLeftText = "<";
         topRightText = digitsText;
         addClass(ids.typeAnswerTopLeftBox, color.danger);
@@ -447,74 +534,6 @@
       }
     }
 
-    if (/SentenceMemory/.test(tags)) {
-      if (ids.typeAnswerTopLeftBox) {
-        const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
-        const textFormat = {
-          today: "Today",
-          yesterday: "24h",
-          daysAgo: "d",
-          weeksAgo: "w",
-          monthAgo: "mo",
-          yearsAgo: `y${nOfDaysAgo > 1 ? "s" : ""}`,
-        };
-        const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
-        if (nOfDaysAgo === 0) {
-          addClass(ids.typeAnswerTopLeftBox, color.danger);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["500ms"]);
-        } else if (nOfDaysAgo === 1) {
-          addClass(ids.typeAnswerTopLeftBox, color.warning);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
-        } else {
-          addClass(ids.typeAnswerTopLeftBox, color.success);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
-        }
-        updateInnerText(ids.typeAnswerTopLeftBox, timesAgoText);
-      }
-
-      if (ids.typeAnswerTopRightBox) {
-        const parsed = parseString(totalTime);
-        const totalSeconds = convertTotalTimeToSeconds(parsed);
-        updateInnerHTML(
-          ids.typeAnswerTopRightBox,
-          `${summarizeTotalTime(parsed) || `New`}`,
-        );
-        if (/Partial/.test(tags)) {
-          if (totalSeconds < 3 * 60) {
-            addClass(ids.typeAnswerTopRightBox, color.success);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
-          } else if (totalSeconds < 6 * 60) {
-            addClass(ids.typeAnswerTopRightBox, color.warning);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
-          } else {
-            addClass(ids.typeAnswerTopRightBox, color.danger);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
-          }
-        }
-      }
-
-      if (ids.typeAnswerBottomMiddleBox) {
-        const { number: nLaps } = parseString(numberOfLapses);
-        let lapsText;
-        if (nLaps === 0) {
-          lapsText = "0 laps";
-          addClass(ids.typeAnswerBottomMiddleBox, color.success);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
-        } else if (nLaps === 1) {
-          lapsText = `${nLaps} lap`;
-          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
-        } else {
-          lapsText = `${nLaps} laps`;
-          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
-          addClass(
-            ids.typeAnswerBottomMiddleBox,
-            animation.colorPulse["500ms"],
-          );
-        }
-        updateInnerText(ids.typeAnswerBottomMiddleBox, `${lapsText}`);
-      }
-    }
     // Initial visual reset
     ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
     ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));

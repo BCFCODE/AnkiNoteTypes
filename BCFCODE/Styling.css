@@ -700,10 +700,6 @@ input#typeans {
   margin-top: 20px;
 }
 
-.days-ago {
-  color: var(--color-success);
-}
-
 .total-time {
   color: var(--color-success);
   /* font-size: 3rem; */
