@@ -17,7 +17,7 @@
 
   <div class="deckInfo">
     <h6>
-      Created <span id="days-ago" class="days-ago"></span> at
+      Created <span id="days-ago" class="days-ago"></span> ago at
       <span id="created-at"></span>
     </h6>
     <h6 class="total-time" id="total-time">Total time: {{info-TimeTotal:}}</h6>
@@ -173,25 +173,40 @@
     return digits ? `${digits}${summarizedTimeText}` : "New";
   }
 
-  function timeAgo(d) {
-    d = new Date(d);
-    if (isNaN(d)) return "?";
-    const delta = Math.floor((Date.now() - d) / 864e5);
-    return delta === 0
-      ? "today"
-      : delta === 1
-        ? "yesterday"
-        : delta < 7
-          ? delta + "d ago"
-          : delta < 31
-            ? Math.round(delta / 7) + "w ago"
-            : delta < 365
-              ? Math.round(delta / 30.4) + "mo ago"
-              : Math.round(delta / 365.25) + "y ago";
+  function getNumberOfDaysAgo(date) {
+    const d = new Date(date);
+    if (isNaN(d)) return "N/A";
+    return Math.floor((Date.now() - d) / 864e5);
+  }
+
+  function timeAgoTextFormat(
+    nOfDaysAgo,
+    textFormat = {
+      today: "today",
+      yesterday: "yesterday",
+      daysAgo: "d",
+      weeksAgo: "w",
+      monthAgo: "mo",
+      yearsAgo: "y",
+    },
+  ) {
+    const nOfWeeks = Math.round(nOfDaysAgo / 7);
+    const nOfMonths = Math.round(nOfDaysAgo / 30.4);
+    const nOfYears = Math.round(nOfDaysAgo / 365.25);
+    return nOfDaysAgo === 0
+      ? textFormat.today
+      : nOfDaysAgo === 1
+        ? textFormat.yesterday
+        : nOfDaysAgo < 7
+          ? `${nOfDaysAgo}${textFormat.daysAgo}`
+          : nOfDaysAgo < 31
+            ? `${nOfWeeks}${textFormat.weeksAgo}`
+            : nOfDaysAgo < 365
+              ? `${nOfMonths}${textFormat.monthAgo}`
+              : `${nOfYears}${textFormat.yearsAgo}`;
   }
 
   var createdAt = "{{info-Date_Created:}}";
-  var daysAgo = timeAgo(createdAt);
   var avgTime = "{{info-TimeAvg:}}";
   var totalTime = "{{info-TimeTotal:}}";
   var numberOfReviews = "{{info-Reviews:}}";
@@ -346,7 +361,8 @@
   }
 
   if (ids.daysAgo) {
-    updateInnerHTML(ids.daysAgo, daysAgo);
+    const nOfDaysAgo = getNumberOfDaysAgo(createdAt);
+    updateInnerHTML(ids.daysAgo, timeAgoTextFormat(nOfDaysAgo));
     addClass(ids.daysAgo, animation.colorPulse["1s"]);
   }
 
@@ -428,18 +444,23 @@
       updateInnerText(ids.typeAnswerTopLeftBox, `${lapsText}`);
     }
     if (ids.typeAnswerTopRightBox) {
-      let timesAgo = timeAgo(lastReview);
-      let timeAgoText;
-      if (timesAgo === "today") {
-        timesAgoText = "New";
+      const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
+      const textFormat = {
+        today: "Today",
+        yesterday: "24h",
+        daysAgo: "d",
+        weeksAgo: "w",
+        monthAgo: "mo",
+        yearsAgo: `y${nOfDaysAgo > 1 ? "s" : ""}`,
+      };
+      const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
+      if (nOfDaysAgo === 0) {
         addClass(ids.typeAnswerTopRightBox, color.danger);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
-      } else if (timesAgo === "yesterday") {
-        timesAgoText = "LastDay";
+      } else if (nOfDaysAgo === 1) {
         addClass(ids.typeAnswerTopRightBox, color.warning);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
       } else {
-        timesAgoText = timesAgo;
         addClass(ids.typeAnswerTopRightBox, color.success);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
       }
