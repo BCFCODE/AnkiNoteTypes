@@ -38,7 +38,7 @@
     <!-- <div class="typeBackImage">{{Image}}</div> -->
     <div class="type-answer-input-container">
       <!-- TYPE ANSWER TOP CONTAINER -->
-      <div class="type-answer-top-container">
+      <div class="type-answer-top-container" id="type-answer-top-container">
         <div
           class="type-answer-top-left-box"
           id="type-answer-top-left-box"
@@ -135,6 +135,7 @@
     totalTime: "total-time",
     avgTimeLabel: "avg-time-label",
     numberOfReviews: "number-of-reviews",
+    typeAnswerTopContainer: "type-answer-top-container",
     typeAnswerTopLeftBox: "type-answer-top-left-box",
     typeAnswerTopRightBox: "type-answer-top-right-box",
     typeAnswerTopMiddleBox: "type-answer-top-middle-box",
@@ -146,6 +147,7 @@
     sizePulse: "size-pulse-animation",
     opacityPulse: "opacity-pulse-animation-1s-80",
     colorPulse: {
+      "500ms": "color-pulse-animation-500ms",
       "1s": "color-pulse-animation-1s",
       "2s": "color-pulse-animation-2s",
     },
@@ -153,6 +155,8 @@
 
   var color = {
     danger: "color-danger",
+    success: "color-success",
+    warning: "color-warning",
   };
 
   function extractNumberFromString(string) {
@@ -191,7 +195,9 @@
   var avgTime = "{{info-TimeAvg:}}";
   var totalTime = "{{info-TimeTotal:}}";
   var numberOfReviews = "{{info-Reviews:}}";
+  var numberOfLapses = "{{info-Lapses:}}";
   var tags = "{{Tags}}";
+  var lastReview = "{{info-LastReview:}}";
   var avgTimeInSeconds;
 
   if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -379,7 +385,7 @@
   }
 
   if (tags.includes("DigitMemory")) {
-    const digitsText = tags.match(/\b\d+Digits\b/) || "xDigits";
+    const digitsText = tags.match(/\b\d+Digits\b/);
 
     let topLeftText, topRightText;
     if (tags.includes("Forward")) {
@@ -399,10 +405,45 @@
       updateInnerText(ids.typeAnswerTopLeftBox, `${topLeftText || `xDigits`}`);
     }
     if (ids.typeAnswerTopRightBox) {
-      updateInnerText(
-        ids.typeAnswerTopRightBox,
-        `${topRightText || `xDirection`}`,
-      );
+      updateInnerText(ids.typeAnswerTopRightBox, `${topRightText || `< x >`}`);
+    }
+  }
+
+  if (tags.includes("SentenceMemory")) {
+    if (ids.typeAnswerTopLeftBox) {
+      const nLaps = +numberOfLapses;
+      let lapsText;
+      if (nLaps === 0) {
+        lapsText = "0 laps";
+        addClass(ids.typeAnswerTopLeftBox, color.success);
+      } else {
+        lapsText = `${nLaps} lap${nLaps > 1 ? "s" : ""}`;
+        if (nLaps === 1) {
+          addClass(ids.typeAnswerTopLeftBox, color.warning);
+        } else {
+          addClass(ids.typeAnswerTopLeftBox, color.danger);
+          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse);
+        }
+      }
+      updateInnerText(ids.typeAnswerTopLeftBox, `${lapsText}`);
+    }
+    if (ids.typeAnswerTopRightBox) {
+      let timesAgo = timeAgo(lastReview);
+      let timeAgoText;
+      if (timesAgo === "today") {
+        timesAgoText = "New";
+        addClass(ids.typeAnswerTopRightBox, color.danger);
+        addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+      } else if (timesAgo === "yesterday") {
+        timesAgoText = "LastDay";
+        addClass(ids.typeAnswerTopRightBox, color.warning);
+        addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+      } else {
+        timesAgoText = timesAgo;
+        addClass(ids.typeAnswerTopRightBox, color.success);
+        addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
+      }
+      updateInnerText(ids.typeAnswerTopRightBox, timesAgoText);
     }
   }
   // Initial visual reset

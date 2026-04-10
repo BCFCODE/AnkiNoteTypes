@@ -1,10 +1,20 @@
 :root {
   --initial-text-color: hsl(20, 40%, 80%);
   --color-danger: red;
+  --color-success: yellowgreen;
+  --color-warning: yellow;
 }
 
 .color-danger {
   color: var(--color-danger);
+}
+
+.color-success {
+  color: var(--color-success);
+}
+
+.color-warning {
+  color: var(--color-warning);
 }
 
 .card {
@@ -33,11 +43,11 @@ h6 {
 }
 
 a {
-  color: yellowgreen;
+  color: var(--color-success);
   cursor: pointer;
 }
 a:hover {
-  color: yellow;
+  color: var(--color-warning);
   text-decoration: underline;
   cursor: pointer;
 }
@@ -55,6 +65,7 @@ pre {
   text-align: left;
   margin-left: -1%;
 }
+
 .hidden {
   display: none;
 }
@@ -441,8 +452,8 @@ input#typeans {
   /* max-width: 100px; */
   /* width: 500px; */
   height: 6px;
-  box-shadow: 0 0 8px yellowgreen;
-  background: yellowgreen;
+  box-shadow: 0 0 8px var(--color-success);
+  background: var(--color-success);
   opacity: 0;
   border-radius: 30px;
   transition:
@@ -462,12 +473,16 @@ input#typeans {
 }
 
 .size-pulse-animation {
-  color: yellowgreen;
+  color: var(--color-success);
   animation: pulse-size-animation 1s infinite;
 }
 
 .opacity-pulse-animation-1s-80 {
   animation: pulse-opacity-animation-80 1s infinite;
+}
+
+.color-pulse-animation-500ms {
+  animation: color-pulse-animation 500ms infinite;
 }
 
 .color-pulse-animation-1s {
@@ -686,11 +701,11 @@ input#typeans {
 }
 
 .days-ago {
-  color: yellowgreen;
+  color: var(--color-success);
 }
 
 .total-time {
-  color: yellowgreen;
+  color: var(--color-success);
   /* font-size: 3rem; */
   /* opacity: 0%; */
   /* transition: opacity 2000ms; */
