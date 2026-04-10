@@ -160,18 +160,32 @@
       warning: "color-warning",
     };
 
-    function extractNumberFromString(string) {
-      return +string.replace(/[^\d.]/g, "") || 0;
+    function parseString(string) {
+      const parsed = {};
+      if (/\d/.test(string)) {
+        parsed.number = +string.match(/[\d.]+/)[0];
+      }
+      if (/[a-zA-Z]/.test(string)) {
+        parsed.string = string.match(/[a-zA-Z]+/)[0];
+      }
+      return parsed;
     }
 
-    function summarizeTotalTime(string) {
-      const digits = extractNumberFromString(totalTime);
-      const summarizedTimeText = /hours?/.test(string)
+    function summarizeTotalTime(parsed) {
+      const summarized = /hours?/.test(parsed.string)
         ? "h"
-        : /minutes?/.test(string)
+        : /minutes?/.test(parsed.string)
           ? "m"
           : "s";
-      return digits ? `${digits}${summarizedTimeText}` : "New";
+      return parsed.number ? `${parsed.number}${summarized}` : "New";
+    }
+
+    function convertTotalTimeToSeconds(parsed) {
+      return /hours?/.test(parsed.string)
+        ? parsed.number * 3600
+        : /minutes?/.test(parsed.string)
+          ? parsed.number * 60
+          : parsed.number;
     }
 
     function getNumberOfDaysAgo(date) {
@@ -222,9 +236,9 @@
     }
 
     if (/\d/.test(avgTime)) {
-      var num = extractNumberFromString(avgTime);
-      if (/minute/i.test(avgTime)) num *= 60;
-      if (num > 0) avgTimeInSeconds = Math.round(num);
+      const { number } = parseString(avgTime);
+      if (/minute/i.test(avgTime)) number *= 60;
+      if (number > 0) avgTimeInSeconds = Math.round(number);
     }
 
     function twoDigits(n) {
@@ -384,9 +398,10 @@
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
+      const parsed = parseString(totalTime);
       updateInnerHTML(
         ids.typeAnswerBottomMiddleBox,
-        `${summarizeTotalTime(totalTime) || `New`}`,
+        `${summarizeTotalTime(parsed) || `New`}`,
       );
       addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
     }
@@ -434,14 +449,6 @@
 
     if (/SentenceMemory/.test(tags)) {
       if (ids.typeAnswerTopLeftBox) {
-        updateInnerHTML(
-          ids.typeAnswerTopLeftBox,
-          `${summarizeTotalTime(totalTime) || `New`}`,
-        );
-        addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
-      }
-
-      if (ids.typeAnswerTopRightBox) {
         const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
         const textFormat = {
           today: "Today",
@@ -453,20 +460,41 @@
         };
         const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
         if (nOfDaysAgo === 0) {
-          addClass(ids.typeAnswerTopRightBox, color.danger);
-          addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+          addClass(ids.typeAnswerTopLeftBox, color.danger);
+          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["500ms"]);
         } else if (nOfDaysAgo === 1) {
-          addClass(ids.typeAnswerTopRightBox, color.warning);
-          addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          addClass(ids.typeAnswerTopLeftBox, color.warning);
+          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
         } else {
-          addClass(ids.typeAnswerTopRightBox, color.success);
-          addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
+          addClass(ids.typeAnswerTopLeftBox, color.success);
+          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
         }
-        updateInnerText(ids.typeAnswerTopRightBox, timesAgoText);
+        updateInnerText(ids.typeAnswerTopLeftBox, timesAgoText);
+      }
+
+      if (ids.typeAnswerTopRightBox) {
+        const parsed = parseString(totalTime);
+        const totalSeconds = convertTotalTimeToSeconds(parsed);
+        updateInnerHTML(
+          ids.typeAnswerTopRightBox,
+          `${summarizeTotalTime(parsed) || `New`}`,
+        );
+        if (/Partial/.test(tags)) {
+          if (totalSeconds < 3 * 60) {
+            addClass(ids.typeAnswerTopRightBox, color.success);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
+          } else if (totalSeconds < 6 * 60) {
+            addClass(ids.typeAnswerTopRightBox, color.warning);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          } else {
+            addClass(ids.typeAnswerTopRightBox, color.danger);
+            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+          }
+        }
       }
 
       if (ids.typeAnswerBottomMiddleBox) {
-        const nLaps = +parseInt(numberOfLapses);
+        const { number: nLaps } = parseString(numberOfLapses);
         let lapsText;
         if (nLaps === 0) {
           lapsText = "0 laps";
