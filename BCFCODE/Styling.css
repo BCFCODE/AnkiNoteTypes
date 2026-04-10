@@ -363,6 +363,7 @@ input#typeans {
 }
 
 .type-answer-top-container,
+.type-answer-middle-container,
 .type-answer-bottom-container {
   /* background-color: rgba(255, 255, 0, 0.629); */
   position: absolute;
@@ -370,7 +371,6 @@ input#typeans {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  bottom: -25px;
   transition:
     opacity 4s color 0.3s ease,
     transform 0.5s ease;
@@ -380,6 +380,17 @@ input#typeans {
   /* background-color: rgba(255, 255, 0, 0.629); */
   justify-content: center;
   bottom: 330px;
+}
+
+.type-answer-middle-container {
+  /* background-color: rgba(255, 255, 0, 0.629); */
+  justify-content: space-between;
+  width: 180%;
+  top: 80px;
+}
+
+.type-answer-bottom-container {
+  bottom: -20px;
 }
 
 .top-container {
@@ -395,11 +406,13 @@ input#typeans {
   height: auto;
 }
 
-.top-count-down-timer,
+.top-right-box,
 .number-of-reviews,
-.top-count-up-timer,
-.count-down-timer,
-.count-up-timer {
+.top-left-box,
+.type-answer-top-left-box,
+.type-answer-top-right-box,
+.type-answer-bottom-left-box,
+.type-answer-bottom-right-box {
   display: flex;
   justify-content: center;
   /* min-width: 100px; */
@@ -483,9 +496,9 @@ input#typeans {
   }
 }
 
-.top-count-down-timer,
+.top-right-box,
 .number-of-reviews,
-.top-count-up-timer {
+.top-left-box {
   width: 1rem;
   border: 6px solid hsl(60, 100%, 50%, 0.4);
   box-shadow: 0 0 10px 10px hsla(30, 100%, 50%, 0.3);
@@ -525,32 +538,36 @@ input#typeans {
   opacity: 100%;
 }
 
-.type-answer-nOfReviews {
+.type-answer-top-middle-box {
   font-size: 3.75rem;
   opacity: 0%;
   transition: opacity 2000ms;
   position: initial;
 }
 
-.type-answer-nOfReviews:hover {
+.type-answer-top-middle-box:hover {
   cursor: unset;
   opacity: 0;
 }
 
-.count-down-timer,
-.count-up-timer {
+.type-answer-top-left-box,
+.type-answer-top-right-box,
+.type-answer-bottom-left-box,
+.type-answer-bottom-right-box {
   opacity: 0;
   width: 180px;
   padding: 1px;
   border: 0.31rem solid rgba(255, 255, 255, 0.5);
 }
 
-.count-down-timer {
+.type-answer-top-right-box,
+.type-answer-bottom-right-box {
   right: -15%;
   /* z-index: 1; */
 }
 
-.count-up-timer {
+.type-answer-top-left-box,
+.type-answer-bottom-left-box {
   left: -15%;
   /* z-index: 3; */
 }
@@ -562,8 +579,8 @@ input#typeans {
 }
 
 /* Here I want to opacity of these top timers be 0, but why doesn't work? */
-.front:focus-within .top-count-down-timer,
-.front:focus-within .top-count-up-timer,
+.front:focus-within .top-right-box,
+.front:focus-within .top-left-box,
 .front:focus-within .card-progress-bar,
 .front:focus-within .number-of-reviews {
   opacity: 0;
@@ -573,9 +590,11 @@ input#typeans {
   opacity: 1;
 } */
 
-.type-answer:focus-within .count-down-timer,
-.type-answer:focus-within .type-answer-nOfReviews,
-.type-answer:focus-within .count-up-timer {
+.type-answer:focus-within .type-answer-top-middle-box,
+.type-answer:focus-within .type-answer-top-left-box,
+.type-answer:focus-within .type-answer-top-right-box,
+.type-answer:focus-within .type-answer-bottom-left-box,
+.type-answer:focus-within .type-answer-bottom-right-box {
   opacity: 100%;
 }
 
@@ -684,7 +703,7 @@ input#typeans {
   /* opacity: 30%; */
 }
 
-.type-answer-total-time-middle-badge {
+.type-answer-bottom-middle-box {
   /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */

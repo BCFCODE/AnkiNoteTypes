@@ -5,8 +5,8 @@
   </div>
   <div class="number-of-reviews" id="number-of-reviews"></div>
   <div class="top-container">
-    <div class="top-count-up-timer" id="top-count-up-timer">00:00</div>
-    <div class="top-count-down-timer" id="top-count-down-timer">00:00</div>
+    <div class="top-left-box" id="top-left-box">00:00</div>
+    <div class="top-right-box" id="top-right-box">00:00</div>
   </div>
 
   {{#Front}}
@@ -14,6 +14,7 @@
   {{/Front}}
 
   <!-- <div class="total-time" id="total-time-big-badge">{{info-TimeTotal:}}</div> -->
+  <div class="total-time" id="test"></div>
 
   <div class="deckInfo">
     <h6>
@@ -37,24 +38,31 @@
     <p class="type-back-tip">Press TAB to see the input...</p>
     <!-- <div class="typeBackImage">{{Image}}</div> -->
     <div class="type-answer-input-container">
-      <div class="input-progress-bar" id="input-progress-bar"></div>
+      <!-- TYPE ANSWER TOP CONTAINER -->
       <div class="type-answer-top-container">
-        <!-- <div class="count-up-timer" >00:00</div> -->
+        <div class="type-answer-top-left-box" id="type-answer-top-left-box">00:00</div>
         <div
-          class="number-of-reviews type-answer-nOfReviews"
-          id="type-answer-nOfReviews"
+          class="number-of-reviews type-answer-top-middle-box"
+          id="type-answer-top-middle-box"
         ></div>
-
-        <!-- <div class="count-down-timer" >00:00</div> -->
+        <div class="type-answer-top-right-box" id="type-answer-top-right-box">00:00</div>
       </div>
       <div>{{type:Answer}}</div>
+      <!-- TYPE ANSWER MIDDLE CONTAINER -->
+      <div class="type-answer-middle-container">
+        <!-- <div id="backward"><</div>
+        <div id="forward">></div> -->
+      </div>
+      <!-- PROGRESS BAR -->
+      <div class="input-progress-bar" id="input-progress-bar"></div>
+      <!-- TYPE ANSWER BOTTOM CONTAINER -->
       <div class="type-answer-bottom-container">
-        <div class="count-up-timer" id="count-up-timer">00:00</div>
+        <div class="type-answer-bottom-left-box" id="type-answer-bottom-left-box">00:00</div>
         <div
-          class="type-answer-total-time-middle-badge total-time number-of-reviews type-answer-nOfReviews"
-          id="type-answer-total-time-badge"
+          class="type-answer-bottom-middle-box total-time number-of-reviews type-answer-top-middle-box"
+          id="type-answer-bottom-middle-box"
         ></div>
-        <div class="count-down-timer" id="count-down-timer">00:00</div>
+        <div class="type-answer-bottom-right-box" id="type-answer-bottom-right-box">00:00</div>
       </div>
     </div>
   </div>
@@ -104,17 +112,18 @@
   var ids = {
     cardProgressBar: "card-progress-bar",
     inputProgressBar: "input-progress-bar",
-    countUpTimer: ["count-up-timer", "top-count-up-timer"],
-    countDownTimer: ["count-down-timer", "top-count-down-timer"],
+    countUpTimer: ["type-answer-bottom-left-box", "top-left-box"],
+    countDownTimer: ["type-answer-bottom-right-box", "top-right-box"],
     createdAt: "created-at",
     daysAgo: "days-ago",
     bottomRightLittleLabel: "bottom-right-little-label",
     totalTime: "total-time",
     totalTimeBigBadge: "total-time-big-badge",
-    typeAnswerTotalTimeBadge: "type-answer-total-time-badge",
+    typeAnswerTotalTimeBadge: "type-answer-bottom-middle-box",
     avgTimeLabel: "avg-time-label",
     numberOfReviews: "number-of-reviews",
-    numberOfReviewsOnTypeAnswer: "type-answer-nOfReviews",
+    numberOfReviewsOnTypeAnswer: "type-answer-top-middle-box",
+    test: "test",
   };
 
   var animation = {
@@ -162,6 +171,7 @@
   var avgTime = "{{info-TimeAvg:}}";
   var totalTime = "{{info-TimeTotal:}}";
   var numberOfReviews = "{{info-Reviews:}}";
+  var tags = "{{Tags}}";
   var avgTimeInSeconds;
 
   if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -339,10 +349,15 @@
   if (ids.numberOfReviewsOnTypeAnswer) {
     updateInnerHTML(
       ids.numberOfReviewsOnTypeAnswer,
-      `${numberOfReviews || `New Card`}`,
+      `${`x${numberOfReviews}` || `New Card`}`,
     );
   }
 
+  if (tags.includes("DigitMemory")) {
+    if (ids.test) {
+      updateInnerHTML(ids.test, `${tags || `Initial value of tags list`}`);
+    }
+  }
   // Initial visual reset
   ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
   ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));
@@ -370,7 +385,7 @@ You can include information about the current card:
 - {{info-Type:}} - 0=suspended, 1=learning, 2=normal, 3=relearning
 - {{info-Nid:}} - note id
 - {{info-Mod:}} - last modification date
-- {{info-Usn:}} - universal serial number which is incremented everytime you upload to AnkiWeb
+- {{info-Usn:}} - universal serial number which is incremented every time you upload to AnkiWeb
 - {{info-Factor:}} - the easiness of a card, e.g. 2500 would be 250%
 - {{info-Ease:}} - the easiness of a card, e.g. 250 is the default Anki uses for new cards. More readable version of "Factor"
 - {{info-Review?:}} - is this card being reviewed?
