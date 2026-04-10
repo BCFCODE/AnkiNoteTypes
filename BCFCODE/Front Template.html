@@ -13,8 +13,7 @@
   <div>{{Front}}</div>
   {{/Front}}
 
-  <!-- <div class="total-time" id="total-time-big-badge">{{info-TimeTotal:}}</div> -->
-  <div class="total-time" id="test"></div>
+  <div id="test"></div>
 
   <div class="deckInfo">
     <h6>
@@ -40,12 +39,18 @@
     <div class="type-answer-input-container">
       <!-- TYPE ANSWER TOP CONTAINER -->
       <div class="type-answer-top-container">
-        <div class="type-answer-top-left-box" id="type-answer-top-left-box">00:00</div>
+        <div
+          class="type-answer-top-left-box"
+          id="type-answer-top-left-box"
+        ></div>
         <div
           class="number-of-reviews type-answer-top-middle-box"
           id="type-answer-top-middle-box"
         ></div>
-        <div class="type-answer-top-right-box" id="type-answer-top-right-box">00:00</div>
+        <div
+          class="type-answer-top-right-box"
+          id="type-answer-top-right-box"
+        ></div>
       </div>
       <div>{{type:Answer}}</div>
       <!-- TYPE ANSWER MIDDLE CONTAINER -->
@@ -57,12 +62,22 @@
       <div class="input-progress-bar" id="input-progress-bar"></div>
       <!-- TYPE ANSWER BOTTOM CONTAINER -->
       <div class="type-answer-bottom-container">
-        <div class="type-answer-bottom-left-box" id="type-answer-bottom-left-box">00:00</div>
+        <div
+          class="type-answer-bottom-left-box"
+          id="type-answer-bottom-left-box"
+        >
+          00:00
+        </div>
         <div
           class="type-answer-bottom-middle-box total-time number-of-reviews type-answer-top-middle-box"
           id="type-answer-bottom-middle-box"
         ></div>
-        <div class="type-answer-bottom-right-box" id="type-answer-bottom-right-box">00:00</div>
+        <div
+          class="type-answer-bottom-right-box"
+          id="type-answer-bottom-right-box"
+        >
+          00:00
+        </div>
       </div>
     </div>
   </div>
@@ -118,11 +133,12 @@
     daysAgo: "days-ago",
     bottomRightLittleLabel: "bottom-right-little-label",
     totalTime: "total-time",
-    totalTimeBigBadge: "total-time-big-badge",
-    typeAnswerTotalTimeBadge: "type-answer-bottom-middle-box",
     avgTimeLabel: "avg-time-label",
     numberOfReviews: "number-of-reviews",
-    numberOfReviewsOnTypeAnswer: "type-answer-top-middle-box",
+    typeAnswerTopLeftBox: "type-answer-top-left-box",
+    typeAnswerTopRightBox: "type-answer-top-right-box",
+    typeAnswerTopMiddleBox: "type-answer-top-middle-box",
+    typeAnswerBottomMiddleBox: "type-answer-bottom-middle-box",
     test: "test",
   };
 
@@ -335,28 +351,50 @@
     addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
   }
 
-  if (ids.typeAnswerTotalTimeBadge) {
+  if (ids.typeAnswerBottomMiddleBox) {
     updateInnerHTML(
-      ids.typeAnswerTotalTimeBadge,
+      ids.typeAnswerBottomMiddleBox,
       `${summarizeTotalTime(totalTime) || `New`}`,
     );
-    addClass(ids.typeAnswerTotalTimeBadge, animation.colorPulse["2s"]);
+    addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
   }
 
   if (ids.numberOfReviews) {
     updateInnerHTML(ids.numberOfReviews, `${numberOfReviews || `0`}`);
   }
-  if (ids.numberOfReviewsOnTypeAnswer) {
+  if (ids.typeAnswerTopMiddleBox) {
     updateInnerHTML(
-      ids.numberOfReviewsOnTypeAnswer,
+      ids.typeAnswerTopMiddleBox,
       `${`x${numberOfReviews}` || `New Card`}`,
     );
   }
 
   if (tags.includes("DigitMemory")) {
-    if (ids.test) {
-      updateInnerHTML(ids.test, `${tags || `Initial value of tags list`}`);
+    const reg = {
+      digits: /\b\d+Digits\b/,
+      direction: /\b(Forward|Backward)\b/i,
+    };
+
+    if (ids.typeAnswerTopLeftBox) {
+      const [directionText] = tags.match(reg.direction);
+      updateInnerHTML(
+        ids.typeAnswerTopLeftBox,
+        `${directionText || `xDirection`}`,
+      );
     }
+
+    if (ids.typeAnswerTopRightBox) {
+      const digitsText = tags.match(reg.digits);
+      updateInnerHTML(ids.typeAnswerTopRightBox, `${digitsText || `xDigits`}`);
+    }
+
+    // if (ids.typeAnswerTopRightBox) {
+    //   const [directionText] = tags.match(reg.direction);
+    //   updateInnerHTML(
+    //     ids.typeAnswerTopRightBox,
+    //     `${directionText || `xDirection`}`,
+    //   );
+    // }
   }
   // Initial visual reset
   ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
