@@ -69,7 +69,7 @@
           00:00
         </div>
         <div
-          class="type-answer-bottom-middle-box total-time number-of-reviews type-answer-top-middle-box"
+          class="type-answer-bottom-middle-box number-of-reviews type-answer-top-middle-box"
           id="type-answer-bottom-middle-box"
         ></div>
         <div
@@ -434,23 +434,13 @@
 
     if (/SentenceMemory/.test(tags)) {
       if (ids.typeAnswerTopLeftBox) {
-        const nLaps = +parseInt(numberOfLapses);
-        let lapsText;
-        if (nLaps === 0) {
-          lapsText = "0 laps";
-          addClass(ids.typeAnswerTopLeftBox, color.success);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
-        } else if (nLaps === 1) {
-          lapsText = `${nLaps} lap`;
-          addClass(ids.typeAnswerTopLeftBox, color.warning);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
-        } else {
-          lapsText = `${nLaps} laps`;
-          addClass(ids.typeAnswerTopLeftBox, color.danger);
-          addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["500ms"]);
-        }
-        updateInnerText(ids.typeAnswerTopLeftBox, `${lapsText}`);
+        updateInnerHTML(
+          ids.typeAnswerTopLeftBox,
+          `${summarizeTotalTime(totalTime) || `New`}`,
+        );
+        addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["2s"]);
       }
+
       if (ids.typeAnswerTopRightBox) {
         const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
         const textFormat = {
@@ -473,6 +463,28 @@
           addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
         }
         updateInnerText(ids.typeAnswerTopRightBox, timesAgoText);
+      }
+
+      if (ids.typeAnswerBottomMiddleBox) {
+        const nLaps = +parseInt(numberOfLapses);
+        let lapsText;
+        if (nLaps === 0) {
+          lapsText = "0 laps";
+          addClass(ids.typeAnswerBottomMiddleBox, color.success);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
+        } else if (nLaps === 1) {
+          lapsText = `${nLaps} lap`;
+          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
+        } else {
+          lapsText = `${nLaps} laps`;
+          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
+          addClass(
+            ids.typeAnswerBottomMiddleBox,
+            animation.colorPulse["500ms"],
+          );
+        }
+        updateInnerText(ids.typeAnswerBottomMiddleBox, `${lapsText}`);
       }
     }
     // Initial visual reset
