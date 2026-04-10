@@ -151,6 +151,10 @@
     },
   };
 
+  var color = {
+    danger: "color-danger",
+  };
+
   function extractNumberFromString(string) {
     return +string.replace(/[^\d.]/g, "") || 0;
   }
@@ -213,6 +217,11 @@
   function updateInnerHTML(id, value) {
     var el = document.getElementById(id);
     if (el) el.innerHTML = value;
+  }
+
+  function updateInnerText(id, value) {
+    var el = document.getElementById(id);
+    if (el) el.innerText = value;
   }
 
   function updateInputPlaceholder(inputId, value) {
@@ -370,31 +379,31 @@
   }
 
   if (tags.includes("DigitMemory")) {
-    const reg = {
-      digits: /\b\d+Digits\b/,
-      direction: /\b(Forward|Backward)\b/i,
-    };
+    const digitsText = tags.match(/\b\d+Digits\b/) || "xDigits";
+
+    let topLeftText, topRightText;
+    if (tags.includes("Forward")) {
+      topRightText = ">";
+      topLeftText = digitsText;
+      addClass(ids.typeAnswerTopRightBox, color.danger);
+      addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+    }
+    if (tags.includes("Backward")) {
+      topLeftText = "<";
+      topRightText = digitsText;
+      addClass(ids.typeAnswerTopLeftBox, color.danger);
+      addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
+    }
 
     if (ids.typeAnswerTopLeftBox) {
-      const [directionText] = tags.match(reg.direction);
-      updateInnerHTML(
-        ids.typeAnswerTopLeftBox,
-        `${directionText || `xDirection`}`,
+      updateInnerText(ids.typeAnswerTopLeftBox, `${topLeftText || `xDigits`}`);
+    }
+    if (ids.typeAnswerTopRightBox) {
+      updateInnerText(
+        ids.typeAnswerTopRightBox,
+        `${topRightText || `xDirection`}`,
       );
     }
-
-    if (ids.typeAnswerTopRightBox) {
-      const digitsText = tags.match(reg.digits);
-      updateInnerHTML(ids.typeAnswerTopRightBox, `${digitsText || `xDigits`}`);
-    }
-
-    // if (ids.typeAnswerTopRightBox) {
-    //   const [directionText] = tags.match(reg.direction);
-    //   updateInnerHTML(
-    //     ids.typeAnswerTopRightBox,
-    //     `${directionText || `xDirection`}`,
-    //   );
-    // }
   }
   // Initial visual reset
   ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));

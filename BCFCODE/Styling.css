@@ -1,5 +1,10 @@
 :root {
-  --text-color: hsl(20, 40%, 80%);
+  --initial-text-color: hsl(20, 40%, 80%);
+  --color-danger: red;
+}
+
+.color-danger {
+  color: var(--color-danger);
 }
 
 .card {
@@ -63,7 +68,7 @@ pre {
   /* margin-top: 100px; */
   min-width: 1000px;
   min-height: 250px;
-  color: var(--text-color);
+  color: var(--initial-text-color);
   border: 2px solid hsl(60, 100%, 50%, 0.4);
   box-shadow: 0 0 50px hsla(30, 100%, 50%, 0.4);
   height: auto;
@@ -493,7 +498,7 @@ input#typeans {
 
 @keyframes color-pulse-animation {
   50% {
-    color: var(--text-color);
+    color: var(--initial-text-color);
   }
 }
 
