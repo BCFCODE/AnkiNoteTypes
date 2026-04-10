@@ -13,7 +13,7 @@
   <div>{{Front}}</div>
   {{/Front}}
 
-  <div id="test"></div>
+  <div id="console"></div>
 
   <div class="deckInfo">
     <h6>
@@ -141,7 +141,7 @@
       typeAnswerTopRightBox: "type-answer-top-right-box",
       typeAnswerTopMiddleBox: "type-answer-top-middle-box",
       typeAnswerBottomMiddleBox: "type-answer-bottom-middle-box",
-      test: "test",
+      console: "console",
     };
 
     var animation = {
@@ -159,6 +159,10 @@
       success: "color-success",
       warning: "color-warning",
     };
+
+    function console(value) {
+      updateInnerText(ids.console, `Console >>> ${value}`);
+    }
 
     function parseString(string) {
       const parsed = {};
@@ -190,7 +194,8 @@
 
     function getNumberOfDaysAgo(date) {
       const d = new Date(date);
-      if (isNaN(d)) return 0;
+      const dateIsNotValid = isNaN(d) || date === "";
+      if (dateIsNotValid) return -1;
       return Math.floor((Date.now() - d) / 864e5);
     }
 
@@ -198,17 +203,19 @@
       const nOfWeeks = Math.round(nOfDaysAgo / 7);
       const nOfMonths = Math.round(nOfDaysAgo / 30.4);
       const nOfYears = Math.round(nOfDaysAgo / 365.25);
-      return nOfDaysAgo === 0
-        ? textFormat.today
-        : nOfDaysAgo === 1
-          ? textFormat.yesterday
-          : nOfDaysAgo < 7
-            ? `${nOfDaysAgo}${textFormat.daysAgo}`
-            : nOfDaysAgo < 31
-              ? `${nOfWeeks}${textFormat.weeksAgo}`
-              : nOfDaysAgo < 365
-                ? `${nOfMonths}${textFormat.monthAgo}`
-                : `${nOfYears}${textFormat.yearsAgo}`;
+      return nOfDaysAgo < 0
+        ? textFormat.dateIsNotValid
+        : nOfDaysAgo === 0
+          ? textFormat.today
+          : nOfDaysAgo === 1
+            ? textFormat.yesterday
+            : nOfDaysAgo < 7
+              ? `${nOfDaysAgo}${textFormat.daysAgo}`
+              : nOfDaysAgo < 31
+                ? `${nOfWeeks}${textFormat.weeksAgo}`
+                : nOfDaysAgo < 365
+                  ? `${nOfMonths}${textFormat.monthAgo}`
+                  : `${nOfYears}${textFormat.yearsAgo}`;
     }
 
     var createdAt = "{{info-Date_Created:}}";
@@ -310,6 +317,7 @@
 
           changeStyle(ids.inputProgressBar, "background", "red");
           changeStyle(ids.cardProgressBar, "background", "red");
+
           return;
         }
 
@@ -317,7 +325,6 @@
         const m = Math.floor(secLeft / 60);
         const s = secLeft % 60;
         updateInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
-
         const msToNext = 1000 - (leftMs % 1000);
         const timeoutId = setTimeout(tick, msToNext > 50 ? msToNext : 1000);
         window.timerTimeouts.push(timeoutId);
@@ -369,6 +376,7 @@
       const nOfDaysAgo = getNumberOfDaysAgo(createdAt);
       const [day, week, month, year] = [1, 7, 30, 365];
       const textFormat = {
+        dateIsNotValid: "New",
         today: "today",
         yesterday: "yesterday",
         daysAgo: ` day${nOfDaysAgo >= 2 * day ? "s" : ""}`,
@@ -377,6 +385,7 @@
         yearsAgo: ` year${nOfDaysAgo >= 2 * year ? "s" : ""}`,
       };
       updateInnerHTML(ids.timeAgo, timeAgoTextFormat(nOfDaysAgo, textFormat));
+
       addClass(ids.timeAgo, color.success);
       addClass(ids.timeAgo, animation.colorPulse["1s"]);
     }
@@ -420,7 +429,8 @@
       const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
       const year = 365;
       const textFormat = {
-        today: "Today",
+        dateIsNotValid: "New",
+        today: "<24h",
         yesterday: "24h",
         daysAgo: "d",
         weeksAgo: "w",
@@ -432,7 +442,7 @@
 
       if (/SentenceMemory/.test(tags)) {
         if (ids.typeAnswerTopLeftBox) {
-          if (nOfDaysAgo === 0) {
+          if (nOfDaysAgo < 1) {
             addClass(ids.typeAnswerTopLeftBox, color.danger);
             addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["500ms"]);
           } else if (nOfDaysAgo === 1) {
@@ -469,6 +479,7 @@
             addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
           }
         }
+
         if (/Full/.test(tags)) {
           if (totalSeconds < 6 * minute) {
             addClass(ids.typeAnswerTopRightBox, color.success);
