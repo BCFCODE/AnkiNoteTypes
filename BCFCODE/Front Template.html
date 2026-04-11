@@ -119,11 +119,21 @@
 
 <script>
   (() => {
-    // Clear any pending timeouts from previous cards
-    if (window.timerTimeouts) {
-      window.timerTimeouts.forEach(clearTimeout);
+    function clearPendingTimeouts() {
+      if (window.timerTimeouts) {
+        window.timerTimeouts.forEach(clearTimeout);
+      }
+      window.timerTimeouts = [];
     }
-    window.timerTimeouts = [];
+    clearPendingTimeouts();
+
+    function clearPendingIntervals() {
+      if (window.timerIntervals) {
+        window.timerIntervals.forEach(clearInterval);
+      }
+      window.timerIntervals = [];
+    }
+    clearPendingIntervals();
 
     var ids = {
       cardProgressBar: "card-progress-bar",
@@ -146,7 +156,10 @@
 
     var animation = {
       sizePulse: "size-pulse-animation",
-      opacityPulse: "opacity-pulse-animation-1s-80",
+      opacityPulse: {
+        "500ms-0": "opacity-pulse-animation-500ms-0",
+        "1s-80": "opacity-pulse-animation-1s-80",
+      },
       colorPulse: {
         "500ms": "color-pulse-animation-500ms",
         "1s": "color-pulse-animation-1s",
@@ -311,6 +324,7 @@
         if (leftMs <= 0) {
           ids.countDownTimer.forEach((countDownId) => {
             updateInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
+            addClass(countDownId, color.warning);
             addClass(countDownId, animation.sizePulse);
           });
           // inputProgressEl.style.width = "0%"
@@ -391,7 +405,6 @@
     }
 
     if (ids.createdAt) updateInnerHTML(ids.createdAt, createdAt);
-    // addClass(ids.createdAt, animation.opacityPulse);
 
     if (ids.totalTime) {
       updateInnerHTML(
@@ -524,11 +537,27 @@
         addClass(ids.typeAnswerTopRightBox, color.danger);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
       }
+
       if (/Backward/i.test(tags)) {
-        topLeftText = "<";
+        leftArrow = " <";
         topRightText = digitsText;
-        addClass(ids.typeAnswerTopLeftBox, color.danger);
-        addClass(ids.typeAnswerTopLeftBox, animation.colorPulse["1s"]);
+
+        function runLeftArrowAnimation() {
+          const backwardIntervalID = setInterval(() => {
+            leftArrow =
+              leftArrow === " <"
+                ? " <  <"
+                : leftArrow === " <  <"
+                  ? " < <  <"
+                  : " <";
+            updateInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
+          }, 100);
+          window.timerIntervals.push(backwardIntervalID);
+        }
+
+        addClass(ids.typeAnswerTopLeftBox, color.warning);
+        addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
+        runLeftArrowAnimation();
       }
 
       if (ids.typeAnswerTopLeftBox) {

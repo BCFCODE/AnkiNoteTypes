@@ -473,8 +473,11 @@ input#typeans {
 }
 
 .size-pulse-animation {
-  color: var(--color-success);
   animation: pulse-size-animation 1s infinite;
+}
+
+.opacity-pulse-animation-500ms-0 {
+  animation: pulse-opacity-animation-0 500ms infinite;
 }
 
 .opacity-pulse-animation-1s-80 {
@@ -502,6 +505,12 @@ input#typeans {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes pulse-opacity-animation-0 {
+  50% {
+    opacity: 0%;
   }
 }
 
