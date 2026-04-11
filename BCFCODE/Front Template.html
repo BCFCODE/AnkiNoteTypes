@@ -231,13 +231,13 @@
                   : `${nOfYears}${textFormat.yearsAgo}`;
     }
 
-    var createdAt = "{{info-Date_Created:}}";
-    var avgTime = "{{info-TimeAvg:}}";
-    var totalTime = "{{info-TimeTotal:}}";
-    var numberOfReviews = "{{info-Reviews:}}";
-    var numberOfLapses = "{{info-Lapses:}}";
-    var tags = "{{Tags}}";
-    var lastReview = "{{info-LastReview:}}";
+    const infoDateCreated = "{{info-Date_Created:}}";
+    const infoTimeAvg = "{{info-TimeAvg:}}";
+    const infoTimeTotal = "{{info-TimeTotal:}}";
+    const infoReviews = "{{info-Reviews:}}";
+    const infoLapses = "{{info-Lapses:}}";
+    const Tags = "{{Tags}}";
+    const infoLastReview = "{{info-LastReview:}}";
     var avgTimeInSeconds;
 
     if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -245,9 +245,9 @@
       avgTimeInSeconds = 60;
     }
 
-    if (/\d/.test(avgTime)) {
-      const { number } = parseString(avgTime);
-      if (/minute/i.test(avgTime)) number *= 60;
+    if (/\d/.test(infoTimeAvg)) {
+      const { number } = parseString(infoTimeAvg);
+      if (/minute/i.test(infoTimeAvg)) number *= 60;
       if (number > 0) avgTimeInSeconds = Math.round(number);
     }
 
@@ -326,7 +326,7 @@
             updateInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
             addClass(countDownId, color.warning);
             addClass(countDownId, animation.sizePulse);
-            addClass(countDownId, animation.colorPulse['1s']);
+            addClass(countDownId, animation.colorPulse["1s"]);
           });
           // inputProgressEl.style.width = "0%"
 
@@ -383,12 +383,12 @@
     updateInnerHTML(ids.bottomRightLittleLabel, deckName);
 
     // Deck info
-    if (!/\d/.test(avgTime)) {
+    if (!/\d/.test(infoTimeAvg)) {
       updateInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
     }
 
     if (ids.timeAgo) {
-      const nOfDaysAgo = getNumberOfDaysAgo(createdAt);
+      const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
       const [day, week, month, year] = [1, 7, 30, 365];
       const textFormat = {
         dateIsNotValid: "New",
@@ -405,23 +405,26 @@
       addClass(ids.timeAgo, animation.colorPulse["1s"]);
     }
 
-    if (ids.createdAt) updateInnerHTML(ids.createdAt, createdAt);
+    if (ids.createdAt) updateInnerHTML(ids.createdAt, infoDateCreated);
 
     if (ids.totalTime) {
       updateInnerHTML(
         ids.totalTime,
-        `Total time: ${totalTime || `0 (new card)`}`,
+        `Total time: ${infoTimeTotal || `0 (new card)`}`,
       );
       addClass(ids.totalTime, animation.colorPulse["2s"]);
     }
 
     if (ids.totalTimeBigBadge) {
-      updateInnerHTML(ids.totalTimeBigBadge, `${totalTime || `New card...`}`);
+      updateInnerHTML(
+        ids.totalTimeBigBadge,
+        `${infoTimeTotal || `New card...`}`,
+      );
       addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
-      const parsed = parseString(totalTime);
+      const parsed = parseString(infoTimeTotal);
       updateInnerHTML(
         ids.typeAnswerBottomMiddleBox,
         `${summarizeTotalTime(parsed) || `New`}`,
@@ -430,17 +433,17 @@
     }
 
     if (ids.numberOfReviews) {
-      updateInnerHTML(ids.numberOfReviews, `${numberOfReviews || `0`}`);
+      updateInnerHTML(ids.numberOfReviews, `${infoReviews || `0`}`);
     }
     if (ids.typeAnswerTopMiddleBox) {
       updateInnerHTML(
         ids.typeAnswerTopMiddleBox,
-        `${`x${numberOfReviews}` || `New Card`}`,
+        `${`x${infoReviews}` || `New Card`}`,
       );
     }
 
     if (ids.typeAnswerTopLeftBox) {
-      const nOfDaysAgo = getNumberOfDaysAgo(lastReview);
+      const nOfDaysAgo = getNumberOfDaysAgo(infoLastReview);
       const year = 365;
       const textFormat = {
         dateIsNotValid: "New",
@@ -454,7 +457,7 @@
       const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
       updateInnerText(ids.typeAnswerTopLeftBox, timesAgoText);
 
-      if (/SentenceMemory/.test(tags)) {
+      if (/SentenceMemory/.test(Tags)) {
         if (ids.typeAnswerTopLeftBox) {
           if (nOfDaysAgo < 1) {
             addClass(ids.typeAnswerTopLeftBox, color.danger);
@@ -471,7 +474,7 @@
     }
 
     if (ids.typeAnswerTopRightBox) {
-      const parsed = parseString(totalTime);
+      const parsed = parseString(infoTimeTotal);
       const totalSeconds = convertTotalTimeToSeconds(parsed);
       updateInnerHTML(
         ids.typeAnswerTopRightBox,
@@ -480,8 +483,8 @@
 
       const minute = 60;
 
-      if (/SentenceMemory/.test(tags)) {
-        if (/Partial/.test(tags)) {
+      if (/SentenceMemory/.test(Tags)) {
+        if (/Partial/.test(Tags)) {
           if (totalSeconds < 3 * minute) {
             addClass(ids.typeAnswerTopRightBox, color.success);
             addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
@@ -494,7 +497,7 @@
           }
         }
 
-        if (/Full/.test(tags)) {
+        if (/Full/.test(Tags)) {
           if (totalSeconds < 6 * minute) {
             addClass(ids.typeAnswerTopRightBox, color.success);
             addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
@@ -510,36 +513,62 @@
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
-      const { number: nLaps } = parseString(numberOfLapses);
-      let lapsText;
-      if (nLaps === 0) {
-        lapsText = "0 laps";
-        addClass(ids.typeAnswerBottomMiddleBox, color.success);
-        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
-      } else if (nLaps === 1) {
-        lapsText = `${nLaps} lap`;
-        addClass(ids.typeAnswerBottomMiddleBox, color.warning);
-        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
-      } else {
-        lapsText = `${nLaps} laps`;
-        addClass(ids.typeAnswerBottomMiddleBox, color.danger);
-        addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["500ms"]);
+      function setDefaultCustomStylesForLaps(numberOfLapses) {
+        if (numberOfLapses === 0) {
+          addClass(ids.typeAnswerBottomMiddleBox, color.success);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
+        } else if (numberOfLapses === 1) {
+          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
+        } else {
+          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
+          addClass(
+            ids.typeAnswerBottomMiddleBox,
+            animation.colorPulse["500ms"],
+          );
+        }
       }
-      updateInnerText(ids.typeAnswerBottomMiddleBox, `${lapsText}`);
+      function setLapsInnerText(numberOfLapses) {
+        let lapsInnerText =
+          numberOfLapses === 0
+            ? "0 laps"
+            : `${numberOfLapses} lap${numberOfLapses > 1 ? "s" : ""}`;
+        updateInnerText(ids.typeAnswerBottomMiddleBox, `${lapsInnerText}`);
+      }
+
+      const { number: numberOfLapses } = parseString(infoLapses);
+
+      setLapsInnerText(numberOfLapses);
+
+      if (/DigitMemory/.test(Tags)) {
+        if (numberOfLapses >= 15) {
+          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
+          addClass(
+            ids.typeAnswerBottomMiddleBox,
+            animation.colorPulse["500ms"],
+          );
+        } else if (numberOfLapses > 5) {
+          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
+        } else {
+          addClass(ids.typeAnswerBottomMiddleBox, color.success);
+          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
+        }
+      } else setDefaultCustomStylesForLaps();
     }
 
-    if (/DigitMemory/.test(tags)) {
-      const digitsText = tags.match(/\b\d+Digits\b/);
+    if (/DigitMemory/.test(Tags)) {
+      const digitsText = Tags.match(/\b\d+Digits\b/);
 
       let topLeftText, topRightText;
-      if (/Forward/i.test(tags)) {
+      if (/Forward/i.test(Tags)) {
         topRightText = ">";
         topLeftText = digitsText;
         addClass(ids.typeAnswerTopRightBox, color.danger);
         addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
       }
 
-      if (/Backward/i.test(tags)) {
+      if (/Backward/i.test(Tags)) {
         leftArrow = " <";
         topRightText = digitsText;
 
