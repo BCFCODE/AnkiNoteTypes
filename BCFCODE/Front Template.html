@@ -119,23 +119,7 @@
 
 <script>
   (() => {
-    function clearPendingTimeouts() {
-      if (window.timerTimeouts) {
-        window.timerTimeouts.forEach(clearTimeout);
-      }
-      window.timerTimeouts = [];
-    }
-    clearPendingTimeouts();
-
-    function clearPendingIntervals() {
-      if (window.timerIntervals) {
-        window.timerIntervals.forEach(clearInterval);
-      }
-      window.timerIntervals = [];
-    }
-    clearPendingIntervals();
-
-    var ids = {
+    const ids = {
       cardProgressBar: "card-progress-bar",
       inputProgressBar: "input-progress-bar",
       countUpTimer: ["type-answer-bottom-left-box", "top-left-box"],
@@ -154,7 +138,7 @@
       console: "console",
     };
 
-    var animation = {
+    const animation = {
       sizePulse: "size-pulse-animation",
       opacityPulse: {
         "500ms-0": "opacity-pulse-animation-500ms-0",
@@ -167,11 +151,37 @@
       },
     };
 
-    var color = {
+    const color = {
       danger: "color-danger",
       success: "color-success",
       warning: "color-warning",
     };
+
+    const infoDateCreated = "{{info-Date_Created:}}";
+    const infoTimeAvg = "{{info-TimeAvg:}}";
+    const infoTimeTotal = "{{info-TimeTotal:}}";
+    const infoReviews = "{{info-Reviews:}}";
+    const infoLapses = "{{info-Lapses:}}";
+    const Tags = "{{Tags}}";
+    const infoLastReview = "{{info-LastReview:}}";
+    // const infoIvl = " {{info-Ivl:}}";
+    var avgTimeInSeconds;
+
+    function clearPendingTimeouts() {
+      if (window.timerTimeouts) {
+        window.timerTimeouts.forEach(clearTimeout);
+      }
+      window.timerTimeouts = [];
+    }
+    clearPendingTimeouts();
+
+    function clearPendingIntervals() {
+      if (window.timerIntervals) {
+        window.timerIntervals.forEach(clearInterval);
+      }
+      window.timerIntervals = [];
+    }
+    clearPendingIntervals();
 
     function console(value) {
       setInnerText(ids.console, `Console >>> ${value}`);
@@ -199,7 +209,7 @@
 
     function getSummarizedTotalTimeText() {
       const parsed = parseString(infoTimeTotal);
-      const summarizedTotalTimeText = `${summarizeTotalTime(parsed) || `New`}`;
+      const summarizedTotalTimeText = summarizeTotalTime(parsed);
       return summarizedTotalTimeText;
     }
 
@@ -218,7 +228,18 @@
       return Math.floor((Date.now() - d) / 864e5);
     }
 
-    function timeAgoTextFormat(nOfDaysAgo, textFormat) {
+    function getTimeAgoText(
+      nOfDaysAgo,
+      textFormat = {
+        dateIsNotValid: "New",
+        today: "today",
+        yesterday: "yesterday",
+        daysAgo: ` day${nOfDaysAgo >= 2 * 1 ? "s" : ""}`,
+        weeksAgo: ` week${nOfDaysAgo >= 2 * 7 ? "s" : ""}`,
+        monthAgo: ` month${nOfDaysAgo >= 2 * 30 ? "s" : ""}`,
+        yearsAgo: ` year${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+      },
+    ) {
       const nOfWeeks = Math.round(nOfDaysAgo / 7);
       const nOfMonths = Math.round(nOfDaysAgo / 30.4);
       const nOfYears = Math.round(nOfDaysAgo / 365.25);
@@ -236,15 +257,6 @@
                   ? `${nOfMonths}${textFormat.monthAgo}`
                   : `${nOfYears}${textFormat.yearsAgo}`;
     }
-
-    const infoDateCreated = "{{info-Date_Created:}}";
-    const infoTimeAvg = "{{info-TimeAvg:}}";
-    const infoTimeTotal = "{{info-TimeTotal:}}";
-    const infoReviews = "{{info-Reviews:}}";
-    const infoLapses = "{{info-Lapses:}}";
-    const Tags = "{{Tags}}";
-    const infoLastReview = "{{info-LastReview:}}";
-    var avgTimeInSeconds;
 
     if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
       // New card
@@ -266,7 +278,7 @@
       return deckAddressArr[deckAddressArr.length - 1] || "Deck";
     }
 
-    function updateInnerHTML(id, innerHTML) {
+    function setInnerHTML(id, innerHTML) {
       var el = document.getElementById(id);
       if (el) el.innerHTML = innerHTML;
     }
@@ -336,7 +348,7 @@
 
         if (leftMs <= 0) {
           ids.countDownTimer.forEach((countDownId) => {
-            updateInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
+            setInnerHTML(countDownId, `+${avgTimeInSeconds}s`);
             addClass(countDownId, color.warning);
             addClass(countDownId, animation.sizePulse);
             addClass(countDownId, animation.colorPulse["1s"]);
@@ -352,7 +364,7 @@
         const secLeft = Math.ceil(leftMs / 1000);
         const m = Math.floor(secLeft / 60);
         const s = secLeft % 60;
-        updateInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
+        setInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
         const msToNext = 1000 - (leftMs % 1000);
         const timeoutId = setTimeout(tick, msToNext > 50 ? msToNext : 1000);
         window.timerTimeouts.push(timeoutId);
@@ -371,11 +383,11 @@
         const sec = Math.floor(elapsedMs / 1000);
 
         if (sec >= targetSec) {
-          updateInnerHTML(id, `+${sec - targetSec}s`);
+          setInnerHTML(id, `+${sec - targetSec}s`);
         } else {
           const m = Math.floor(sec / 60);
           const s = sec % 60;
-          updateInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
+          setInnerHTML(id, `${twoDigits(m)}:${twoDigits(s)}`);
         }
 
         const msInto = elapsedMs % 1000;
@@ -393,35 +405,26 @@
     // Deck name etc.
     var deckName = getDeckName();
     updateInputPlaceholder("typeans", deckName);
-    updateInnerHTML(ids.bottomRightLittleLabel, deckName);
+    setInnerHTML(ids.bottomRightLittleLabel, deckName);
 
     // Deck info
     if (!/\d/.test(infoTimeAvg)) {
-      updateInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
+      setInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
     }
 
     if (ids.timeAgo) {
       const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
-      const [day, week, month, year] = [1, 7, 30, 365];
-      const textFormat = {
-        dateIsNotValid: "New",
-        today: "today",
-        yesterday: "yesterday",
-        daysAgo: ` day${nOfDaysAgo >= 2 * day ? "s" : ""}`,
-        weeksAgo: `week${nOfDaysAgo >= 2 * week ? "s" : ""}`,
-        monthAgo: ` month${nOfDaysAgo >= 2 * month ? "s" : ""}`,
-        yearsAgo: ` year${nOfDaysAgo >= 2 * year ? "s" : ""}`,
-      };
-      updateInnerHTML(ids.timeAgo, timeAgoTextFormat(nOfDaysAgo, textFormat));
+      const timeAgoText = getTimeAgoText(nOfDaysAgo);
+      setInnerHTML(ids.timeAgo, timeAgoText);
 
       addClass(ids.timeAgo, color.success);
       addClass(ids.timeAgo, animation.colorPulse["1s"]);
     }
 
-    if (ids.createdAt) updateInnerHTML(ids.createdAt, infoDateCreated);
+    if (ids.createdAt) setInnerHTML(ids.createdAt, infoDateCreated);
 
     if (ids.totalTime) {
-      updateInnerHTML(
+      setInnerHTML(
         ids.totalTime,
         `Total time: ${infoTimeTotal || `0 (new card)`}`,
       );
@@ -429,16 +432,13 @@
     }
 
     if (ids.totalTimeBigBadge) {
-      updateInnerHTML(
-        ids.totalTimeBigBadge,
-        `${infoTimeTotal || `New card...`}`,
-      );
+      setInnerHTML(ids.totalTimeBigBadge, `${infoTimeTotal || `New card...`}`);
       addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
       const parsed = parseString(infoTimeTotal);
-      updateInnerHTML(
+      setInnerText(
         ids.typeAnswerBottomMiddleBox,
         `${summarizeTotalTime(parsed) || `New`}`,
       );
@@ -446,10 +446,10 @@
     }
 
     if (ids.numberOfReviews) {
-      updateInnerHTML(ids.numberOfReviews, `${infoReviews || `0`}`);
+      setInnerHTML(ids.numberOfReviews, `${infoReviews || `0`}`);
     }
     if (ids.typeAnswerTopMiddleBox) {
-      updateInnerHTML(
+      setInnerHTML(
         ids.typeAnswerTopMiddleBox,
         `${`x${infoReviews}` || `New Card`}`,
       );
@@ -457,168 +457,177 @@
 
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
-      function setDefaultTypeAnswerTopLeftBox() {
-        const nOfDaysAgo = getNumberOfDaysAgo(infoLastReview);
-        const year = 365;
-        const textFormat = {
-          dateIsNotValid: "New",
-          today: "<24h",
-          yesterday: "24h",
-          daysAgo: "d",
-          weeksAgo: "w",
-          monthAgo: "mo",
-          yearsAgo: `y${nOfDaysAgo >= 2 * year ? "s" : ""}`,
-        };
-        const timesAgoText = timeAgoTextFormat(nOfDaysAgo, textFormat);
-        setInnerText(ids.typeAnswerTopLeftBox, timesAgoText);
-      }
+      const nOfDaysAgo = getNumberOfDaysAgo(infoLastReview);
+      const timeAgoText = getTimeAgoText(nOfDaysAgo, {
+        dateIsNotValid: "New",
+        today: "< 24h",
+        yesterday: "24h",
+        daysAgo: "d",
+        weeksAgo: "w",
+        monthAgo: "mo",
+        yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+      });
+      setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+
       if (/DigitMemory/.test(Tags)) {
         const innerText = getSummarizedTotalTimeText();
         setInnerTextAfterDelay(ids.typeAnswerTopLeftBox, 1000, innerText);
       } else if (/SentenceMemory/.test(Tags)) {
-        if (id) {
-          if (nOfDaysAgo < 1) {
-            addClass(id, color.danger);
-            addClass(id, animation.colorPulse["500ms"]);
-          } else if (nOfDaysAgo === 1) {
-            addClass(id, color.warning);
-            addClass(id, animation.colorPulse["1s"]);
-          } else {
-            addClass(id, color.success);
-            addClass(id, animation.colorPulse["2s"]);
-          }
+        if (nOfDaysAgo < 1) {
+          addClass(id, color.danger);
+          addClass(id, animation.colorPulse["500ms"]);
+        } else if (nOfDaysAgo === 1) {
+          addClass(id, color.warning);
+          addClass(id, animation.colorPulse["1s"]);
+        } else {
+          addClass(id, color.success);
+          addClass(id, animation.colorPulse["2s"]);
         }
-      } else setDefaultTypeAnswerTopLeftBox();
+      }
     }
 
     if (ids.typeAnswerTopRightBox) {
+      const id = ids.typeAnswerTopRightBox;
+
+      function setDateCreatedTimeAgoInnerText() {
+        const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
+        const innerText = getTimeAgoText(nOfDaysAgo, {
+          dateIsNotValid: "New",
+          today: "< 24h",
+          yesterday: "24h",
+          daysAgo: "d",
+          weeksAgo: "w",
+          monthAgo: "mo",
+          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+        });
+        setInnerText(id, innerText);
+      }
+      
+      setDateCreatedTimeAgoInnerText();
+
       const parsed = parseString(infoTimeTotal);
-      const totalSeconds = convertTotalTimeToSeconds(parsed);
-      updateInnerHTML(
-        ids.typeAnswerTopRightBox,
-        `${summarizeTotalTime(parsed) || `New`}`,
-      );
+      const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
+      const summarizedTotalTimeInnerText = summarizeTotalTime(parsed);
+
+      setInnerTextAfterDelay(id, 2000, summarizedTotalTimeInnerText);
 
       const minute = 60;
 
       if (/SentenceMemory/.test(Tags)) {
         if (/Partial/.test(Tags)) {
-          if (totalSeconds < 3 * minute) {
-            addClass(ids.typeAnswerTopRightBox, color.success);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
-          } else if (totalSeconds < 6 * minute) {
-            addClass(ids.typeAnswerTopRightBox, color.warning);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          if (totalTimeInSeconds < 3 * minute) {
+            addClass(id, color.success);
+            addClass(id, animation.colorPulse["2s"]);
+          } else if (totalTimeInSeconds < 6 * minute) {
+            addClass(id, color.warning);
+            addClass(id, animation.colorPulse["1s"]);
           } else {
-            addClass(ids.typeAnswerTopRightBox, color.danger);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+            addClass(id, color.danger);
+            addClass(id, animation.colorPulse["500ms"]);
           }
         }
 
         if (/Full/.test(Tags)) {
-          if (totalSeconds < 6 * minute) {
-            addClass(ids.typeAnswerTopRightBox, color.success);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["2s"]);
-          } else if (totalSeconds < 12 * minute) {
-            addClass(ids.typeAnswerTopRightBox, color.warning);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
+          if (totalTimeInSeconds < 6 * minute) {
+            addClass(id, color.success);
+            addClass(id, animation.colorPulse["2s"]);
+          } else if (totalTimeInSeconds < 12 * minute) {
+            addClass(id, color.warning);
+            addClass(id, animation.colorPulse["1s"]);
           } else {
-            addClass(ids.typeAnswerTopRightBox, color.danger);
-            addClass(ids.typeAnswerTopRightBox, animation.colorPulse["500ms"]);
+            addClass(id, color.danger);
+            addClass(id, animation.colorPulse["500ms"]);
           }
         }
       }
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
-      function setDefaultTypeAnswerBottomMiddleBox(numberOfLapses) {
-        if (numberOfLapses === 0) {
-          addClass(ids.typeAnswerBottomMiddleBox, color.success);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
-        } else if (numberOfLapses === 1) {
-          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
-        } else {
-          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
-          addClass(
-            ids.typeAnswerBottomMiddleBox,
-            animation.colorPulse["500ms"],
-          );
-        }
-      }
-      function setLapsInnerText(numberOfLapses) {
+      const id = ids.typeAnswerBottomMiddleBox;
+      const { number: numberOfLapses } = parseString(infoLapses);
+
+      function createLapsInnerText(numberOfLapses) {
         let lapsInnerText =
           numberOfLapses === 0
             ? "0 laps"
             : `${numberOfLapses} lap${numberOfLapses > 1 ? "s" : ""}`;
-        setInnerText(ids.typeAnswerBottomMiddleBox, `${lapsInnerText}`);
+        return lapsInnerText;
       }
 
-      const { number: numberOfLapses } = parseString(infoLapses);
+      const lapsInnerText = createLapsInnerText(numberOfLapses);
+      setInnerText(id, lapsInnerText);
 
-      setLapsInnerText(numberOfLapses);
-
-      if (/DigitMemory/.test(Tags)) {
-        if (numberOfLapses >= 15) {
-          addClass(ids.typeAnswerBottomMiddleBox, color.danger);
-          addClass(
-            ids.typeAnswerBottomMiddleBox,
-            animation.colorPulse["500ms"],
-          );
-        } else if (numberOfLapses > 5) {
-          addClass(ids.typeAnswerBottomMiddleBox, color.warning);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["1s"]);
+      function setDefaultTypeAnswerBottomMiddleBox(numberOfLapses) {
+        if (numberOfLapses === 0) {
+          addClass(id, color.success);
+          addClass(id, animation.colorPulse["2s"]);
+        } else if (numberOfLapses === 1) {
+          addClass(id, color.warning);
+          addClass(id, animation.colorPulse["1s"]);
         } else {
-          addClass(ids.typeAnswerBottomMiddleBox, color.success);
-          addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
+          addClass(id, color.danger);
+          addClass(id, animation.colorPulse["500ms"]);
         }
-      } else setDefaultTypeAnswerBottomMiddleBox();
-    }
-
-    if (/DigitMemory/.test(Tags)) {
-      const digitsText = Tags.match(/\b\d+Digits\b/);
-
-      let topLeftText, topRightText;
-      if (/Forward/i.test(Tags)) {
-        topRightText = ">";
-        topLeftText = digitsText;
-        addClass(ids.typeAnswerTopRightBox, color.danger);
-        addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
       }
 
-      if (/Backward/i.test(Tags)) {
-        leftArrow = " <";
-        topRightText = digitsText;
+      if (/SentenceMemory/.test(Tags)) {
+        if (/Partial/.test(Tags))
+          setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
+      } else if (/DigitMemory/.test(Tags)) {
+        const digitsText = Tags.match(/\b\d+Digits\b/);
 
-        function runLeftArrowAnimation() {
-          const backwardIntervalID = setInterval(() => {
-            leftArrow =
-              leftArrow === " <"
-                ? " <  <"
-                : leftArrow === " <  <"
-                  ? " < <  <"
-                  : " <";
-            setInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
-          }, 100);
-          window.timerIntervals.push(backwardIntervalID);
+        let topLeftText, topRightText;
+        if (/Forward/i.test(Tags)) {
+          topRightText = ">";
+          topLeftText = digitsText;
+          addClass(ids.typeAnswerTopRightBox, color.danger);
+          addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
         }
 
-        addClass(ids.typeAnswerTopLeftBox, color.warning);
-        addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
-        runLeftArrowAnimation();
-      }
+        if (/Backward/i.test(Tags)) {
+          leftArrow = " <";
+          topRightText = digitsText;
 
-      if (ids.typeAnswerTopLeftBox) {
-        setInnerText(ids.typeAnswerTopLeftBox, `${topLeftText || `xDigits`}`);
-      }
-      if (ids.typeAnswerTopRightBox) {
-        setInnerText(ids.typeAnswerTopRightBox, `${topRightText || `< x >`}`);
-      }
+          function runLeftArrowAnimation() {
+            const backwardIntervalID = setInterval(() => {
+              leftArrow =
+                leftArrow === " <"
+                  ? " <  <"
+                  : leftArrow === " <  <"
+                    ? " < <  <"
+                    : " <";
+              setInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
+            }, 100);
+            window.timerIntervals.push(backwardIntervalID);
+          }
+
+          addClass(ids.typeAnswerTopLeftBox, color.warning);
+          addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
+          runLeftArrowAnimation();
+        }
+
+        if (ids.typeAnswerTopLeftBox) {
+          setInnerText(ids.typeAnswerTopLeftBox, `${topLeftText || `xDigits`}`);
+        }
+        if (ids.typeAnswerTopRightBox) {
+          setInnerText(ids.typeAnswerTopRightBox, `${topRightText || `< x >`}`);
+        }
+        if (numberOfLapses >= 15) {
+          addClass(id, color.danger);
+          addClass(id, animation.colorPulse["500ms"]);
+        } else if (numberOfLapses > 5) {
+          addClass(id, color.warning);
+          addClass(id, animation.colorPulse["1s"]);
+        } else {
+          addClass(id, color.success);
+          addClass(id, animation.colorPulse["2s"]);
+        }
+      } else setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
     }
 
     // Initial visual reset
-    ids.countUpTimer.forEach((id) => updateInnerHTML(id, "00:00"));
-    ids.countDownTimer.forEach((id) => updateInnerHTML(id, "00:00"));
+    ids.countUpTimer.forEach((id) => setInnerHTML(id, "00:00"));
+    ids.countDownTimer.forEach((id) => setInnerHTML(id, "00:00"));
   })();
 </script>
 
