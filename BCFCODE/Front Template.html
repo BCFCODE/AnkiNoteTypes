@@ -119,6 +119,24 @@
 
 <script>
   (() => {
+    const infoDateCreated = "{{info-Date_Created:}}";
+    const infoTimeAvg = "{{info-TimeAvg:}}";
+    const infoTimeTotal = "{{info-TimeTotal:}}";
+    const infoReviews = "{{info-Reviews:}}";
+    const infoLapses = "{{info-Lapses:}}";
+    const Tags = "{{Tags}}";
+    const tags = ["DigitMemory", "SentenceMemory", "Partial", "Full"];
+    const infoLastReview = "{{info-LastReview:}}";
+    // const infoIvl = " {{info-Ivl:}}";
+
+    const isTag = {
+      DigitMemory: /DigitMemory/.test(Tags),
+      SentenceMemory: /SentenceMemory/.test(Tags),
+      Partial: /Partial/.test(Tags),
+      Full: /Partial/.test(Tags),
+    };
+
+    var avgTimeInSeconds;
     const ids = {
       cardProgressBar: "card-progress-bar",
       inputProgressBar: "input-progress-bar",
@@ -156,16 +174,6 @@
       success: "color-success",
       warning: "color-warning",
     };
-
-    const infoDateCreated = "{{info-Date_Created:}}";
-    const infoTimeAvg = "{{info-TimeAvg:}}";
-    const infoTimeTotal = "{{info-TimeTotal:}}";
-    const infoReviews = "{{info-Reviews:}}";
-    const infoLapses = "{{info-Lapses:}}";
-    const Tags = "{{Tags}}";
-    const infoLastReview = "{{info-LastReview:}}";
-    // const infoIvl = " {{info-Ivl:}}";
-    var avgTimeInSeconds;
 
     function clearPendingTimeouts() {
       if (window.timerTimeouts) {
@@ -469,10 +477,13 @@
       });
       setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
 
-      if (/DigitMemory/.test(Tags)) {
-        const innerText = getSummarizedTotalTimeText();
-        setInnerTextAfterDelay(ids.typeAnswerTopLeftBox, 1000, innerText);
-      } else if (/SentenceMemory/.test(Tags)) {
+      if (isTag.DigitMemory) {
+        function setTotalTimeAfterDelay() {
+          const innerText = getSummarizedTotalTimeText();
+          setInnerTextAfterDelay(ids.typeAnswerTopLeftBox, 2000, innerText);
+        }
+        setTotalTimeAfterDelay();
+      } else if (isTag.SentenceMemory) {
         if (nOfDaysAgo < 1) {
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["500ms"]);
@@ -488,12 +499,13 @@
 
     if (ids.typeAnswerTopRightBox) {
       const id = ids.typeAnswerTopRightBox;
+      const minute = 60;
 
       function setDateCreatedTimeAgoInnerText() {
         const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
         const innerText = getTimeAgoText(nOfDaysAgo, {
           dateIsNotValid: "New",
-          today: "< 24h",
+          today: "Today",
           yesterday: "24h",
           daysAgo: "d",
           weeksAgo: "w",
@@ -502,19 +514,23 @@
         });
         setInnerText(id, innerText);
       }
-      
+
       setDateCreatedTimeAgoInnerText();
 
       const parsed = parseString(infoTimeTotal);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
-      const summarizedTotalTimeInnerText = summarizeTotalTime(parsed);
 
-      setInnerTextAfterDelay(id, 2000, summarizedTotalTimeInnerText);
+      function setTotalTimeAfterDelay() {
+        const summarizedTotalTimeInnerText = summarizeTotalTime(parsed);
+        setInnerTextAfterDelay(id, 3000, summarizedTotalTimeInnerText);
+      }
 
-      const minute = 60;
+      if (!isTag.DigitMemory) {
+        setTotalTimeAfterDelay();
+      }
 
-      if (/SentenceMemory/.test(Tags)) {
-        if (/Partial/.test(Tags)) {
+      if (isTag.SentenceMemory) {
+        if (isTag.Partial) {
           if (totalTimeInSeconds < 3 * minute) {
             addClass(id, color.success);
             addClass(id, animation.colorPulse["2s"]);
@@ -527,11 +543,11 @@
           }
         }
 
-        if (/Full/.test(Tags)) {
-          if (totalTimeInSeconds < 6 * minute) {
+        if (isTag.Full) {
+          if (totalTimeInSeconds < 10 * minute) {
             addClass(id, color.success);
             addClass(id, animation.colorPulse["2s"]);
-          } else if (totalTimeInSeconds < 12 * minute) {
+          } else if (totalTimeInSeconds < 15 * minute) {
             addClass(id, color.warning);
             addClass(id, animation.colorPulse["1s"]);
           } else {
@@ -570,10 +586,10 @@
         }
       }
 
-      if (/SentenceMemory/.test(Tags)) {
-        if (/Partial/.test(Tags))
-          setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
-      } else if (/DigitMemory/.test(Tags)) {
+      if (isTag.SentenceMemory) {
+        if (isTag.Partial) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
+        if (isTag.Full) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
+      } else if (isTag.DigitMemory) {
         const digitsText = Tags.match(/\b\d+Digits\b/);
 
         let topLeftText, topRightText;
