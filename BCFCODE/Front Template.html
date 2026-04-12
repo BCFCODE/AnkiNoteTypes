@@ -125,15 +125,24 @@
     const infoReviews = "{{info-Reviews:}}";
     const infoLapses = "{{info-Lapses:}}";
     const Tags = "{{Tags}}";
-    const tags = ["DigitMemory", "SentenceMemory", "Partial", "Full"];
+    const tags = [
+      "DigitMemory",
+      "SentenceMemory",
+      "Partial",
+      "Full",
+      "Forward",
+      "Backward",
+    ];
     const infoLastReview = "{{info-LastReview:}}";
     // const infoIvl = " {{info-Ivl:}}";
 
     const isTag = {
-      DigitMemory: /DigitMemory/.test(Tags),
-      SentenceMemory: /SentenceMemory/.test(Tags),
-      Partial: /Partial/.test(Tags),
-      Full: /Partial/.test(Tags),
+      DigitMemory: /DigitMemory/i.test(Tags),
+      Forward: /Forward/i.test(Tags),
+      Backward: /Backward/i.test(Tags),
+      SentenceMemory: /SentenceMemory/i.test(Tags),
+      Partial: /Partial/i.test(Tags),
+      Full: /Full/i.test(Tags),
     };
 
     var avgTimeInSeconds;
@@ -219,6 +228,11 @@
       const parsed = parseString(infoTimeTotal);
       const summarizedTotalTimeText = summarizeTotalTime(parsed);
       return summarizedTotalTimeText;
+    }
+
+    function setTotalTimeAfterDelay(id, delay) {
+      const innerText = getSummarizedTotalTimeText();
+      setInnerTextAfterDelay(id, delay, innerText);
     }
 
     function convertTotalTimeToSeconds(parsed) {
@@ -477,13 +491,7 @@
       });
       setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
 
-      if (isTag.DigitMemory) {
-        function setTotalTimeAfterDelay() {
-          const innerText = getSummarizedTotalTimeText();
-          setInnerTextAfterDelay(ids.typeAnswerTopLeftBox, 2000, innerText);
-        }
-        setTotalTimeAfterDelay();
-      } else if (isTag.SentenceMemory) {
+      if (isTag.SentenceMemory) {
         if (nOfDaysAgo < 1) {
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["500ms"]);
@@ -519,15 +527,6 @@
 
       const parsed = parseString(infoTimeTotal);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
-
-      function setTotalTimeAfterDelay() {
-        const summarizedTotalTimeInnerText = summarizeTotalTime(parsed);
-        setInnerTextAfterDelay(id, 3000, summarizedTotalTimeInnerText);
-      }
-
-      if (!isTag.DigitMemory) {
-        setTotalTimeAfterDelay();
-      }
 
       if (isTag.SentenceMemory) {
         if (isTag.Partial) {
@@ -593,16 +592,18 @@
         const digitsText = Tags.match(/\b\d+Digits\b/);
 
         let topLeftText, topRightText;
-        if (/Forward/i.test(Tags)) {
+        if (isTag.Forward) {
           topRightText = ">";
           topLeftText = digitsText;
+          setTotalTimeAfterDelay(ids.typeAnswerTopLeftBox, 2000);
           addClass(ids.typeAnswerTopRightBox, color.danger);
           addClass(ids.typeAnswerTopRightBox, animation.colorPulse["1s"]);
         }
 
-        if (/Backward/i.test(Tags)) {
+        if (isTag.Backward) {
           leftArrow = " <";
           topRightText = digitsText;
+          setTotalTimeAfterDelay(ids.typeAnswerTopRightBox, 2000);
 
           function runLeftArrowAnimation() {
             const backwardIntervalID = setInterval(() => {
