@@ -441,9 +441,9 @@
     }
 
     if (ids.timeAgo) {
-      const nOfDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
-      const timeAgoText = getTimeAgoText(nOfDaysAgo);
-      setInnerHTML(ids.timeAgo, timeAgoText);
+      const createdDateDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
+      const dateCreatedInnerText = getTimeAgoText(createdDateDaysAgo);
+      setInnerHTML(ids.timeAgo, dateCreatedInnerText);
 
       addClass(ids.timeAgo, color.success);
       addClass(ids.timeAgo, animation.colorPulse["1s"]);
@@ -460,7 +460,10 @@
     }
 
     if (ids.totalTimeBigBadge) {
-      setInnerHTML(ids.totalTimeBigBadge, `${INFO_TIME_TOTAL || `New card...`}`);
+      setInnerHTML(
+        ids.totalTimeBigBadge,
+        `${INFO_TIME_TOTAL || `New card...`}`,
+      );
       addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
     }
 
@@ -507,22 +510,17 @@
       const id = ids.typeAnswerTopRightBox;
       const minute = 60;
 
-      function setInfoDateCreatedText() {
-        const nOfDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
-
-        const innerText = getTimeAgoText(nOfDaysAgo, {
-          dateIsNotValid: "New",
-          today: "Today",
-          yesterday: "24h",
-          daysAgo: "d",
-          weeksAgo: "w",
-          monthAgo: "mo",
-          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
-        });
-        setInnerText(id, innerText);
-      }
-
-      setInfoDateCreatedText();
+      const createdDateDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
+      const dateCreatedInnerText = getTimeAgoText(createdDateDaysAgo, {
+        dateIsNotValid: "New",
+        today: "Today",
+        yesterday: "24h",
+        daysAgo: "d",
+        weeksAgo: "w",
+        monthAgo: "mo",
+        yearsAgo: `y${createdDateDaysAgo >= 2 * 365 ? "s" : ""}`,
+      });
+      setInnerText(id, dateCreatedInnerText);
 
       const parsed = parseString(INFO_TIME_TOTAL);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
@@ -544,6 +542,8 @@
         }
 
         if (isTag.Full) {
+          setTotalTimeAfterDelay(id, 3000);
+
           if (totalTimeInSeconds < 10 * minute) {
             addClass(id, color.success);
             addClass(id, animation.colorPulse["2s"]);
