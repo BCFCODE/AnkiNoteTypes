@@ -243,14 +243,21 @@
           : parsed.number;
     }
 
-    function getNumberOfDaysAgo(date) {
+    function convertDateToDaysAgo(date) {
       const d = new Date(date);
       const dateIsNotValid = isNaN(d) || date === "";
       if (dateIsNotValid) return -1;
       return Math.floor((Date.now() - d) / 864e5);
     }
 
-    function getTimeAgoText(
+    function convertDateToSecondsAgo(date) {
+      const d = new Date(date);
+      const dateIsNotValid = isNaN(d) || date === "";
+      if (dateIsNotValid) return -1;
+      return Math.floor((Date.now() - d) / 1000);
+    }
+
+    function getDayBasedTimeAgoText(
       nOfDaysAgo,
       textFormat = {
         dateIsNotValid: "New",
@@ -278,6 +285,28 @@
                 : nOfDaysAgo < 365
                   ? `${nOfMonths}${textFormat.monthAgo}`
                   : `${nOfYears}${textFormat.yearsAgo}`;
+    }
+
+    function getSecondBasedTimeAgoText(
+      date,
+      textFormat = {
+        dateIsNotValid: "New",
+        secondsAgo: "s",
+        minutesAgo: "m",
+        hoursAgo: "h",
+      },
+    ) {
+      if (!date) return textFormat.dateIsNotValid;
+      const secondsAgo = convertDateToSecondsAgo(date);
+      const [hoursAgo, minutesAgo] = [
+        secondsAgo / (60 * 60),
+        secondsAgo / 60,
+      ].map((time) => Math.floor(time));
+      return secondsAgo < 60
+        ? `${secondsAgo}${textFormat.secondsAgo}`
+        : minutesAgo < 60
+          ? `${minutesAgo}${textFormat.minutesAgo}`
+          : `${hoursAgo}${textFormat.hoursAgo}`;
     }
 
     if ("{{info-Type:}}" === "0" || "{{info-New?:}}") {
@@ -441,12 +470,25 @@
     }
 
     if (ids.timeAgo) {
-      const createdDateDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
-      const dateCreatedInnerText = getTimeAgoText(createdDateDaysAgo);
-      setInnerHTML(ids.timeAgo, dateCreatedInnerText);
+      const id = ids.timeAgo;
 
-      addClass(ids.timeAgo, color.warning);
-      addClass(ids.timeAgo, animation.colorPulse["500ms"]);
+      const nOfDaysAgo = convertDateToDaysAgo(INFO_DATE_CREATED);
+
+      if (nOfDaysAgo <= 1) {
+        const secondsAgo = convertDateToSecondsAgo(INFO_DATE_CREATED);
+        const timeAgoText = getSecondBasedTimeAgoText(INFO_DATE_CREATED, {
+          secondsAgo: ` second${secondsAgo > 1 ? "s" : ""}`,
+          minutesAgo: ` minute${secondsAgo > 60 ? "s" : ""}`,
+          hoursAgo: ` hour${secondsAgo > 60 * 60 ? "s" : ""}`,
+        });
+        setInnerText(id, timeAgoText);
+      } else {
+        const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo);
+        setInnerText(id, timeAgoText);
+      }
+
+      addClass(id, color.warning);
+      addClass(id, animation.colorPulse["500ms"]);
     }
 
     if (ids.createdAt) setInnerHTML(ids.createdAt, INFO_DATE_CREATED);
@@ -479,17 +521,24 @@
 
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
-      const nOfDaysAgo = getNumberOfDaysAgo(INFO_LAST_REVIEW);
-      const timeAgoText = getTimeAgoText(nOfDaysAgo, {
-        dateIsNotValid: "New",
-        today: "< 24h",
-        yesterday: "24h",
-        daysAgo: "d",
-        weeksAgo: "w",
-        monthAgo: "mo",
-        yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
-      });
-      setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+      const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
+      if (nOfDaysAgo <= 1) {
+        const timeAgoText =
+          nOfDaysAgo < 0 ? "New" : getSecondBasedTimeAgoText(INFO_LAST_REVIEW);
+        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+      } else {
+        const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
+          // dateIsNotValid: "New",
+          // today: "< 24h",
+          // yesterday: "24h",
+          daysAgo: "d",
+          weeksAgo: "w",
+          monthAgo: "mo",
+          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+        });
+        console(`${nOfDaysAgo} - ${timeAgoText}`);
+        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+      }
 
       if (isTag.SentenceMemory) {
         if (nOfDaysAgo < 1) {
@@ -510,18 +559,23 @@
       const id = ids.typeAnswerTopRightBox;
       const minute = 60;
 
-      const createdDateDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
-      const dateCreatedInnerText = getTimeAgoText(createdDateDaysAgo, {
-        dateIsNotValid: "New",
-        today: "Today",
-        yesterday: "24h",
-        daysAgo: "d",
-        weeksAgo: "w",
-        monthAgo: "mo",
-        yearsAgo: `y${createdDateDaysAgo >= 2 * 365 ? "s" : ""}`,
-      });
-      setInnerText(id, dateCreatedInnerText);
+      const nOfDaysAgo = convertDateToDaysAgo(INFO_DATE_CREATED);
 
+      if (nOfDaysAgo <= 1) {
+        const timeAgoText = getSecondBasedTimeAgoText(INFO_DATE_CREATED);
+        setInnerText(id, timeAgoText);
+      } else {
+        const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
+          // dateIsNotValid: "New",
+          // today: "Today",
+          // yesterday: "24h",
+          daysAgo: "d",
+          weeksAgo: "w",
+          monthAgo: "mo",
+          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+        });
+        setInnerText(id, timeAgoText);
+      }
       const parsed = parseString(INFO_TIME_TOTAL);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
       if (isTag.SentenceMemory) {
