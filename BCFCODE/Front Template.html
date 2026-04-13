@@ -498,7 +498,7 @@
           // DO NOTHING
         } else if (nOfDaysAgo === 1) {
           addClass(id, color.warning);
-          addClass(id, animation.colorPulse["1s"]);
+          // addClass(id, animation.colorPulse["1s"]);
         } else {
           addClass(id, color.success);
           addClass(id, animation.colorPulse["2s"]);
@@ -510,8 +510,9 @@
       const id = ids.typeAnswerTopRightBox;
       const minute = 60;
 
-      function setDateCreatedTimeAgoInnerText() {
+      function setInfoDateCreatedText() {
         const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
+
         const innerText = getTimeAgoText(nOfDaysAgo, {
           dateIsNotValid: "New",
           today: "Today",
@@ -524,11 +525,12 @@
         setInnerText(id, innerText);
       }
 
-      setDateCreatedTimeAgoInnerText();
+      setInfoDateCreatedText();
 
       const parsed = parseString(infoTimeTotal);
-      const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
+      setInnerTextAfterDelay(id, 3000, summarizeTotalTime(parsed));
 
+      const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
       if (isTag.SentenceMemory) {
         if (isTag.Partial) {
           if (totalTimeInSeconds < 3 * minute) {
