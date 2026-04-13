@@ -445,8 +445,8 @@
       const dateCreatedInnerText = getTimeAgoText(createdDateDaysAgo);
       setInnerHTML(ids.timeAgo, dateCreatedInnerText);
 
-      addClass(ids.timeAgo, color.success);
-      addClass(ids.timeAgo, animation.colorPulse["1s"]);
+      addClass(ids.timeAgo, color.warning);
+      addClass(ids.timeAgo, animation.colorPulse["500ms"]);
     }
 
     if (ids.createdAt) setInnerHTML(ids.createdAt, INFO_DATE_CREATED);
@@ -533,17 +533,17 @@
             addClass(id, color.warning);
             addClass(id, animation.colorPulse["1s"]);
           } else {
-            const classes = [color.warning, animation.colorPulse["500ms"]];
-            classes.forEach((className) => addClass(id, className));
-            setTotalTimeAfterDelay(id, 3000, () =>
-              classes.forEach((className) => removeClass(id, className)),
-            );
+            addClass(id, color.warning);
+            addClass(id, animation.colorPulse["500ms"]);
           }
+
+          setTotalTimeAfterDelay(id, 3000, () => {
+            removeClass(id, color.warning);
+            removeClass(id, animation.colorPulse["500ms"]);
+          });
         }
 
         if (isTag.Full) {
-          setTotalTimeAfterDelay(id, 3000);
-
           if (totalTimeInSeconds < 10 * minute) {
             addClass(id, color.success);
             addClass(id, animation.colorPulse["2s"]);
@@ -554,6 +554,8 @@
             addClass(id, color.danger);
             addClass(id, animation.colorPulse["500ms"]);
           }
+
+          setTotalTimeAfterDelay(id, 3000);
         }
       }
     }
