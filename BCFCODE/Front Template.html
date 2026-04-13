@@ -230,9 +230,9 @@
       return summarizedTotalTimeText;
     }
 
-    function setTotalTimeAfterDelay(id, delay, callback) {
+    function setTotalTimeAfterDelay(id, delay, afterDelay) {
       const innerText = getSummarizedTotalTimeText();
-      setInnerTextAfterDelay(id, delay, innerText, callback);
+      setInnerTextAfterDelay(id, delay, innerText, afterDelay);
     }
 
     function convertTotalTimeToSeconds(parsed) {
@@ -310,10 +310,10 @@
       if (el) el.innerText = innerText;
     }
 
-    function setInnerTextAfterDelay(id, delay, innerText, callback) {
+    function setInnerTextAfterDelay(id, delay, innerText, afterDelay) {
       const timerID = setTimeout(() => {
         setInnerText(id, innerText);
-        callback();
+        afterDelay();
       }, delay);
       window.timerTimeouts.push(timerID);
     }
@@ -544,7 +544,7 @@
             addClass(id, color.warning);
             addClass(id, animation.colorPulse["1s"]);
           } else {
-            const classes = [color.danger, animation.colorPulse["500ms"]];
+            const classes = [color.warning, animation.colorPulse["500ms"]];
             classes.forEach((className) => addClass(id, className));
             setTotalTimeAfterDelay(id, 3000, () =>
               classes.forEach((className) => removeClass(id, className)),
