@@ -119,13 +119,14 @@
 
 <script>
   (() => {
-    const infoDateCreated = "{{info-Date_Created:}}";
-    const infoTimeAvg = "{{info-TimeAvg:}}";
-    const infoTimeTotal = "{{info-TimeTotal:}}";
-    const infoReviews = "{{info-Reviews:}}";
-    const infoLapses = "{{info-Lapses:}}";
-    const Tags = "{{Tags}}";
-    const tags = [
+    const INFO_DATE_CREATED = "{{info-Date_Created:}}";
+    const INFO_TIME_AVG = "{{info-TimeAvg:}}";
+    const INFO_TIME_TOTAL = "{{info-TimeTotal:}}";
+    const INFO_REVIEWS = "{{info-Reviews:}}";
+    const INFO_LAPSES = "{{info-Lapses:}}";
+    const INFO_LAST_REVIEW = "{{info-LastReview:}}";
+    const TAGS = "{{Tags}}";
+    const tagNames = [
       "DigitMemory",
       "SentenceMemory",
       "Partial",
@@ -133,16 +134,31 @@
       "Forward",
       "Backward",
     ];
-    const infoLastReview = "{{info-LastReview:}}";
     // const infoIvl = " {{info-Ivl:}}";
 
+    function summarizeTotalTime(parsed) {
+      const summarized = /hours?/.test(parsed.string)
+        ? "h"
+        : /minutes?/.test(parsed.string)
+          ? "m"
+          : "s";
+      return parsed.number ? `${parsed.number}${summarized}` : "New";
+    }
+    function createSummarizeTotalTime() {
+      const parsed = parseString(INFO_TIME_TOTAL);
+      const summarizedTotalTimeText = summarizeTotalTime(parsed);
+      return summarizedTotalTimeText;
+    }
+
+    const SUMMARIZED_TOTAL_TIME = createSummarizeTotalTime();
+
     const isTag = {
-      DigitMemory: /DigitMemory/i.test(Tags),
-      Forward: /Forward/i.test(Tags),
-      Backward: /Backward/i.test(Tags),
-      SentenceMemory: /SentenceMemory/i.test(Tags),
-      Partial: /Partial/i.test(Tags),
-      Full: /Full/i.test(Tags),
+      DigitMemory: /DigitMemory/i.test(TAGS),
+      Forward: /Forward/i.test(TAGS),
+      Backward: /Backward/i.test(TAGS),
+      SentenceMemory: /SentenceMemory/i.test(TAGS),
+      Partial: /Partial/i.test(TAGS),
+      Full: /Full/i.test(TAGS),
     };
 
     var avgTimeInSeconds;
@@ -215,24 +231,8 @@
       return parsed;
     }
 
-    function summarizeTotalTime(parsed) {
-      const summarized = /hours?/.test(parsed.string)
-        ? "h"
-        : /minutes?/.test(parsed.string)
-          ? "m"
-          : "s";
-      return parsed.number ? `${parsed.number}${summarized}` : "New";
-    }
-
-    function getSummarizedTotalTimeText() {
-      const parsed = parseString(infoTimeTotal);
-      const summarizedTotalTimeText = summarizeTotalTime(parsed);
-      return summarizedTotalTimeText;
-    }
-
     function setTotalTimeAfterDelay(id, delay, afterDelay) {
-      const innerText = getSummarizedTotalTimeText();
-      setInnerTextAfterDelay(id, delay, innerText, afterDelay);
+      setInnerTextAfterDelay(id, delay, SUMMARIZED_TOTAL_TIME, afterDelay);
     }
 
     function convertTotalTimeToSeconds(parsed) {
@@ -285,9 +285,9 @@
       avgTimeInSeconds = 60;
     }
 
-    if (/\d/.test(infoTimeAvg)) {
-      const { number } = parseString(infoTimeAvg);
-      if (/minute/i.test(infoTimeAvg)) number *= 60;
+    if (/\d/.test(INFO_TIME_AVG)) {
+      const { number } = parseString(INFO_TIME_AVG);
+      if (/minute/i.test(INFO_TIME_AVG)) number *= 60;
       if (number > 0) avgTimeInSeconds = Math.round(number);
     }
 
@@ -436,12 +436,12 @@
     setInnerHTML(ids.bottomRightLittleLabel, deckName);
 
     // Deck info
-    if (!/\d/.test(infoTimeAvg)) {
+    if (!/\d/.test(INFO_TIME_AVG)) {
       setInnerHTML(ids.avgTimeLabel, "Average Time: Calculating...");
     }
 
     if (ids.timeAgo) {
-      const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
+      const nOfDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
       const timeAgoText = getTimeAgoText(nOfDaysAgo);
       setInnerHTML(ids.timeAgo, timeAgoText);
 
@@ -449,43 +449,34 @@
       addClass(ids.timeAgo, animation.colorPulse["1s"]);
     }
 
-    if (ids.createdAt) setInnerHTML(ids.createdAt, infoDateCreated);
+    if (ids.createdAt) setInnerHTML(ids.createdAt, INFO_DATE_CREATED);
 
     if (ids.totalTime) {
       setInnerHTML(
         ids.totalTime,
-        `Total time: ${infoTimeTotal || `0 (new card)`}`,
+        `Total time: ${INFO_TIME_TOTAL || `0 (new card)`}`,
       );
       addClass(ids.totalTime, animation.colorPulse["2s"]);
     }
 
     if (ids.totalTimeBigBadge) {
-      setInnerHTML(ids.totalTimeBigBadge, `${infoTimeTotal || `New card...`}`);
+      setInnerHTML(ids.totalTimeBigBadge, `${INFO_TIME_TOTAL || `New card...`}`);
       addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
     }
 
-    if (ids.typeAnswerBottomMiddleBox) {
-      const parsed = parseString(infoTimeTotal);
-      setInnerText(
-        ids.typeAnswerBottomMiddleBox,
-        `${summarizeTotalTime(parsed) || `New`}`,
-      );
-      addClass(ids.typeAnswerBottomMiddleBox, animation.colorPulse["2s"]);
-    }
-
     if (ids.numberOfReviews) {
-      setInnerHTML(ids.numberOfReviews, `${infoReviews || `0`}`);
+      setInnerHTML(ids.numberOfReviews, `${INFO_REVIEWS || `0`}`);
     }
     if (ids.typeAnswerTopMiddleBox) {
       setInnerHTML(
         ids.typeAnswerTopMiddleBox,
-        `${`x${infoReviews}` || `New Card`}`,
+        `${`x${INFO_REVIEWS}` || `New Card`}`,
       );
     }
 
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
-      const nOfDaysAgo = getNumberOfDaysAgo(infoLastReview);
+      const nOfDaysAgo = getNumberOfDaysAgo(INFO_LAST_REVIEW);
       const timeAgoText = getTimeAgoText(nOfDaysAgo, {
         dateIsNotValid: "New",
         today: "< 24h",
@@ -517,7 +508,7 @@
       const minute = 60;
 
       function setInfoDateCreatedText() {
-        const nOfDaysAgo = getNumberOfDaysAgo(infoDateCreated);
+        const nOfDaysAgo = getNumberOfDaysAgo(INFO_DATE_CREATED);
 
         const innerText = getTimeAgoText(nOfDaysAgo, {
           dateIsNotValid: "New",
@@ -533,7 +524,7 @@
 
       setInfoDateCreatedText();
 
-      const parsed = parseString(infoTimeTotal);
+      const parsed = parseString(INFO_TIME_TOTAL);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
       if (isTag.SentenceMemory) {
         if (isTag.Partial) {
@@ -569,7 +560,7 @@
 
     if (ids.typeAnswerBottomMiddleBox) {
       const id = ids.typeAnswerBottomMiddleBox;
-      const { number: numberOfLapses } = parseString(infoLapses);
+      const { number: numberOfLapses } = parseString(INFO_LAPSES);
 
       function createLapsInnerText(numberOfLapses) {
         let lapsInnerText =
@@ -599,7 +590,7 @@
         if (isTag.Partial) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
         if (isTag.Full) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
       } else if (isTag.DigitMemory) {
-        const digitsText = Tags.match(/\b\d+Digits\b/);
+        const digitsText = TAGS.match(/\b\d+Digits\b/);
 
         let topLeftText, topRightText;
         if (isTag.Forward) {
