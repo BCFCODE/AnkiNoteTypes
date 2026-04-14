@@ -10,7 +10,7 @@
   </div>
 
   {{#Front}}
-  <div>{{Front}}</div>
+  <div id="front">{{Front}}</div>
   {{/Front}}
 
   <div id="console"></div>
@@ -119,6 +119,26 @@
 
 <script>
   (() => {
+    function clearPendingTimeouts() {
+      if (window.timerTimeouts) {
+        window.timerTimeouts.forEach(clearTimeout);
+      }
+      window.timerTimeouts = [];
+    }
+    clearPendingTimeouts();
+
+    function clearPendingIntervals() {
+      if (window.timerIntervals) {
+        window.timerIntervals.forEach(clearInterval);
+      }
+      window.timerIntervals = [];
+    }
+    clearPendingIntervals();
+
+    function console(value) {
+      setInnerText(ids.console, `Console >>> ${value}`);
+    }
+
     const INFO_DATE_CREATED = "{{info-Date_Created:}}";
     const INFO_TIME_AVG = "{{info-TimeAvg:}}";
     const INFO_TIME_TOTAL = "{{info-TimeTotal:}}";
@@ -128,11 +148,12 @@
     const TAGS = "{{Tags}}";
     const tagNames = [
       "DigitMemory",
+      "Forward",
+      "Backward",
+      "Warmup",
       "SentenceMemory",
       "Partial",
       "Full",
-      "Forward",
-      "Backward",
     ];
     // const infoIvl = " {{info-Ivl:}}";
 
@@ -156,6 +177,7 @@
       DigitMemory: /DigitMemory/i.test(TAGS),
       Forward: /Forward/i.test(TAGS),
       Backward: /Backward/i.test(TAGS),
+      Warmup: /Warmup/i.test(TAGS),
       SentenceMemory: /SentenceMemory/i.test(TAGS),
       Partial: /Partial/i.test(TAGS),
       Full: /Full/i.test(TAGS),
@@ -163,6 +185,7 @@
 
     var avgTimeInSeconds;
     const ids = {
+      Fields: { Front: "front" },
       cardProgressBar: "card-progress-bar",
       inputProgressBar: "input-progress-bar",
       countUpTimer: ["type-answer-bottom-left-box", "top-left-box"],
@@ -179,6 +202,10 @@
       typeAnswerTopMiddleBox: "type-answer-top-middle-box",
       typeAnswerBottomMiddleBox: "type-answer-bottom-middle-box",
       console: "console",
+    };
+
+    const Fields = {
+      Front: document.getElementById(ids.Fields.Front),
     };
 
     const animation = {
@@ -199,26 +226,6 @@
       success: "color-success",
       warning: "color-warning",
     };
-
-    function clearPendingTimeouts() {
-      if (window.timerTimeouts) {
-        window.timerTimeouts.forEach(clearTimeout);
-      }
-      window.timerTimeouts = [];
-    }
-    clearPendingTimeouts();
-
-    function clearPendingIntervals() {
-      if (window.timerIntervals) {
-        window.timerIntervals.forEach(clearInterval);
-      }
-      window.timerIntervals = [];
-    }
-    clearPendingIntervals();
-
-    function console(value) {
-      setInnerText(ids.console, `Console >>> ${value}`);
-    }
 
     function parseString(string) {
       const parsed = {};
@@ -512,6 +519,16 @@
     if (ids.numberOfReviews) {
       setInnerHTML(ids.numberOfReviews, `${INFO_REVIEWS || `0`}`);
     }
+
+    if (ids.Fields.Front) {
+      function setDefaultStyles() {
+        Fields.Front.style.textAlign = "left";
+      }
+      if (isTag.Warmup) {
+        Fields.Front.style.textAlign = "center";
+      } else setDefaultStyles();
+    }
+
     if (ids.typeAnswerTopMiddleBox) {
       setInnerHTML(
         ids.typeAnswerTopMiddleBox,
@@ -536,7 +553,6 @@
           monthAgo: "mo",
           yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
         });
-        console(`${nOfDaysAgo} - ${timeAgoText}`);
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       }
 
