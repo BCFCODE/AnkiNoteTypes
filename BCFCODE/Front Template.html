@@ -525,7 +525,10 @@
         Fields.Front.style.textAlign = "left";
       }
       if (isTag.Warmup) {
-        Fields.Front.style.textAlign = "center";
+        const style = Fields.Front.style
+        style.textAlign = "center";
+        style.fontSize = '5rem'
+        style.fontWeight = "bold"
       } else setDefaultStyles();
     }
 

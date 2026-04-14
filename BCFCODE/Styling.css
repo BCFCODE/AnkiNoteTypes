@@ -506,6 +506,7 @@ input#typeans {
   100% {
     transform: scale(1);
   }
+  
 }
 
 @keyframes pulse-opacity-animation-0 {
