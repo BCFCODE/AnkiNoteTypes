@@ -329,17 +329,17 @@
     }
 
     function getDeckName() {
-      var deckAddressArr = "{{Deck}}".split("::");
+      const deckAddressArr = "{{Deck}}".split("::");
       return deckAddressArr[deckAddressArr.length - 1] || "Deck";
     }
 
     function setInnerHTML(id, innerHTML) {
-      var el = document.getElementById(id);
+      const el = document.getElementById(id);
       if (el) el.innerHTML = innerHTML;
     }
 
     function setInnerText(id, innerText) {
-      var el = document.getElementById(id);
+      const el = document.getElementById(id);
       if (el) el.innerText = innerText;
     }
 
@@ -352,22 +352,22 @@
     }
 
     function setInputPlaceholder(inputId, value) {
-      var input = document.getElementById(inputId);
+      const input = document.getElementById(inputId);
       if (input) input.placeholder = value;
     }
 
     function setCSSstyle(id, property, value) {
-      var el = document.getElementById(id);
+      const el = document.getElementById(id);
       if (el) el.style[property] = value;
     }
 
     function addClass(id, className) {
-      var el = document.getElementById(id);
+      const el = document.getElementById(id);
       if (el) el.classList.add(className);
     }
 
     function removeClass(id, className) {
-      var el = document.getElementById(id);
+      const el = document.getElementById(id);
       if (el) el.classList.remove(className);
     }
 
@@ -495,33 +495,19 @@
       addClass(id, animation.colorPulse["500ms"]);
     }
 
-    if (ids.createdAt) setInnerHTML(ids.createdAt, INFO_DATE_CREATED);
+    setInnerHTML(ids.createdAt, INFO_DATE_CREATED);
 
-    if (ids.totalTime) {
-      setInnerHTML(
-        ids.totalTime,
-        `Total time: ${INFO_TIME_TOTAL || `0 (new card)`}`,
-      );
-      addClass(ids.totalTime, animation.colorPulse["2s"]);
-    }
+    setInnerHTML(
+      ids.totalTime,
+      `Total time: ${INFO_TIME_TOTAL || `0 (new card)`}`,
+    );
+    addClass(ids.totalTime, animation.colorPulse["2s"]);
 
-    if (ids.totalTimeBigBadge) {
-      setInnerHTML(
-        ids.totalTimeBigBadge,
-        `${INFO_TIME_TOTAL || `New card...`}`,
-      );
-      addClass(ids.totalTimeBigBadge, animation.colorPulse["2s"]);
-    }
-
-    if (ids.numberOfReviews) {
-      setInnerHTML(ids.numberOfReviews, `${INFO_REVIEWS || `0`}`);
-    }
+    setInnerHTML(ids.numberOfReviews, `${INFO_REVIEWS || `0`}`);
 
     if (ids.typeAnswerTopMiddleBox) {
-      setInnerHTML(
-        ids.typeAnswerTopMiddleBox,
-        `${`x${INFO_REVIEWS}` || `New Card`}`,
-      );
+      const id = ids.typeAnswerTopMiddleBox;
+      setInnerHTML(id, `${`x${INFO_REVIEWS}` || `New Card`}`);
     }
 
     if (ids.typeAnswerTopLeftBox) {
@@ -650,9 +636,8 @@
         if (isTag.Partial) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
         if (isTag.Full) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
       } else if (isTag.DigitMemory) {
-        if (ids.Fields.Front) {
-          setCSSstyle(ids.Fields.Front, "textAlign", "center");
-        }
+        setCSSstyle(ids.Fields.Front, "textAlign", "center");
+
         const digitsText = TAGS.match(/\b\d+Digits\b/);
 
         let topLeftText, topRightText;
