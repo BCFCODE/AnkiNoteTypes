@@ -1,9 +1,9 @@
 :root {
   --initial-text-color: hsl(20, 40%, 80%);
-  --color-danger: rgb(255, 92, 92);
-  --color-orange: rgb(255, 196, 77);
-  --color-success: yellowgreen;
-  --color-warning: yellow;
+  --color-danger: rgb(255, 90, 50);
+  --color-orange: rgb(255, 195, 50);
+  --color-success: rgb(154, 205, 50);
+  --color-warning: rgb(255, 255, 50);
 }
 
 .color-danger {
