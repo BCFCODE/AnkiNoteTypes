@@ -515,9 +515,16 @@
       const id = ids.typeAnswerTopLeftBox;
       const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
 
+      const isNew = nOfDaysAgo === -1;
+
+      if (isNew) {
+        addClass(id, color.success);
+        addClass(id, animation.sizePulse);
+      }
       if (nOfDaysAgo <= 1) {
-        const timeAgoText =
-          nOfDaysAgo < 0 ? "New" : getSecondBasedTimeAgoText(INFO_LAST_REVIEW);
+        const timeAgoText = !isNew
+          ? getSecondBasedTimeAgoText(INFO_LAST_REVIEW)
+          : "New";
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       } else {
         const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
@@ -550,6 +557,7 @@
 
       addClass(id, color.orange);
       addClass(id, animation.colorPulse["500ms"]);
+
       if (nOfDaysAgo <= 1) {
         const timeAgoText = getSecondBasedTimeAgoText(INFO_DATE_CREATED);
         setInnerText(id, timeAgoText);
@@ -569,13 +577,17 @@
       setTotalTimeAfterDelay(id, 3000, () => {
         removeClass(id, color.orange);
         removeClass(id, animation.colorPulse["500ms"]);
+
         if (totalTimeInSeconds < avgTimeInSeconds * 5) {
           addClass(id, color.success);
           addClass(id, animation.colorPulse["2s"]);
         } else if (totalTimeInSeconds < avgTimeInSeconds * 10) {
           addClass(id, color.warning);
           addClass(id, animation.colorPulse["1s"]);
-        } else {
+        } else if (SUMMARIZED_TOTAL_TIME === "New") {
+          addClass(id, color.success);
+          addClass(id, animation.sizePulse);
+        } else if (SUMMARIZED_TOTAL_TIME !== "New") {
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["500ms"]);
         }
