@@ -513,15 +513,13 @@
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
       const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
+
       if (nOfDaysAgo <= 1) {
         const timeAgoText =
           nOfDaysAgo < 0 ? "New" : getSecondBasedTimeAgoText(INFO_LAST_REVIEW);
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       } else {
         const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
-          // dateIsNotValid: "New",
-          // today: "< 24h",
-          // yesterday: "24h",
           daysAgo: "d",
           weeksAgo: "w",
           monthAgo: "mo",
@@ -532,8 +530,6 @@
 
       if (isTag.SentenceMemory) {
         if (nOfDaysAgo < 1) {
-          // addClass(id, color.danger);
-          // addClass(id, animation.colorPulse["500ms"]);
           // DO NOTHING
         } else if (nOfDaysAgo === 1) {
           addClass(id, color.warning);
@@ -556,9 +552,6 @@
         setInnerText(id, timeAgoText);
       } else {
         const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
-          // dateIsNotValid: "New",
-          // today: "Today",
-          // yesterday: "24h",
           daysAgo: "d",
           weeksAgo: "w",
           monthAgo: "mo",
@@ -568,40 +561,19 @@
       }
       const parsed = parseString(INFO_TIME_TOTAL);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
-      if (isTag.SentenceMemory) {
-        if (isTag.Partial) {
-          if (totalTimeInSeconds < 3 * minute) {
-            addClass(id, color.success);
-            addClass(id, animation.colorPulse["2s"]);
-          } else if (totalTimeInSeconds < 6 * minute) {
-            addClass(id, color.warning);
-            addClass(id, animation.colorPulse["1s"]);
-          } else {
-            addClass(id, color.warning);
-            addClass(id, animation.colorPulse["500ms"]);
-          }
 
-          setTotalTimeAfterDelay(id, 3000, () => {
-            removeClass(id, color.warning);
-            removeClass(id, animation.colorPulse["500ms"]);
-          });
+      setTotalTimeAfterDelay(id, 3000, () => {
+        if (totalTimeInSeconds < avgTimeInSeconds * 5) {
+          addClass(id, color.success);
+          addClass(id, animation.colorPulse["2s"]);
+        } else if (totalTimeInSeconds < avgTimeInSeconds * 10) {
+          addClass(id, color.warning);
+          addClass(id, animation.colorPulse["1s"]);
+        } else {
+          addClass(id, color.danger);
+          addClass(id, animation.colorPulse["500ms"]);
         }
-
-        if (isTag.Full) {
-          if (totalTimeInSeconds < 10 * minute) {
-            addClass(id, color.success);
-            addClass(id, animation.colorPulse["2s"]);
-          } else if (totalTimeInSeconds < 15 * minute) {
-            addClass(id, color.warning);
-            addClass(id, animation.colorPulse["1s"]);
-          } else {
-            addClass(id, color.danger);
-            addClass(id, animation.colorPulse["500ms"]);
-          }
-
-          setTotalTimeAfterDelay(id, 3000);
-        }
-      }
+      });
     }
 
     if (ids.typeAnswerBottomMiddleBox) {
