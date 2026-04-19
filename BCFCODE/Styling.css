@@ -1,12 +1,17 @@
 :root {
   --initial-text-color: hsl(20, 40%, 80%);
-  --color-danger: red;
+  --color-danger: rgb(255, 92, 92);
+  --color-orange: rgb(255, 196, 77);
   --color-success: yellowgreen;
   --color-warning: yellow;
 }
 
 .color-danger {
   color: var(--color-danger);
+}
+
+.color-orange {
+  color: var(--color-orange);
 }
 
 .color-success {
@@ -506,7 +511,6 @@ input#typeans {
   100% {
     transform: scale(1);
   }
-  
 }
 
 @keyframes pulse-opacity-animation-0 {

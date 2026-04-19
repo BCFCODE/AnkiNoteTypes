@@ -220,6 +220,7 @@
 
     const color = {
       danger: "color-danger",
+      orange: "color-orange",
       success: "color-success",
       warning: "color-warning",
     };
@@ -491,7 +492,7 @@
         setInnerText(id, timeAgoText);
       }
 
-      addClass(id, color.warning);
+      addClass(id, color.orange);
       addClass(id, animation.colorPulse["500ms"]);
     }
 
@@ -547,6 +548,8 @@
 
       const nOfDaysAgo = convertDateToDaysAgo(INFO_DATE_CREATED);
 
+      addClass(id, color.orange);
+      addClass(id, animation.colorPulse["500ms"]);
       if (nOfDaysAgo <= 1) {
         const timeAgoText = getSecondBasedTimeAgoText(INFO_DATE_CREATED);
         setInnerText(id, timeAgoText);
@@ -559,10 +562,13 @@
         });
         setInnerText(id, timeAgoText);
       }
+
       const parsed = parseString(INFO_TIME_TOTAL);
       const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
 
       setTotalTimeAfterDelay(id, 3000, () => {
+        removeClass(id, color.orange);
+        removeClass(id, animation.colorPulse["500ms"]);
         if (totalTimeInSeconds < avgTimeInSeconds * 5) {
           addClass(id, color.success);
           addClass(id, animation.colorPulse["2s"]);
