@@ -552,6 +552,9 @@
           const digitsText = TAGS.match(/\b\d+Digits\b/);
           setInnerText(id, digitsText);
 
+          removeClass(id, color.success)
+          removeClass(id, animation.sizePulse);
+
           setTotalTimeAfterDelay(id, 2000, () => {
             const parsed = parseString(INFO_TIME_TOTAL);
             const totalTimeInSeconds = convertTotalTimeToSeconds(parsed);
@@ -579,13 +582,13 @@
                   : leftArrow === " <  <"
                     ? " < <  <"
                     : " <";
-              setInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
+              setInnerText(id, `${leftArrow}`);
             }, 100);
             window.timerIntervals.push(backwardIntervalID);
           }
 
-          addClass(ids.typeAnswerTopLeftBox, color.warning);
-          addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
+          addClass(id, color.warning);
+          addClass(id, animation.sizePulse);
           runLeftArrowAnimation();
         } else setInnerText(id, "xDigits");
       }
