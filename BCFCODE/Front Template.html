@@ -569,26 +569,25 @@
               addClass(id, animation.colorPulse["500ms"]);
             }
           });
-        }
-      }
-      if (isTag.Backward) {
-        function runLeftArrowAnimation() {
-          let leftArrow = " <";
-          const backwardIntervalID = setInterval(() => {
-            leftArrow =
-              leftArrow === " <"
-                ? " <  <"
-                : leftArrow === " <  <"
-                  ? " < <  <"
-                  : " <";
-            setInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
-          }, 100);
-          window.timerIntervals.push(backwardIntervalID);
-        }
+        } else if (isTag.Backward) {
+          function runLeftArrowAnimation() {
+            let leftArrow = " <";
+            const backwardIntervalID = setInterval(() => {
+              leftArrow =
+                leftArrow === " <"
+                  ? " <  <"
+                  : leftArrow === " <  <"
+                    ? " < <  <"
+                    : " <";
+              setInnerText(ids.typeAnswerTopLeftBox, `${leftArrow}`);
+            }, 100);
+            window.timerIntervals.push(backwardIntervalID);
+          }
 
-        addClass(ids.typeAnswerTopLeftBox, color.warning);
-        addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
-        runLeftArrowAnimation();
+          addClass(ids.typeAnswerTopLeftBox, color.warning);
+          addClass(ids.typeAnswerTopLeftBox, animation.sizePulse);
+          runLeftArrowAnimation();
+        } else setInnerText(id, "xDigits");
       }
     }
 
@@ -618,8 +617,7 @@
           removeClass(id, animation.colorPulse["500ms"]);
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["1s"]);
-        }
-        if (isTag.Backward) {
+        } else if (isTag.Backward) {
           const digitsText = TAGS.match(/\b\d+Digits\b/);
           setInnerText(id, digitsText);
 
@@ -643,7 +641,7 @@
               addClass(id, animation.colorPulse["500ms"]);
             }
           });
-        }
+        } else setInnerText(id, "< x >");
       } else {
         removeClass(id, color.danger);
         removeClass(id, animation.colorPulse["1s"]);
