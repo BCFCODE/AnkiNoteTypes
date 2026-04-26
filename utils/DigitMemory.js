@@ -3,6 +3,9 @@ class DigitMemory {
   #digits;
 
   set number(num) {
+    if (typeof num === "string") {
+      this.#number = Number(num.replace(/\s/, ""));
+    }
     this.#number = num;
   }
 
@@ -28,7 +31,7 @@ class DigitMemory {
   };
 
   get number() {
-    this.#replaceDigitsWithAsterisk()
+    this.#replaceDigitsWithAsterisk();
     return this.#number;
   }
 }
