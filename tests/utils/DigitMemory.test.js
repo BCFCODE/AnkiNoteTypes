@@ -43,5 +43,4 @@ describe("DigitMemory", () => {
     expect(digitMemory).toHaveProperty("output");
   });
 
-
 });

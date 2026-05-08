@@ -86,9 +86,26 @@ class DigitMemory {
 
   get output() {
     const output = this.#createOutput();
-    fs.writeFileSync("outputs/Anki.txt", output, "utf8");
     return output;
   }
+
+  outputToFile = () =>
+    fs.writeFileSync("outputs/Anki.txt", this.#createOutput(), "utf8");
 }
 
 export default DigitMemory;
+
+const digitMemory = new DigitMemory();
+
+// [
+//   [123456, 35],
+//   [123456, 23]
+// ].forEach(([number, digits, isBackward = false]) => {
+//   digitMemory.number = number
+//   digitMemory.digits = digitMemory
+//   digitMemory.isBackward = isBackward
+
+// })
+digitMemory.number = 123456;
+digitMemory.digits = 43;
+digitMemory.outputToFile();
