@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class DigitMemory {
+export class Warmup {
   #isBackward = false;
   #multipleInputs = [];
   #number;
@@ -91,13 +91,17 @@ class DigitMemory {
     fs.writeFileSync(`outputs/${path}`, this.#createOutput(), "utf8");
 }
 
-export default DigitMemory;
+const digitMemory = new Warmup();
 
-const digitMemory = new DigitMemory();
 const inputs = [
-  ['1 5 1 0 5 7 4 9 2', 149]
+  ["8 2 9 7 8 6 5 1 6", 91],
+  ["8 4 7 4 5 7 3 8 5", 47],
+  ["2 9 8 6 2 5 4", 294],
+  ["7 6 1 0 7 8 6 9 0", 6],
 ];
+
 inputs.forEach(([number, digits, isBackward]) => {
   digitMemory.input = { number, digits, isBackward };
 });
+
 digitMemory.outputToFile();

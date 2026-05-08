@@ -1,9 +1,9 @@
 import { it, describe, vi, expect } from "vitest";
-import DigitMemory from "../../utils/DigitMemory";
+import { Warmup } from "../../utils/DigitMemory";
 
 describe("DigitMemory", () => {
   it(`const digitMemory = new DigitMemory();\n\tdigitMemory.number = 4531071;\n\t digitMemory.input = { number: 4531071, digits: 317 };`, () => {
-    const digitMemory = new DigitMemory();
+    const digitMemory = new Warmup();
     digitMemory.input = { number: 4531071, digits: 317 };
 
     const Front = `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>`;
@@ -22,7 +22,7 @@ describe("DigitMemory", () => {
   });
 
   it("should have reversed Front field digits and Backward tag if isBackward flag is true", () => {
-    const digitMemory = new DigitMemory();
+    const digitMemory = new Warmup();
     digitMemory.input = { number: 4531071, digits: 317, isBackward: true };
 
     const Front = `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>`;
