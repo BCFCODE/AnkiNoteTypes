@@ -8,7 +8,7 @@ class DigitMemory {
 
   set input(obj) {
     if (typeof obj.number === "string") {
-      obj.number = Number(num.replace(/\s/, ""));
+      obj.number = Number(obj.number.replace(/\s/g, ""));
     }
     this.#multipleInputs.push(obj);
   }
@@ -95,8 +95,7 @@ export default DigitMemory;
 
 const digitMemory = new DigitMemory();
 const inputs = [
-  [123456, 25],
-  [123456, 123, true],
+  ['1 5 1 0 5 7 4 9 2', 149]
 ];
 inputs.forEach(([number, digits, isBackward]) => {
   digitMemory.input = { number, digits, isBackward };
