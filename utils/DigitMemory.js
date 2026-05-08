@@ -1,9 +1,9 @@
 import fs from "fs";
 
 class DigitMemory {
+  isBackward = false;
   #number;
   #digits;
-  isBackward = false;
 
   set number(num) {
     if (typeof num === "string") {
@@ -11,6 +11,8 @@ class DigitMemory {
     }
     this.#number = num;
   }
+
+  set multipleInputs(inputs) {}
 
   set digits(digits) {
     this.#digits = digits;
@@ -38,7 +40,7 @@ class DigitMemory {
     return `${this.#number}`.match(reg).join` `;
   };
 
-  #createTTSFront = () => {
+  #createTTSFrontField = () => {
     if (this.isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
       return this.#addSpace(reversedNumber);
@@ -46,18 +48,38 @@ class DigitMemory {
     return this.#addSpace(this.#number);
   };
 
-  #createTTSBack = () => {
+  #createTTSBackField = () => {
     return this.#addSpace(this.#number);
+  };
+
+  #createNumberOfDigitsTag = () => {
+    const tagMap = {
+      4: "4Digits",
+      5: "5Digits",
+      6: "6Digits",
+      7: "7Digits",
+      8: "8Digits",
+      9: "9Digits",
+      10: "10Digits",
+    };
+    return tagMap[this.#number.toString().length];
+  };
+
+  #createTagsField = () => {
+    const nOfDigitsTag = this.#createNumberOfDigitsTag();
+    const directionTag = this.isBackward ? "Backward" : "Forward";
+    return `Memo DigitMemory Warmup ${directionTag} ${nOfDigitsTag}`;
   };
 
   #createOutput = () => {
     const Front = this.#createFrontField();
     const Answer = this.#createAnswerField();
-    const TTSFront = this.#createTTSFront();
-    const TTSBack = this.#createTTSBack();
+    const TTSFront = this.#createTTSFrontField();
+    const TTSBack = this.#createTTSBackField();
+    const Tags = this.#createTagsField();
 
     return (
-      [Front, Answer, TTSFront, TTSBack].map((str) => JSON.stringify(str))
+      [Front, Answer, TTSFront, TTSBack, Tags].map((str) => JSON.stringify(str))
         .join`, ` + "\n"
     );
   };
@@ -70,6 +92,3 @@ class DigitMemory {
 }
 
 export default DigitMemory;
-
-const digitMemory = new DigitMemory();
-digitMemory.output;
