@@ -103,5 +103,5 @@ const inputs = [
 inputs.forEach(([number, digits, isBackward]) => {
   digitMemory.input = { number, digits, isBackward };
 });
-
+ 
 digitMemory.outputToFile();
