@@ -1,3 +1,5 @@
+import fs from "fs";
+
 class DigitMemory {
   #number;
   #digits;
@@ -27,13 +29,22 @@ class DigitMemory {
     const reg = this.#getReg(this.#digits);
     const spacedNumber = this.#addSpace(this.#number);
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
-    this.#number = spacedNumber.replace(reg, (digit) => coloredAsterisk);
+    return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
 
-  get number() {
-    this.#replaceDigitsWithAsterisk();
-    return this.#number;
+  #createOutput = () => {
+    const replacedWithAsterisk = this.#replaceDigitsWithAsterisk();
+    return `${JSON.stringify(replacedWithAsterisk)}`;
+  };
+
+  get output() {
+    const output = this.#createOutput();
+    fs.writeFileSync("outputs/Anki.txt", output, "utf8");
+    return output;
   }
 }
 
 export default DigitMemory;
+
+const digitMemory = new DigitMemory();
+digitMemory.output;
