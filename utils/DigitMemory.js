@@ -94,6 +94,11 @@ class DigitMemory {
 export default DigitMemory;
 
 const digitMemory = new DigitMemory();
-digitMemory.input = { number: 123456, digits: 25 };
-digitMemory.input = { number: 123456, digits: 123, isBackward: true };
+const inputs = [
+  [123456, 25],
+  [123456, 123, true],
+];
+inputs.forEach(([number, digits, isBackward]) => {
+  digitMemory.input = { number, digits, isBackward };
+});
 digitMemory.outputToFile();
