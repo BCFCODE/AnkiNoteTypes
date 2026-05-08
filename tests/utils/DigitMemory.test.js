@@ -6,11 +6,33 @@ describe("DigitMemory", () => {
   digitMemory.number = 4531071;
   digitMemory.digits = 317;
 
-  const correctReturnValue = `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>`;
+  const Front = `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>`;
 
-  it(`const digitMemory = new DigitMemory();\n\tdigitMemory.number = 4531071;\n\tdigitMemory.digits = 317;\n\tdigitMemory.output >> ${JSON.stringify(correctReturnValue)}`, () => {
+  const Answer = "3 1 7 1";
+
+  const TTSFront = "4 5 3 1 0 7 1";
+
+  const TTSBack = "4 5 3 1 0 7 1";
+
+  const correctOutput =
+    [Front, Answer, TTSFront, TTSBack].map((str) => JSON.stringify(str))
+      .join`, ` + "\n";
+
+  it(`const digitMemory = new DigitMemory();\n\tdigitMemory.number = 4531071;\n\tdigitMemory.digits = 317;\n\tdigitMemory.output >> ${correctOutput}`, () => {
     const result = digitMemory.output;
-    expect(result).toBe(JSON.stringify(correctReturnValue));
+    expect(result).toBe(correctOutput);
+  });
+
+  it("should have reversed Front field if isBackward flag is true", () => {
+    digitMemory.isBackward = true;
+    const reversedTTSFront = "1 7 0 1 3 5 4";
+    const correctOutput =
+      [Front, Answer, reversedTTSFront, TTSBack].map((str) =>
+        JSON.stringify(str),
+      ).join`, ` + "\n";
+
+    const result = digitMemory.output;
+    expect(result).toBe(correctOutput);
   });
 
   it("should have output property", () => {
