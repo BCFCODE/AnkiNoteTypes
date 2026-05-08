@@ -1,21 +1,16 @@
 import fs from "fs";
 
 class DigitMemory {
-  isBackward = false;
+  #isBackward = false;
+  #multipleInputs = [];
   #number;
   #digits;
 
-  set number(num) {
-    if (typeof num === "string") {
-      this.#number = Number(num.replace(/\s/, ""));
+  set input(obj) {
+    if (typeof obj.number === "string") {
+      obj.number = Number(num.replace(/\s/, ""));
     }
-    this.#number = num;
-  }
-
-  set multipleInputs(inputs) {}
-
-  set digits(digits) {
-    this.#digits = digits;
+    this.#multipleInputs.push(obj);
   }
 
   #addSpace = (n) => [...`${n}`].join` `;
@@ -41,7 +36,7 @@ class DigitMemory {
   };
 
   #createTTSFrontField = () => {
-    if (this.isBackward) {
+    if (this.#isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
       return this.#addSpace(reversedNumber);
     }
@@ -67,44 +62,38 @@ class DigitMemory {
 
   #createTagsField = () => {
     const nOfDigitsTag = this.#createNumberOfDigitsTag();
-    const directionTag = this.isBackward ? "Backward" : "Forward";
+    const directionTag = this.#isBackward ? "Backward" : "Forward";
     return `Memo DigitMemory Warmup ${directionTag} ${nOfDigitsTag}`;
   };
 
   #createOutput = () => {
-    const Front = this.#createFrontField();
-    const Answer = this.#createAnswerField();
-    const TTSFront = this.#createTTSFrontField();
-    const TTSBack = this.#createTTSBackField();
-    const Tags = this.#createTagsField();
-
-    return (
-      [Front, Answer, TTSFront, TTSBack, Tags].map((str) => JSON.stringify(str))
-        .join`, ` + "\n"
+    const outputs = this.#multipleInputs.map(
+      ({ number, digits, isBackward = false }) => {
+        this.#number = number;
+        this.#digits = digits;
+        this.#isBackward = isBackward;
+        const Front = this.#createFrontField();
+        const Answer = this.#createAnswerField();
+        const TTSFront = this.#createTTSFrontField();
+        const TTSBack = this.#createTTSBackField();
+        const Tags = this.#createTagsField();
+        return [Front, Answer, TTSFront, TTSBack, Tags].join`|`;
+      },
     );
+    return outputs.join`\n`;
   };
 
   get output() {
     return this.#createOutput();
   }
 
-  outputToFile = () =>
-    fs.writeFileSync("outputs/Anki.txt", this.#createOutput(), "utf8");
+  outputToFile = (path = "Anki.txt") =>
+    fs.writeFileSync(`outputs/${path}`, this.#createOutput(), "utf8");
 }
 
 export default DigitMemory;
 
-
-
-const output = [
-  [123456, 35],
-  [12356, 23, true],
-].map(([number, digits, isBackward = false]) => {
- const digitMemory = new DigitMemory();
-  digitMemory.number = number;
-  digitMemory.digits = digits;
-  digitMemory.isBackward = isBackward;
-  return digitMemory.output
-}).join``;
-
-fs.writeFileSync("outputs/multiple-inputs.txt", output, "utf8");
+const digitMemory = new DigitMemory();
+digitMemory.input = { number: 123456, digits: 25 };
+digitMemory.input = { number: 123456, digits: 123, isBackward: true };
+digitMemory.outputToFile();
