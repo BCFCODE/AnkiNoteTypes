@@ -85,8 +85,7 @@ class DigitMemory {
   };
 
   get output() {
-    const output = this.#createOutput();
-    return output;
+    return this.#createOutput();
   }
 
   outputToFile = () =>
@@ -95,17 +94,17 @@ class DigitMemory {
 
 export default DigitMemory;
 
-const digitMemory = new DigitMemory();
 
-// [
-//   [123456, 35],
-//   [123456, 23]
-// ].forEach(([number, digits, isBackward = false]) => {
-//   digitMemory.number = number
-//   digitMemory.digits = digitMemory
-//   digitMemory.isBackward = isBackward
 
-// })
-digitMemory.number = 123456;
-digitMemory.digits = 43;
-digitMemory.outputToFile();
+const output = [
+  [123456, 35],
+  [12356, 23, true],
+].map(([number, digits, isBackward = false]) => {
+ const digitMemory = new DigitMemory();
+  digitMemory.number = number;
+  digitMemory.digits = digits;
+  digitMemory.isBackward = isBackward;
+  return digitMemory.output
+}).join``;
+
+fs.writeFileSync("outputs/multiple-inputs.txt", output, "utf8");
