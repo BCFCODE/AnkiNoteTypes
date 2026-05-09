@@ -1,15 +1,30 @@
 import fs from "fs";
 
 export class Warmup {
+  #color = 
   #isBackward = false;
   #multipleInputs = [];
   #number;
   #digits;
 
-  set input(obj) {
-    if (typeof obj.number === "string") {
-      obj.number = Number(obj.number.replace(/\s/g, ""));
+  #inputValidation = (obj) => {
+    for (const property in obj) {
+      const propsThatShouldHaveNumberType = ["number", "digits"];
+      propsThatShouldHaveNumberType.forEach((numberProp) => {
+        if (property === numberProp && typeof obj[property] === "string") {
+          const convertedNumber = Number(obj[numberProp].replace(/\s/g, ""));
+          if (isNaN(convertedNumber))
+            throw new Error(
+              `Your ${property} input property (${obj[property]}) is invalid, it must be a number or a string that can be converted to a number.`,
+            );
+          obj[numberProp] = Number(obj[numberProp].replace(/\s/g, ""));
+        }
+      });
     }
+  };
+
+  set input(obj) {
+    this.#inputValidation(obj);
     this.#multipleInputs.push(obj);
   }
 
@@ -48,16 +63,8 @@ export class Warmup {
   };
 
   #createNumberOfDigitsTag = () => {
-    const tagMap = {
-      4: "4Digits",
-      5: "5Digits",
-      6: "6Digits",
-      7: "7Digits",
-      8: "8Digits",
-      9: "9Digits",
-      10: "10Digits",
-    };
-    return tagMap[this.#number.toString().length];
+    const numberOf = this.#number.toString().length;
+    return `${numberOf}Digits`;
   };
 
   #createTagsField = () => {
@@ -94,14 +101,25 @@ export class Warmup {
 const digitMemory = new Warmup();
 
 const inputs = [
-  ["8 2 9 7 8 6 5 1 6", 91],
-  ["8 4 7 4 5 7 3 8 5", 47],
-  ["2 9 8 6 2 5 4", 294],
-  ["7 6 1 0 7 8 6 9 0", 6],
+  ["4 7 8 7 5 3 0 2 1", 53],
+  ["4 9 4 1 7", 19, true],
+  ["5 9 3 9 8 5 1 6 9", 13],
+  ["6 5 8 7 3 6 4 0", 430],
+  ["4 0 4 7 3 4 3 2 9", 43],
+  ["9 1 4 9 0 9 1", 19],
+  ["0 4 3 0 8 2 5 7", 8342],
+  ["5 9 7 9 4 5 6 1 6", 451],
+  ["8 5 2 0 2 1 4 3 7 9", 3],
+  ["6 9 4 9 7 4 1", 1],
+  ["6 8 9 2 8 0 8", 820],
+  ["4 1 5 4 5 7 6 8", 5478],
+  ["9 8 5 6 1 8", 951, true],
+  ["3 8 6 9 2 4 9 7 0", 87],
+  ["6 2 6 1 6 2 5 3 7", 925],
 ];
 
 inputs.forEach(([number, digits, isBackward]) => {
   digitMemory.input = { number, digits, isBackward };
 });
- 
+
 digitMemory.outputToFile();
