@@ -1,7 +1,6 @@
 import fs from "fs";
 
 export class Warmup {
-  #color = 
   #isBackward = false;
   #multipleInputs = [];
   #number;
