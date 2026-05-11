@@ -80,10 +80,35 @@ export class Warmup {
         this.#isBackward = isBackward;
         const Front = this.#createFrontField();
         const Answer = this.#createAnswerField();
+        const Back = null;
+        const Image = null;
+        const AudioBothSides = null;
+        const AudioFront = null;
+        const AudioBack = null;
+        const VideoFront = null;
+        const VideoBack = null;
+        const Links = null;
         const TTSFront = this.#createTTSFrontField();
         const TTSBack = this.#createTTSBackField();
+        const FrontPersian = null;
         const Tags = this.#createTagsField();
-        return [Front, Answer, TTSFront, TTSBack, Tags].join`|`;
+        const Fields = [
+          Front,
+          Answer,
+          Back,
+          Image,
+          AudioBothSides,
+          AudioFront,
+          AudioBack,
+          VideoFront,
+          VideoBack,
+          Links,
+          TTSFront,
+          TTSBack,
+          FrontPersian,
+          Tags,
+        ];
+        return Fields.join`|`;
       },
     );
     return outputs.join`\n`;
@@ -100,21 +125,35 @@ export class Warmup {
 const digitMemory = new Warmup();
 
 const inputs = [
-  ["4 7 8 7 5 3 0 2 1", 53],
-  ["4 9 4 1 7", 19, true],
-  ["5 9 3 9 8 5 1 6 9", 13],
-  ["6 5 8 7 3 6 4 0", 430],
-  ["4 0 4 7 3 4 3 2 9", 43],
-  ["9 1 4 9 0 9 1", 19],
-  ["0 4 3 0 8 2 5 7", 8342],
-  ["5 9 7 9 4 5 6 1 6", 451],
-  ["8 5 2 0 2 1 4 3 7 9", 3],
-  ["6 9 4 9 7 4 1", 1],
-  ["6 8 9 2 8 0 8", 820],
-  ["4 1 5 4 5 7 6 8", 5478],
-  ["9 8 5 6 1 8", 951, true],
+  ["6 8 2 0 1 7 0 5 4 9", 70],
+  ["8 4 7 4 5 7 3 8 5", 7],
+  ["3 8 6 9 2 4 9 7 0", 8],
+  ["6 3 8 5 1 0 2 5 3", 8510],
+  ["4 0 4 7 3 4 3 2 9", 40],
+  ["2 0 3 5 2 5", 2, true],
+  ["0 8 6 3 6 1 3 7 9", 7],
+  ["3 6 3 4 1 6 4 6 1", 6],
+  ["6 8 2 0 1 7 0 5 4 9", 75],
+  ["5 4 2 5 2 1", 25, true],
+  ["3 2 8 4 5 0 6 2", 5062],
   ["3 8 6 9 2 4 9 7 0", 87],
-  ["6 2 6 1 6 2 5 3 7", 925],
+  ["7 9 5 9 8 1 9 1", 19],
+  ["7 6 1 0 7 8 6 9 0", 869],
+  ["9 4 5 0 7 1 0 2 8 6", 108],
+  ["6 7 8 0 9 6 2 4 8", 706],
+  ["4 0 4 7 3 4 3 2 9", 43],
+  ["6 4 3 2 5", 28, true],
+  ["9 7 3 4 1 2 0 2 5 8", 123],
+  ["3 6 3 4 1 6 4 6 1", 76],
+  ["6 8 2 0 1 7 0 5 4 9", 64],
+  ["7 6 1 0 7 8 6 9 0", 16],
+  ["7 9 5 9 8 1 9 1", 519],
+  ["6 7 8 0 9 6 2 4 8", 248],
+  ["9 2 0 8 9 0 7 2 0 5", 208],
+  ["6 7 2 6 5 8 7 1 4", 65],
+  ["9 7 3 4 1 2 0 2 5 8", 12],
+  ["8 4 7 4 5 7 3 8 5", 57],
+  ["3 6 1 0 7 0 6 3 9", 106],
 ];
 
 inputs.forEach(([number, digits, isBackward]) => {

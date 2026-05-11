@@ -2,10 +2,20 @@ import { it, describe, vi, expect } from "vitest";
 import { Warmup } from "../../utils/DigitMemory";
 
 describe("DigitMemory", () => {
+  const Back = null;
+  const Image = null;
+  const AudioBothSides = null;
+  const AudioFront = null;
+  const AudioBack = null;
+  const VideoFront = null;
+  const VideoBack = null;
+  const Links = null;
+  const FrontPersian = null;
+
   describe("input validation", () => {
-    it('should throw an error if number input is an invalid string (cannot convert to number)', () => {
+    it("should throw an error if number input is an invalid string (cannot convert to number)", () => {
       const digitMemory = new Warmup();
-      digitMemory.input = { number: '13 u 8 a *', digits: 317 };
+      // digitMemory.input = { number: '13 u 8 a *', digits: 317 };
 
       // const Front = `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>`;
 
@@ -18,7 +28,7 @@ describe("DigitMemory", () => {
       // const Tags = "Memo DigitMemory Warmup Forward 7Digits";
 
       // const correctOutput = [Front, Answer, TTSFront, TTSBack, Tags].join`|`;
-      
+
       // const result = digitMemory.output;
       // expect(result).toBe(correctOutput);
     });
@@ -37,7 +47,24 @@ describe("DigitMemory", () => {
 
     const Tags = "Memo DigitMemory Warmup Forward 7Digits";
 
-    const correctOutput = [Front, Answer, TTSFront, TTSBack, Tags].join`|`;
+    const Fields = [
+      Front,
+      Answer,
+      Back,
+      Image,
+      AudioBothSides,
+      AudioFront,
+      AudioBack,
+      VideoFront,
+      VideoBack,
+      Links,
+      TTSFront,
+      TTSBack,
+      FrontPersian,
+      Tags,
+    ];
+
+    const correctOutput = Fields.join`|`;
     const result = digitMemory.output;
     expect(result).toBe(correctOutput);
   });
@@ -56,7 +83,24 @@ describe("DigitMemory", () => {
 
     const Tags = "Memo DigitMemory Warmup Backward 7Digits";
 
-    const correctOutput = [Front, Answer, TTSFront, TTSBack, Tags].join`|`;
+    const Fields = [
+      Front,
+      Answer,
+      Back,
+      Image,
+      AudioBothSides,
+      AudioFront,
+      AudioBack,
+      VideoFront,
+      VideoBack,
+      Links,
+      TTSFront,
+      TTSBack,
+      FrontPersian,
+      Tags,
+    ];
+
+    const correctOutput = Fields.join`|`;
 
     const result = digitMemory.output;
     expect(result).toBe(correctOutput);
