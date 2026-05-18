@@ -33,6 +33,43 @@ describe("DigitMemory", () => {
       // expect(result).toBe(correctOutput);
     });
   });
+
+  it(`should return the same number with empty front, if number does not contain digits\n\tconst digitMemory = new DigitMemory();\n\tdigitMemory.number = 4531071;\n\t digitMemory.input = { number: 4531071, digits: 9 };`, () => {
+    const digitMemory = new Warmup();
+    digitMemory.input = { number: 4531071, digits: 9 };
+
+    const Front = ``;
+
+    const Answer = "4 5 3 1 0 7 1";
+
+    const TTSFront = "4 5 3 1 0 7 1";
+
+    const TTSBack = "4 5 3 1 0 7 1";
+
+    const Tags = "Memo DigitMemory Warmup Forward 7Digits";
+
+    const Fields = [
+      Front,
+      Answer,
+      Back,
+      Image,
+      AudioBothSides,
+      AudioFront,
+      AudioBack,
+      VideoFront,
+      VideoBack,
+      Links,
+      TTSFront,
+      TTSBack,
+      FrontPersian,
+      Tags,
+    ];
+
+    const correctOutput = Fields.join`|`;
+    const result = digitMemory.output;
+    expect(result).toBe(correctOutput);
+  });
+
   it(`const digitMemory = new DigitMemory();\n\tdigitMemory.number = 4531071;\n\t digitMemory.input = { number: 4531071, digits: 317 };`, () => {
     const digitMemory = new Warmup();
     digitMemory.input = { number: 4531071, digits: 317 };
