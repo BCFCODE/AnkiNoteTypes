@@ -12,6 +12,30 @@ describe("DigitMemory", () => {
   const Links = null;
   const FrontPersian = null;
 
+  describe("input cleaners (clean input before use)", () => {
+    it.each([
+      {
+        number: "13 u 8 a *",
+        digits: 3417,
+        expectedResult: `<span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 8|1 3|||||||||1 3 8|1 3 8||Memo DigitMemory Warmup Forward 3Digits **`,
+      },
+      {
+        number: 4531071,
+        digits: "3@ 1d7g 9 d",
+        expectedResult: `4 5 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> 0 <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>|3 1 7 1|||||||||4 5 3 1 0 7 1|4 5 3 1 0 7 1||Memo DigitMemory Warmup Forward 7Digits ****`,
+      },
+    ])(
+      `should work with unclean inputs\n\tconst digitMemory = new DigitMemory();\n\tdigitMemory.input = { number: $number, digits: $digits };`,
+      ({ number, digits, expectedResult }) => {
+        const digitMemory = new Warmup();
+        digitMemory.input = { number, digits };
+
+        const result = digitMemory.output;
+        expect(result).toBe(expectedResult);
+      },
+    );
+  });
+
   describe("input validation", () => {
     it('should work with digits: 0 or digits: "0"', () => {});
 
@@ -21,8 +45,6 @@ describe("DigitMemory", () => {
         digits: 9,
         scenario: "(number does not contain digits)",
       },
-      { number: "13 u 8 a *", digits: 317, scenario: "(invalid string)" },
-      { number: 4531071, digits: "3@ 1d7g d", scenario: "(invalid string)" },
       { number: null, digits: 317, scenario: "(null instead of valid number)" },
       { number: "", digits: 317, scenario: "(number is an empty string)" },
       {
