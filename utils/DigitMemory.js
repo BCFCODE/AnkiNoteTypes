@@ -6,28 +6,13 @@ export class Warmup {
   #number;
   #digits;
 
-  #inputValidation = (obj) => {
-    for (const property in obj) {
-      const propsThatShouldHaveNumberType = ["number", "digits"];
-      propsThatShouldHaveNumberType.forEach((numberProp) => {
-        if (property === numberProp && typeof obj[property] === "string") {
-          const convertedNumber = Number(obj[numberProp].replace(/\s/g, ""));
-          if (isNaN(convertedNumber))
-            throw new Error(
-              `Your ${property} input property (${obj[property]}) is invalid, it must be a number or a string that can be converted to a number.`,
-            );
-          obj[numberProp] = Number(obj[numberProp].replace(/\s/g, ""));
-        }
-      });
-    }
-  };
-
   set input(obj) {
-    this.#inputValidation(obj);
     this.#multipleInputs.push(obj);
   }
 
   #addSpace = (n) => [...`${n}`].join` `;
+
+  #removeSpace = (n) => `${n}`.replace(/ /g, '')
 
   #getReg = (n) => {
     return new RegExp(`[${n}]`, "g");
@@ -36,31 +21,45 @@ export class Warmup {
   #createColoredAsterisk = (color) => {
     return `<span style="color: ${color}">*</span>`;
   };
+ 
+  #canNotConvertToNumber = (number) => {
+    if (!/number|string/.test(typeof number)) return true;
+    if (typeof number === "string") {
+      if (number === "") return true;
+      const cleanNumber = this.#removeSpace(number)
+      const hasNoneDigit = /\D/.test(cleanNumber);
+      if (hasNoneDigit) return true;
+    }
+    return false;
+  };
 
-  #numberHasDigits = () => {
+  #isValidInputs = () => {
+   if( [this.#number, this.#digits].some(this.#canNotConvertToNumber)) return false;
+
     const reg = this.#getReg(this.#digits);
-    return reg.test(`${this.#number}`);
+    const numberHasDigits = reg.test(`${this.#number}`);
+    if (!numberHasDigits) return false;
+
+    return true;
   };
 
   #createFrontField = () => {
+    if (!this.#isValidInputs()) return null;
     const reg = this.#getReg(this.#digits);
-    if (!this.#numberHasDigits()) return null;
-
     const spacedNumber = this.#addSpace(this.#number);
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
     return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
 
   #createAnswerField = () => {
+    if (!this.#isValidInputs()) return null;
     const reg = this.#getReg(this.#digits);
-    if (!this.#numberHasDigits()) return null;
-
     const answerFieldDigits = `${this.#number}`.match(reg);
     return answerFieldDigits.join` `;
   };
 
   #createTTSFrontField = () => {
-    if (!this.#numberHasDigits()) return null;
+    if (!this.#isValidInputs()) return null;
     if (this.#isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
       return this.#addSpace(reversedNumber);
@@ -69,7 +68,7 @@ export class Warmup {
   };
 
   #createTTSBackField = () => {
-    if (!this.#numberHasDigits()) return null;
+    if (!this.#isValidInputs()) return null;
     return this.#addSpace(this.#number);
   };
 
@@ -86,7 +85,7 @@ export class Warmup {
   };
 
   #createTagsField = () => {
-    if (!this.#numberHasDigits()) return null;
+    if (!this.#isValidInputs()) return null;
     const nOfDigitsTag = this.#createNumberOfDigitsTag();
     const directionTag = this.#isBackward ? " Backward" : " Forward";
     const hiddenStarsTag = this.#createHiddenStarsTag();
@@ -138,7 +137,7 @@ export class Warmup {
   get output() {
     return this.#createOutput();
   }
-
+ 
   outputToFile = (path = "Anki.txt") =>
     fs.writeFileSync(`outputs/${path}`, this.#createOutput(), "utf8");
 }
