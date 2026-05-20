@@ -67,13 +67,21 @@ export class Warmup {
 
   #createNumberOfDigitsTag = () => {
     const numberOf = this.#number.toString().length;
-    return `${numberOf}Digits`;
+    return ` ${numberOf}Digits`;
+  };
+
+  #createHiddenStarsTag = () => {
+    const reg = this.#getReg(this.#digits);
+    const answerFieldDigits = `${this.#number}`.match(reg);
+    if (answerFieldDigits === null) return "";
+    return " " + "*".repeat(answerFieldDigits.length);
   };
 
   #createTagsField = () => {
     const nOfDigitsTag = this.#createNumberOfDigitsTag();
-    const directionTag = this.#isBackward ? "Backward" : "Forward";
-    return `Memo DigitMemory Warmup ${directionTag} ${nOfDigitsTag}`;
+    const directionTag = this.#isBackward ? " Backward" : " Forward";
+    const hiddenStarsTag = this.#createHiddenStarsTag();
+    return `Memo DigitMemory Warmup${directionTag}${nOfDigitsTag}${hiddenStarsTag}`;
   };
 
   #createOutput = () => {
@@ -129,67 +137,13 @@ export class Warmup {
 export const digitMemory = new Warmup();
 
 const inputs = [
-  ["6 5 8 9 0 5 4 2", 85],
-  ["2 7 5 3 7 3 1 7 5 4", 734],
-  ["2 7 5 3 7 3 1 7 5 4", 75],
-  ["6 5 8 9 0 5 4 2", 582],
-  ["2 7 5 3 7 3 1 7 5 4", 352],
-  ["2 7 5 3 7 3 1 7 5 4", 731],
-  ["6 5 8 9 0 5 4 2", 54],
-  ["2 7 5 3 7 3 1 7 5 4", 73],
-  ["2 7 5 3 7 3 1 7 5 4", 735],
-  ["8 5 2 0 2 1 4 3 7 9", 4120],
-  ["3 2 0 7 4 5 8", 40, true],
-  ["3 2 0 7 4 5 8", 50, true],
-  ["5 6 3 1 7 1 9 3 4 6", 17],
-  ["8 2 4 8 7 6 8 3 6", 8795],
-  ["6 3 8 5 1 0 2 5 3", 8510],
-  ["4 0 8 9 5 3 8 0", 8953],
-  ["5 6 3 1 7 1 9 3 4 6", 945],
-  ["8 4 7 4 5 7 3 8 5", 78],
-  ["5 6 3 1 7 1 9 3 4 6", 14],
-  ["5 8 9 1 8 7 3 8 5 9", 59],
-  ["2 7 5 3 7 3 1 7 5 4", 73542],
-  ["5 6 3 1 7 1 9 3 4 6", 194],
-  ["5 8 9 1 8 7 3 8 5 9", 591],
-  ["5 8 2 1 6 7 3 1 7", 731],
-  ["2 6 5 4 8 4 3 8 0", 84],
-  ["8 4 1 2 9 7", 47, true],
-  ["3 2 8 2 1 3 2 8 5", 1328],
-  ["6 4 3 9 1 7 1 3 6 5", 1],
-  ["2 7 5 3 7 3 1 7 5 4", 173],
-  ["7 4 1 2 1 7 0 5 1", 75],
-  ["9 7 1 7 9 1 7 8", 91],
-  ["5 8 2 1 6 7 3 1 7", 873],
-  ["5 8 9 1 8 7 3 8 5 9", 5],
-  ["2 3 4 2 0 1 3 8 9 1", 10],
-  ["2 7 5 3 7 3 1 7 5 4", 5],
-  ["1 7 5 9 1 6 3", 19, true],
-  ["5 8 2 1 6 7 3 1 7", 23],
-  ["5 8 9 1 8 7 3 8 5 9", 15],
-  ["6 4 3 9 1 7 1 3 6 5", 16],
-  ["9 7 3 4 1 2 0 2 5 8", 302],
-  ["4 2 4 1 3 9 7", 3],
-  ["7 4 1 2 1 7 0 5 1", 1217],
-  ["5 8 2 1 6 7 3 1 7", 317],
-  ["5 8 9 1 8 7 3 8 5 9", 51],
-  ["6 4 3 9 1 7 1 3 6 5", 19],
-  ["9 7 3 4 1 2 0 2 5 8", 30],
-  ["9 0 2 1 9 2 9 4", 5],
-  // ['2 3 4 2 0 1 3 8 9 1', 20],
-  // ['0 4 3 0 8 2 5 7', 4],
-  // ['9 7 3 4 1 2 0 2 5 8', 30],
-  // ['7 1 9 7 5 7 2 8', 13],
-  // ['6 4 3 9 1 7 1 3 6 5', 139],
-  // ['5 8 9 1 8 7 3 8 5 9', 59],
-  // ['9 7 3 4 1 2 0 2 5 8', 30],
-  // ['7 4 1 2 1 7 0 5 1', 751],
-  // ['6 4 3 9 1 7 1 3 6 5', 16],
-  // ['4 0 9 7 9 4 0 5 1', 405],
-  // ['8 7 9 0 5 1 2 7 3 3', 691],
-  // ['3 6 3 7 4 4 7 0 4', 70],
-  // ['7 0 8 6 4 2 6', 6842],
-  // ['8 4 8 7 2 4 6 0', 76]
+  ["9 2 5 6 8 3 7 1 4", 3],
+  ["4 0 9 7 9 4 0 5 1", 49],
+  ["3 2 3 8 2 9 5 3 6 2", 293682],
+  ["6 8 0 6 7 1 5 6", 7],
+  ["7 1 3 4 8 6 0 6 2 6", 87],
+  ["4 0 9 7 9 4 0 5 1", 74],
+  ["3 2 3 8 2 9 5 3 6 2", 82519],
 ];
 
 inputs.forEach(([number, digits, isBackward]) => {
