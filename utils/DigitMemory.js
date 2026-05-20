@@ -6,8 +6,28 @@ export class Warmup {
   #number;
   #digits;
 
+  #sortDigits = (n) => {
+    return [...this.#removeSpace(n)].sort((a, b) => a - b).join``;
+  };
+
+  #isDuplicatedInputObj = (oldObj, newObj) => {
+    const isNumberDuplicated =
+      this.#removeSpace(oldObj.number) === this.#removeSpace(newObj.number);
+    const isDigitsDuplicated =
+      this.#sortDigits(oldObj.digits) === this.#sortDigits(newObj.digits);
+    const isBackwardDuplicated = oldObj.isBackward === newObj.isBackward;
+    return [isNumberDuplicated, isDigitsDuplicated, isBackwardDuplicated].every(
+      (is) => is === true,
+    );
+  };
+
+  #isDuplicatedInput = (newObj) =>
+    this.#multipleInputs.some((oldObj) =>
+      this.#isDuplicatedInputObj(oldObj, newObj),
+    );
+
   set input(obj) {
-    this.#multipleInputs.push(obj);
+    if (!this.#isDuplicatedInput(obj)) this.#multipleInputs.push(obj);
   }
 
   #addSpace = (n) => [...`${n}`].join` `;
@@ -146,46 +166,10 @@ export class Warmup {
 export const digitMemory = new Warmup();
 
 const inputs = [
-  ["9 2 5 6 8 3 7 1 4", 3],
-  ["4 0 9 7 9 4 0 5 1", 49],
-  ["3 2 3 8 2 9 5 3 6 2", 293682],
-  ["6 8 0 6 7 1 5 6", 7],
-  ["7 1 3 4 8 6 0 6 2 6", 87],
-  ["4 0 9 7 9 4 0 5 1", 74],
-  ["3 2 3 8 2 9 5 3 6 2", 82519],
-  ["7 1 3 4 8 6 0 6 2 6", 54],
-  ["4 0 9 7 9 4 0 5 1", 4],
-  ["6 8 0 6 7 1 5 6", 7],
-  ["4 0 9 7 9 4 0 5 1", 47],
-  ["7 6 1 0 7 8 6 9 0", 71],
-  ["4 0 9 7 9 4 0 5 1", 74],
-  ["8 3 1 4 5 3 1 2 7", 5314],
-  ["0 8 6 3 6 1 3 7 9", 67],
-  ["4 7 1 9 0 8 3 7 8", 837],
-  ["8 9 0 5 8 6 4 3 6", 40],
-  ["8 3 1 4 5 3 1 2 7", 8143],
-  ["8 9 0 5 8 6 4 3 6", 95],
-  ["3 8 6 9 2 4 9 7 0", 467],
-  ["8 5 2 0 2 1 4 3 7 9", 4],
-  ["9 4 6 5 1 8 5 1 9", 45],
-  ["8 3 1 4 5 3 1 2 7", 5],
-  ["6 4 3 9 1 7 1 3 6 5", 1],
-  ["7 5 1 6 4 3 9 0 4", 16370],
-  ["8 5 2 0 2 1 4 3 7 9", 4],
-  ["8 3 1 4 5 3 1 2 7", 462],
-  ["8 5 6 5 3 9 7 0", 973],
-  ["8 2 1 3 5 6 3 7 5", 67],
-  ["5 9 3 9 8 5 1 6 9", 853],
-  ["8 3 1 4 5 3 1 2 7", 4351],
-  ["8 5 6 5 3 9 7 0", 973],
-  ["1 9 2 8 6 4 5 3", 46],
-  ["8 2 1 3 5 6 3 7 5", 6],
-  ["8 9 7 1 6 0 3 0 6", 79630],
-  ["1 3 6 8 9 6 8 5 3 9", 91],
-  ["8 9 7 1 6 0 3 0 6", 91],
-  ["8 9 7 1 6 0 3 0 6", 790],
-  ["1 3 6 8 9 6 8 5 3 9", 59],
-  ["9 4 5 0 7 1 0 2 8 6", 102],
+  [1234, 14],
+  [1234, 41],
+  [1234, 14, true],
+  [1234, 41, true],
 ];
 
 inputs.forEach(([number, digits, isBackward]) => {
