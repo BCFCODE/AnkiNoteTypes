@@ -37,23 +37,30 @@ export class Warmup {
     return `<span style="color: ${color}">*</span>`;
   };
 
+  #numberHasDigits = () => {
+    const reg = this.#getReg(this.#digits);
+    return reg.test(`${this.#number}`);
+  };
+
   #createFrontField = () => {
     const reg = this.#getReg(this.#digits);
+    if (!this.#numberHasDigits()) return null;
+
     const spacedNumber = this.#addSpace(this.#number);
-    if (!reg.test(spacedNumber)) return "";
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
     return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
 
   #createAnswerField = () => {
     const reg = this.#getReg(this.#digits);
-    const answerFieldDigits = `${this.#number}`.match(reg);
-    if (answerFieldDigits === null) return this.#addSpace(this.#number);
+    if (!this.#numberHasDigits()) return null;
 
+    const answerFieldDigits = `${this.#number}`.match(reg);
     return answerFieldDigits.join` `;
   };
 
   #createTTSFrontField = () => {
+    if (!this.#numberHasDigits()) return null;
     if (this.#isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
       return this.#addSpace(reversedNumber);
@@ -62,6 +69,7 @@ export class Warmup {
   };
 
   #createTTSBackField = () => {
+    if (!this.#numberHasDigits()) return null;
     return this.#addSpace(this.#number);
   };
 
@@ -78,6 +86,7 @@ export class Warmup {
   };
 
   #createTagsField = () => {
+    if (!this.#numberHasDigits()) return null;
     const nOfDigitsTag = this.#createNumberOfDigitsTag();
     const directionTag = this.#isBackward ? " Backward" : " Forward";
     const hiddenStarsTag = this.#createHiddenStarsTag();
