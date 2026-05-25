@@ -6,13 +6,16 @@ export class Warmup {
   #number;
   #digits;
 
-  #getSortedDigits = (digits) => {
-    return [...this.#removeSpace(digits)].sort((a, b) => a - b).join``;
+  #getUniqueDigits = (digits) => [...new Set(this.#removeNoneDigits(digits))];
+
+  #getSortedUniqueDigits = (digits) => {
+    const uniqueDigits = this.#getUniqueDigits(digits);
+    return uniqueDigits.sort((a, b) => a - b).join``;
   };
 
   #removeNotIncludedDigits = ({ number, digits }) => {
-    const reg = new RegExp(`[^${this.#removeSpace(number)}]`, "g");
-    return this.#removeSpace(digits).replace(reg, "");
+    const reg = new RegExp(`[^${this.#removeNoneDigits(number)}]`, "g");
+    return this.#removeNoneDigits(digits).replace(reg, "");
   };
 
   #setCleanNumber = (obj) => {
@@ -21,7 +24,7 @@ export class Warmup {
 
   #setCleanDigits = (obj) => {
     const cleanDigits = this.#removeNotIncludedDigits(obj);
-    obj.digits = this.#getSortedDigits(cleanDigits);
+    obj.digits = this.#getSortedUniqueDigits(cleanDigits);
   };
 
   #isDuplicatedInputObj = (oldObj, newObj) => {
@@ -45,21 +48,49 @@ export class Warmup {
       this.#isDuplicatedInputObj(oldObj, newObj),
     );
 
-  set input(obj) {
-    this.#setCleanNumber(obj);
-    this.#setCleanDigits(obj);
+  #generateInputs = (obj) => {
+    const splittedDigits = obj.digits.match(/\d/g) ?? [];
+    const individualDigits = [...splittedDigits, obj.digits];
+    return individualDigits.map((digits) => ({ ...obj, digits }));
+  };
+
+  #checkForDuplicatesAndPushToMultipleInputs = (obj) => {
     const objIsNotADuplicatedInput = !this.#isDuplicatedInput(obj);
     if (objIsNotADuplicatedInput) this.#multipleInputs.push(obj);
+  };
+
+  #addInputs = (obj) => {
+    const inputs = this.#generateInputs(obj);
+    inputs.forEach(this.#checkForDuplicatesAndPushToMultipleInputs);
+  };
+
+  #createInputObj = (input = {}) => {
+    let obj = input;
+
+    if (Array.isArray(input)) {
+      const [number, digits, isBackward] = input;
+      obj = { number, digits, isBackward };
+    }
+
+    if (typeof input === "number" || typeof input === "string") {
+      obj = { number: input, digits: input };
+    }
+    return obj;
+  };
+
+  set singleInput(input) {
+    const obj = this.#createInputObj(input);
+    this.#setCleanNumber(obj);
+    this.#setCleanDigits(obj);
+    this.#addInputs(obj);
   }
 
   #addSpace = (n) => [...`${n}`].join` `;
 
-  #removeSpace = (n) => `${n}`.replace(/ /g, "");
-
   #removeNoneDigits = (n) => `${n}`.replace(/\D/g, "");
 
   #getReg = (n) => {
-    return new RegExp(`[${this.#removeSpace(n)}]`, "g");
+    return new RegExp(`[${this.#removeNoneDigits(n)}]`, "g");
   };
 
   #createColoredAsterisk = (color) => {
@@ -70,7 +101,7 @@ export class Warmup {
     if (!/number|string/.test(typeof number)) return true;
     if (typeof number === "string") {
       if (number === "") return true;
-      const cleanNumber = this.#removeSpace(number);
+      const cleanNumber = this.#removeNoneDigits(number);
       const hasNoneDigit = /\D/.test(cleanNumber);
       if (hasNoneDigit) return true;
     }
@@ -118,7 +149,7 @@ export class Warmup {
   };
 
   #createNumberOfDigitsTag = () => {
-    const numberOf = this.#removeSpace(this.#number).toString().length;
+    const numberOf = this.#removeNoneDigits(this.#number).toString().length;
     return ` ${numberOf}Digits`;
   };
 
@@ -190,16 +221,12 @@ export class Warmup {
 export const digitMemory = new Warmup();
 
 const inputs = [
-  ["7 8 6 7 4 5 9", 8],
-  ["6 3 5 1 3 0 7 3", 73],
-  ["9 2 9 7 8 0 9 4", 20],
-  ["2 9 5 7 8 7", 9, true],
-  ["6 3 5 1 3 0 7 3", 30],
-  ["5 9 4 9 1 0 3 5 6", 103],
+  ["2 5 0 1 2 0 4 2 7", 30],
+  ["2 5 0 1 2 0 4 2 7", 42],
 ];
 
-inputs.forEach(([number, digits, isBackward]) => {
-  digitMemory.input = { number, digits, isBackward };
+inputs.forEach((input) => {
+  digitMemory.singleInput = input;
 });
 
 digitMemory.outputToFile();
