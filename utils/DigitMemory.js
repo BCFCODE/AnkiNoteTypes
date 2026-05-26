@@ -127,15 +127,7 @@ export class Warmup {
     const [uniqueNumber, uniqueDigits] = [obj.number, obj.digits].map(
       this.#getSortedUniqueDigits,
     );
-
-    console.log(
-      obj,
-      isDuplicatedInput,
-      numberOrDigitsCanNotConvertedToNumber,
-      uniqueNumber,
-      uniqueDigits,
-      uniqueNumber === uniqueDigits,
-    );
+    
     if (isDuplicatedInput) return false;
     if (numberOrDigitsCanNotConvertedToNumber) return false;
     if (uniqueNumber === uniqueDigits) return false;
@@ -240,7 +232,8 @@ export class Warmup {
 export const digitMemory = new Warmup();
 
 digitMemory.multipleInputs = [
-  "2 5 0 1 2 0 4 2 7"
+  ['2 0 7 4 5 6 8 2 4', 72],
+
 ];
 
 digitMemory.outputToFile();
