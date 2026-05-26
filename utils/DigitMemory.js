@@ -59,7 +59,7 @@ export class Warmup {
     if (isValidInput) this.#multipleInputs.push(obj);
   };
 
-  #addInputs = (obj) => {
+  #addInput = (obj) => {
     const inputs = this.#generateInputs(obj);
     inputs.forEach(this.#inputValidationAndPushToMultipleInputs);
   };
@@ -76,14 +76,23 @@ export class Warmup {
       obj = { number: input, digits: input };
     }
 
+    this.#setCleanNumber(obj);
+    this.#setCleanDigits(obj);
+
     return obj;
   };
 
-  set singleInput(input) {
+  #createAndAddInputToMultipleInputs = (input) => {
     const obj = this.#createInputObj(input);
-    this.#setCleanNumber(obj);
-    this.#setCleanDigits(obj);
-    this.#addInputs(obj);
+    this.#addInput(obj);
+  };
+
+  set singleInput(input) {
+    this.#createAndAddInputToMultipleInputs(input);
+  }
+
+  set multipleInputs(inputs) {
+    inputs.forEach(this.#createAndAddInputToMultipleInputs);
   }
 
   #addSpace = (n) => [...`${n}`].join` `;
@@ -115,12 +124,21 @@ export class Warmup {
       this.#canNotConvertToNumber,
     );
 
-    const [uniqueNumber, uniqueDigits] = [obj.number, obj.digits].map(this.#getSortedUniqueDigits)
+    const [uniqueNumber, uniqueDigits] = [obj.number, obj.digits].map(
+      this.#getSortedUniqueDigits,
+    );
 
-    console.log(obj, isDuplicatedInput, numberOrDigitsCanNotConvertedToNumber, uniqueNumber, uniqueDigits, uniqueNumber === uniqueDigits);
+    console.log(
+      obj,
+      isDuplicatedInput,
+      numberOrDigitsCanNotConvertedToNumber,
+      uniqueNumber,
+      uniqueDigits,
+      uniqueNumber === uniqueDigits,
+    );
     if (isDuplicatedInput) return false;
     if (numberOrDigitsCanNotConvertedToNumber) return false;
-    if(uniqueNumber === uniqueDigits) return false
+    if (uniqueNumber === uniqueDigits) return false;
 
     return true;
   };
@@ -221,12 +239,8 @@ export class Warmup {
 
 export const digitMemory = new Warmup();
 
-const inputs = [
+digitMemory.multipleInputs = [
   "2 5 0 1 2 0 4 2 7"
 ];
-
-inputs.forEach((input) => {
-  digitMemory.singleInput = input;
-});
 
 digitMemory.outputToFile();
