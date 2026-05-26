@@ -37,8 +37,6 @@ describe("DigitMemory", () => {
   });
 
   describe("input validation", () => {
-    it('should work with digits: 0 or digits: "0"', () => {});
-
     it.each([
       {
         number: 4531071,
@@ -58,34 +56,7 @@ describe("DigitMemory", () => {
         const digitMemory = new Warmup();
         digitMemory.singleInput = { number, digits };
 
-        const Front = null;
-
-        const Answer = null;
-
-        const TTSFront = null;
-
-        const TTSBack = null;
-
-        const Tags = null;
-
-        const Fields = [
-          Front,
-          Answer,
-          Back,
-          Image,
-          AudioBothSides,
-          AudioFront,
-          AudioBack,
-          VideoFront,
-          VideoBack,
-          Links,
-          TTSFront,
-          TTSBack,
-          FrontPersian,
-          Tags,
-        ];
-
-        const correctOutput = Fields.join`|`;
+        const correctOutput = "";
         const result = digitMemory.output;
         expect(result).toBe(correctOutput);
       },
@@ -142,7 +113,7 @@ describe("DigitMemory", () => {
         const digitMemory = new Warmup();
         digitMemory.singleInput = number;
 
-        const correctOutput = `2 5 <span style="color: rgb(170, 255, 0);">*</span> 1 2 <span style="color: rgb(170, 255, 0);">*</span> 4 2 7|0 0|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits **\n2 5 0 <span style="color: rgb(170, 255, 0);">*</span> 2 0 4 2 7|1|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n<span style="color: rgb(170, 255, 0);">*</span> 5 0 1 <span style="color: rgb(170, 255, 0);">*</span> 0 4 <span style="color: rgb(170, 255, 0);">*</span> 7|2 2 2|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits ***\n2 5 0 1 2 0 <span style="color: rgb(170, 255, 0);">*</span> 2 7|4|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n2 <span style="color: rgb(170, 255, 0);">*</span> 0 1 2 0 4 2 7|5|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n2 5 0 1 2 0 4 2 <span style="color: rgb(170, 255, 0);">*</span>|7|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n<span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span> <span style="color: rgb(170, 255, 0);">*</span>|2 5 0 1 2 0 4 2 7|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *********`;
+        const correctOutput = `2 5 <span style="color: rgb(170, 255, 0);">*</span> 1 2 <span style="color: rgb(170, 255, 0);">*</span> 4 2 7|0 0|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits **\n2 5 0 <span style="color: rgb(170, 255, 0);">*</span> 2 0 4 2 7|1|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n<span style="color: rgb(170, 255, 0);">*</span> 5 0 1 <span style="color: rgb(170, 255, 0);">*</span> 0 4 <span style="color: rgb(170, 255, 0);">*</span> 7|2 2 2|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits ***\n2 5 0 1 2 0 <span style="color: rgb(170, 255, 0);">*</span> 2 7|4|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n2 <span style="color: rgb(170, 255, 0);">*</span> 0 1 2 0 4 2 7|5|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *\n2 5 0 1 2 0 4 2 <span style="color: rgb(170, 255, 0);">*</span>|7|||||||||2 5 0 1 2 0 4 2 7|2 5 0 1 2 0 4 2 7||Memo DigitMemory Warmup Forward 9Digits *`;
 
         const result = digitMemory.output;
         console.log(result);

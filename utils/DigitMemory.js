@@ -54,14 +54,14 @@ export class Warmup {
     return individualDigits.map((digits) => ({ ...obj, digits }));
   };
 
-  #checkForDuplicatesAndPushToMultipleInputs = (obj) => {
-    const objIsNotADuplicatedInput = !this.#isDuplicatedInput(obj);
-    if (objIsNotADuplicatedInput) this.#multipleInputs.push(obj);
+  #inputValidationAndPushToMultipleInputs = (obj) => {
+    const isValidInput = this.#isValidInputs(obj);
+    if (isValidInput) this.#multipleInputs.push(obj);
   };
 
   #addInputs = (obj) => {
     const inputs = this.#generateInputs(obj);
-    inputs.forEach(this.#checkForDuplicatesAndPushToMultipleInputs);
+    inputs.forEach(this.#inputValidationAndPushToMultipleInputs);
   };
 
   #createInputObj = (input = {}) => {
@@ -75,6 +75,7 @@ export class Warmup {
     if (typeof input === "number" || typeof input === "string") {
       obj = { number: input, digits: input };
     }
+
     return obj;
   };
 
@@ -108,19 +109,23 @@ export class Warmup {
     return false;
   };
 
-  #isValidInputs = () => {
-    if ([this.#number, this.#digits].some(this.#canNotConvertToNumber))
-      return false;
+  #isValidInputs = (obj) => {
+    const isDuplicatedInput = this.#isDuplicatedInput(obj);
+    const numberOrDigitsCanNotConvertedToNumber = [obj.number, obj.digits].some(
+      this.#canNotConvertToNumber,
+    );
 
-    const reg = this.#getReg(this.#digits);
-    const numberHasDigits = reg.test(`${this.#number}`);
-    if (!numberHasDigits) return false;
+    const [uniqueNumber, uniqueDigits] = [obj.number, obj.digits].map(this.#getSortedUniqueDigits)
+
+    console.log(obj, isDuplicatedInput, numberOrDigitsCanNotConvertedToNumber, uniqueNumber, uniqueDigits, uniqueNumber === uniqueDigits);
+    if (isDuplicatedInput) return false;
+    if (numberOrDigitsCanNotConvertedToNumber) return false;
+    if(uniqueNumber === uniqueDigits) return false
 
     return true;
   };
 
   #createFrontField = () => {
-    if (!this.#isValidInputs()) return null;
     const reg = this.#getReg(this.#digits);
     const spacedNumber = this.#addSpace(this.#number);
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
@@ -128,14 +133,12 @@ export class Warmup {
   };
 
   #createAnswerField = () => {
-    if (!this.#isValidInputs()) return null;
     const reg = this.#getReg(this.#digits);
     const answerFieldDigits = `${this.#number}`.match(reg);
     return answerFieldDigits.join` `;
   };
 
   #createTTSFrontField = () => {
-    if (!this.#isValidInputs()) return null;
     if (this.#isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
       return this.#addSpace(reversedNumber);
@@ -144,7 +147,6 @@ export class Warmup {
   };
 
   #createTTSBackField = () => {
-    if (!this.#isValidInputs()) return null;
     return this.#addSpace(this.#number);
   };
 
@@ -161,7 +163,6 @@ export class Warmup {
   };
 
   #createTagsField = () => {
-    if (!this.#isValidInputs()) return null;
     const nOfDigitsTag = this.#createNumberOfDigitsTag();
     const directionTag = this.#isBackward ? " Backward" : " Forward";
     const hiddenStarsTag = this.#createHiddenStarsTag();
@@ -221,8 +222,7 @@ export class Warmup {
 export const digitMemory = new Warmup();
 
 const inputs = [
-  ["2 5 0 1 2 0 4 2 7", 30],
-  ["2 5 0 1 2 0 4 2 7", 42],
+  "2 5 0 1 2 0 4 2 7"
 ];
 
 inputs.forEach((input) => {
