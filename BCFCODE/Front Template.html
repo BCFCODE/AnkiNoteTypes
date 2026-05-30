@@ -151,9 +151,9 @@
       "Forward",
       "Backward",
       "Warmup",
+      "ChunkMemory",
       "SentenceMemory",
-      "Partial",
-      "Full",
+      "PassageMemory",
     ];
     // const infoIvl = " {{info-Ivl:}}";
 
@@ -178,9 +178,9 @@
       Forward: /Forward/i.test(TAGS),
       Backward: /Backward/i.test(TAGS),
       Warmup: /Warmup/i.test(TAGS),
+      ChunkMemory: /ChunkMemory/i.test(TAGS),
       SentenceMemory: /SentenceMemory/i.test(TAGS),
-      Partial: /Partial/i.test(TAGS),
-      Full: /Full/i.test(TAGS),
+      PassageMemory: /PassageMemory/i.test(TAGS),
     };
 
     var avgTimeInSeconds;
@@ -552,7 +552,7 @@
           const digitsText = TAGS.match(/\b\d+Digits\b/);
           setInnerText(id, digitsText);
 
-          removeClass(id, color.success)
+          removeClass(id, color.success);
           removeClass(id, animation.sizePulse);
 
           setTotalTimeAfterDelay(id, 2000, () => {
@@ -702,10 +702,9 @@
         }
       }
 
-      if (isTag.SentenceMemory) {
-        if (isTag.Partial) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
-        if (isTag.Full) setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
-      } else if (isTag.DigitMemory) {
+      if (isTag.ChunkMemory || isTag.SentenceMemory || isTag.PassageMemory)
+        setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
+      else if (isTag.DigitMemory) {
         if (numberOfLapses >= 15) {
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["500ms"]);
