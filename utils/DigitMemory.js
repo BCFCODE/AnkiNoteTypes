@@ -229,11 +229,18 @@ export class Warmup {
     fs.writeFileSync(`outputs/${path}`, this.#createOutput(), "utf8");
 }
 
-export const digitMemory = new Warmup();
+export const warmup = new Warmup();
 
-digitMemory.multipleInputs = [
-  ['2 0 7 4 5 6 8 2 4', 72],
-
+warmup.multipleInputs = [
+  '3 6 4 8 2 4 5', 
+  '3 5 4 3 7 3 0',
+  ['2 4 3 7 5', 70, true],
+  ['3 2 1 5 4 9', '3 2 1 5 4 9', true],
+  '5 2 1 5 6 2 7 0 2', 
+  ['7 5 1 0 3 1 7 3 8', 70],
+  '1 5 3 7 9 2 0 6 7',
+  '0 4 3 0 8 2 5 7',
+  ['3 7 4 6 5 0 6 8 0', 680]
 ];
 
-digitMemory.outputToFile();
+warmup.outputToFile();
