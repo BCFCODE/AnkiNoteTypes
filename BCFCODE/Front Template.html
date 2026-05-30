@@ -151,9 +151,9 @@
       "Forward",
       "Backward",
       "Warmup",
-      "ChunkMemory",
-      "SentenceMemory",
-      "PassageMemory",
+      "Fragment",
+      "Sentence",
+      "Passage",
     ];
     // const infoIvl = " {{info-Ivl:}}";
 
@@ -178,9 +178,9 @@
       Forward: /Forward/i.test(TAGS),
       Backward: /Backward/i.test(TAGS),
       Warmup: /Warmup/i.test(TAGS),
-      ChunkMemory: /ChunkMemory/i.test(TAGS),
-      SentenceMemory: /SentenceMemory/i.test(TAGS),
-      PassageMemory: /PassageMemory/i.test(TAGS),
+      Fragment: /Fragment/i.test(TAGS),
+      Sentence: /Sentence/i.test(TAGS),
+      Passage: /Passage/i.test(TAGS),
     };
 
     var avgTimeInSeconds;
@@ -536,7 +536,7 @@
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       }
 
-      if (isTag.SentenceMemory) {
+      if (isTag.Sentence) {
         if (nOfDaysAgo < 1) {
           // DO NOTHING
         } else if (nOfDaysAgo === 1) {
@@ -702,7 +702,7 @@
         }
       }
 
-      if (isTag.ChunkMemory || isTag.SentenceMemory || isTag.PassageMemory)
+      if (isTag.Fragment || isTag.Sentence || isTag.Passage)
         setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
       else if (isTag.DigitMemory) {
         if (numberOfLapses >= 15) {
