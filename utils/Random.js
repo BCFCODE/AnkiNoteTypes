@@ -18,7 +18,7 @@ class Random extends Utils {
       digits = digits.replace(this.getReg(chosenDigit), "");
       this.#output.push(chosenDigit);
     }
-    return this.#output.join``;
+    return this.#output.join` `;
   };
 
   get output() {
@@ -28,7 +28,7 @@ class Random extends Utils {
 
 const random = new Random();
 random.numberOfDigits = 10;
-// console.log(random.output) 
+console.log(random.output) 
 random.outputToFile();
  
 export default Random;

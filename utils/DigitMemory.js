@@ -5,7 +5,7 @@ class Warmup extends Utils {
   #multipleInputs = [];
   #number;
   #digits;
-  
+
   #getSortedUniqueDigits = (digits) => {
     const uniqueDigits = this.getUniqueDigits(digits);
     return uniqueDigits.sort((a, b) => a - b).join``;
@@ -93,10 +93,6 @@ class Warmup extends Utils {
     inputs.forEach(this.#createAndAddInputToMultipleInputs);
   }
 
-  #createColoredAsterisk = (color) => {
-    return `<span style="color: ${color}">*</span>`;
-  };
-
   #canNotConvertToNumber = (number) => {
     if (!/number|string/.test(typeof number)) return true;
     if (typeof number === "string") {
@@ -128,7 +124,7 @@ class Warmup extends Utils {
   #createFrontField = () => {
     const reg = this.getReg(this.#digits);
     const spacedNumber = this.addSpaceBetweenDigits(this.#number);
-    const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
+    const coloredAsterisk = this.addColor("*");
     return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
 
