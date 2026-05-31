@@ -4,16 +4,16 @@ class Utils {
   addColor = (char) => {
     const colors = {
       "*": "rgb(170, 255, 0);",
-      0: "rgb(128, 128, 128);",
-      1: "rgb(255, 255, 255);",
-      2: "rgb(0, 102, 255);",
-      3: "rgb(0, 168, 67);",
-      4: "rgb(255, 215, 0);",
-      5: "rgb(255, 127, 0);",
-      6: "rgb(138, 43, 226);",
-      7: "rgb(255, 0, 0);",
-      8: "rgb(139, 69, 19);",
-      9: "rgb(0, 0, 0);",
+      0: "rgb(128, 128, 128)", // Gray
+      1: "rgb(0, 122, 255)", // Blue
+      2: "rgb(0, 199, 255)", // Cyan
+      3: "rgb(0, 176, 80)", // Green
+      4: "rgb(255, 215, 0)", // Gold
+      5: "rgb(255, 140, 0)", // Orange
+      6: "rgb(155, 89, 182)", // Purple
+      7: "rgb(255, 59, 48)", // Red
+      8: "rgb(160, 82, 45)", // Brown
+      9: "rgb(255, 20, 147)", // Pink
     };
     /* Philosophy: If your goal is **long-term digit memorization training** (years of Anki use), the most important principle is:
 
@@ -172,6 +172,26 @@ class Utils {
       However, for Anki digit training specifically, I would still choose the first table because it maximizes immediate visual discrimination when scanning long numbers.
 
       For a deck you expect to use for many years, the key is not finding the objectively perfect colors—it's choosing a set of **highly distinct colors and never changing them again**. The brain becomes remarkably efficient once a digit-color mapping has been reinforced thousands of times.
+      but My rule for long-term memory systems is:
+
+      Never sacrifice readability for symbolism.
+
+      A color that perfectly symbolizes a digit but is hard to see after 100,000 reviews is a poor choice. The best digit-color system is the one that remains effortless to read after years of daily practice.
+      so use:
+
+      for background color you can choose: rgb(32, 33, 36)
+      
+      and for digits colors: 
+        0: "rgb(128, 128, 128)", // Gray
+        1: "rgb(0, 122, 255)",   // Blue
+        2: "rgb(0, 199, 255)",   // Cyan
+        3: "rgb(0, 176, 80)",    // Green
+        4: "rgb(255, 215, 0)",   // Gold
+        5: "rgb(255, 140, 0)",   // Orange
+        6: "rgb(155, 89, 182)",  // Purple
+        7: "rgb(255, 59, 48)",   // Red
+        8: "rgb(160, 82, 45)",   // Brown
+        9: "rgb(255, 20, 147)"   // Pink
    */
     return `<span style="color: ${colors[char]}">${char}</span>`;
   };
