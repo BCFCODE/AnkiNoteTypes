@@ -1,6 +1,5 @@
-
 import { it, describe, vi, expect } from "vitest";
-import { Warmup } from "../../utils/DigitMemory";
+import Warmup from "../../utils/DigitMemory";
 
 describe("DigitMemory", () => {
   const Back = null;

@@ -1,12 +1,12 @@
-import fs from "fs";
+import Utils from ".";
 
-export class Warmup {
+class Warmup extends Utils {
   #isBackward = false;
   #multipleInputs = [];
   #number;
   #digits;
 
-  #getUniqueDigits = (digits) => [...new Set(this.#removeNoneDigits(digits))];
+  #getUniqueDigits = (digits) => [...new Set(this.removeNoneDigits(digits))];
 
   #getSortedUniqueDigits = (digits) => {
     const uniqueDigits = this.#getUniqueDigits(digits);
@@ -14,12 +14,12 @@ export class Warmup {
   };
 
   #removeNotIncludedDigits = ({ number, digits }) => {
-    const reg = new RegExp(`[^${this.#removeNoneDigits(number)}]`, "g");
-    return this.#removeNoneDigits(digits).replace(reg, "");
+    const reg = new RegExp(`[^${this.removeNoneDigits(number)}]`, "g");
+    return this.removeNoneDigits(digits).replace(reg, "");
   };
 
   #setCleanNumber = (obj) => {
-    obj.number = this.#removeNoneDigits(obj.number);
+    obj.number = this.removeNoneDigits(obj.number);
   };
 
   #setCleanDigits = (obj) => {
@@ -95,12 +95,8 @@ export class Warmup {
     inputs.forEach(this.#createAndAddInputToMultipleInputs);
   }
 
-  #addSpace = (n) => [...`${n}`].join` `;
-
-  #removeNoneDigits = (n) => `${n}`.replace(/\D/g, "");
-
   #getReg = (n) => {
-    return new RegExp(`[${this.#removeNoneDigits(n)}]`, "g");
+    return new RegExp(`[${this.removeNoneDigits(n)}]`, "g");
   };
 
   #createColoredAsterisk = (color) => {
@@ -111,7 +107,7 @@ export class Warmup {
     if (!/number|string/.test(typeof number)) return true;
     if (typeof number === "string") {
       if (number === "") return true;
-      const cleanNumber = this.#removeNoneDigits(number);
+      const cleanNumber = this.removeNoneDigits(number);
       const hasNoneDigit = /\D/.test(cleanNumber);
       if (hasNoneDigit) return true;
     }
@@ -127,7 +123,7 @@ export class Warmup {
     const [uniqueNumber, uniqueDigits] = [obj.number, obj.digits].map(
       this.#getSortedUniqueDigits,
     );
-    
+
     if (isDuplicatedInput) return false;
     if (numberOrDigitsCanNotConvertedToNumber) return false;
     if (uniqueNumber === uniqueDigits) return false;
@@ -137,7 +133,7 @@ export class Warmup {
 
   #createFrontField = () => {
     const reg = this.#getReg(this.#digits);
-    const spacedNumber = this.#addSpace(this.#number);
+    const spacedNumber = this.addSpaceBetweenDigits(this.#number);
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
     return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
@@ -151,17 +147,17 @@ export class Warmup {
   #createTTSFrontField = () => {
     if (this.#isBackward) {
       const reversedNumber = [...this.#number.toString()].reverse().join``;
-      return this.#addSpace(reversedNumber);
+      return this.addSpaceBetweenDigits(reversedNumber);
     }
-    return this.#addSpace(this.#number);
+    return this.addSpaceBetweenDigits(this.#number);
   };
 
   #createTTSBackField = () => {
-    return this.#addSpace(this.#number);
+    return this.addSpaceBetweenDigits(this.#number);
   };
 
   #createNumberOfDigitsTag = () => {
-    const numberOf = this.#removeNoneDigits(this.#number).toString().length;
+    const numberOf = this.removeNoneDigits(this.#number).toString().length;
     return ` ${numberOf}Digits`;
   };
 
@@ -224,23 +220,15 @@ export class Warmup {
   get output() {
     return this.#createOutput();
   }
-
-  outputToFile = (path = "Anki.txt") =>
-    fs.writeFileSync(`outputs/${path}`, this.#createOutput(), "utf8");
 }
 
 export const warmup = new Warmup();
 
 warmup.multipleInputs = [
-  '3 6 4 8 2 4 5', 
-  '3 5 4 3 7 3 0',
-  ['2 4 3 7 5', 70, true],
-  ['3 2 1 5 4 9', '3 2 1 5 4 9', true],
-  '5 2 1 5 6 2 7 0 2', 
-  ['7 5 1 0 3 1 7 3 8', 70],
-  '1 5 3 7 9 2 0 6 7',
-  '0 4 3 0 8 2 5 7',
-  ['3 7 4 6 5 0 6 8 0', 680]
+  ["7 5 1 0 3 1 7 3 8", 310],
+  ["3 7 4 6 5 0 6 8 0", 506],
 ];
 
 warmup.outputToFile();
+
+export default Warmup;
