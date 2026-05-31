@@ -124,13 +124,14 @@ class Warmup extends Utils {
   #createFrontField = () => {
     const reg = this.getReg(this.#digits);
     const spacedNumber = this.addSpaceBetweenDigits(this.#number);
-    const coloredAsterisk = this.addColor("*");
-    return spacedNumber.replace(reg, (digit) => coloredAsterisk);
+    return spacedNumber.replace(reg, (digit) => this.addColor(digit, "*"));
   };
 
   #createAnswerField = () => {
     const reg = this.getReg(this.#digits);
-    const answerFieldDigits = `${this.#number}`.match(reg);
+    const answerFieldDigits = `${this.#number}`
+      .match(reg) 
+      .map((digit) => this.addColor(digit));
     return answerFieldDigits.join` `;
   };
 
@@ -217,6 +218,27 @@ export const warmup = new Warmup();
 warmup.multipleInputs = [
   ["7 5 1 0 3 1 7 3 8", 310],
   ["3 7 4 6 5 0 6 8 0", 506],
+  ["6 9 3 2 1 3 7", 12, true],
+  ["6 9 3 2 1 3 7", 91, true],
+  ["3 7 4 6 5 0 6 8 0", 680],
+  ["3 1 8 5 9 7", 89, true],
+  ["6 9 3 2 1 3 7", 62, true],
+  ["4 0 3 8 3 1 9 1 6 7", 16],
+  "9 7 3 4 1 2 0 2 5 8",
+  ["7 6 3 7 5 1 9 1", 76],
+  ["9 4 6 5 1 8 5 1 9", 68],
+  "6 1 5 7 9 0 7 6",
+  ["6 2 6 0 6 8 4 3 1 7", 8],
+  ["8 3 1 4 5 3 1 2 7", 24],
+  ["3 4 5 7 8 6 4 7 8", 36],
+  ["8 3 1 4 5 3 1 2 7", 24],
+  "2 5 0 1 2 0 4 2 7",
+  "1 9 8 3 1 0 2 4 3 2",
+  ["8 3 1 4 5 3 1 2 7", 143],
+  ["7 1 2 1 4 3 8", "7 1 2 1 4 3 8", true],
+  ["8 3 1 4 5 3 1 2 7", 24],
+  ["1 9 8 3 1 0 2 4 3 2", 243],
+  ["5 8 9 1 8 7 3 8 5 9", 87],
 ];
 
 warmup.outputToFile();

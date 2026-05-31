@@ -1,200 +1,46 @@
-import fs from "fs";
+import fs from "fs"; 
 
 class Utils {
-  addColor = (char) => {
-    const colors = {
-      "*": "rgb(170, 255, 0);",
-      0: "rgb(128, 128, 128)", // Gray
-      1: "rgb(0, 122, 255)", // Blue
-      2: "rgb(0, 199, 255)", // Cyan
-      3: "rgb(0, 176, 80)", // Green
-      4: "rgb(255, 215, 0)", // Gold
-      5: "rgb(255, 140, 0)", // Orange
-      6: "rgb(155, 89, 182)", // Purple
-      7: "rgb(255, 59, 48)", // Red
-      8: "rgb(160, 82, 45)", // Brown
-      9: "rgb(255, 20, 147)", // Pink
+  addColor = (digit, replaceChar = digit) => {
+    const style = {
+      0: "color: rgb(105, 105, 105); text-shadow: 0 2px 6px rgba(0,0,0,0.8), 0 0 4px rgba(105,105,105,0.4); background: rgba(255,255,255,0.06);",
+      1: "color: rgb(0, 122, 255); text-shadow: 0 0 8px rgba(0, 122, 255, 0.7), 0 0 16px rgba(0, 122, 255, 0.3);",
+      2: "color: rgb(0, 230, 120); text-shadow: 0 0 10px rgba(0, 230, 120, 0.8), 0 0 20px rgba(0, 230, 120, 0.4);",
+      3: "color: rgb(34, 190, 80); text-shadow: 0 0 8px rgba(34, 190, 80, 0.6), 0 2px 6px rgba(0,0,0,0.5);",
+      4: "color: rgb(255, 223, 0); text-shadow: 0 0 12px rgba(255, 223, 0, 0.85), 0 0 22px rgba(255, 180, 0, 0.4);",
+      5: "color: rgb(255, 145, 0); text-shadow: 0 0 10px rgba(255, 145, 0, 0.8), 0 0 18px rgba(255, 100, 0, 0.5);",
+      6: "color: rgb(150, 50, 240); text-shadow: 0 0 10px rgba(150, 50, 240, 0.75), 0 0 20px rgba(120, 0, 255, 0.35);",
+      7: "color: rgb(235, 30, 55); text-shadow: 0 0 9px rgba(235, 30, 55, 0.8), 0 0 18px rgba(255, 40, 70, 0.4);",
+      8: "color: rgb(180, 90, 40); text-shadow: 0 3px 8px rgba(0,0,0,0.85), 0 0 6px rgba(180, 90, 40, 0.5); background: rgba(0,0,0,0.25);",
+      9: "color: rgb(255, 35, 160); text-shadow: 0 0 11px rgba(255, 35, 160, 0.8), 0 0 22px rgba(255, 20, 147, 0.45);",
     };
-    /* Philosophy: If your goal is **long-term digit memorization training** (years of Anki use), the most important principle is:
-
-      > **Consistency beats cleverness.**
-
-      The brain learns associations through repetition. A color system that feels slightly less intuitive but remains unchanged for 5 years will outperform a "more optimal" system that gets redesigned every few months.
-
-      ---
-
-      # My Selection Criteria
-
-      For each digit, I would optimize for:
-
-      1. **Distinctiveness**
-
-        * Colors must be easy to distinguish quickly.
-        * Avoid colors that look similar.
-
-      2. **Natural Associations**
-
-        * Use associations many people already have.
-        * Existing mental links reduce learning time.
-
-      3. **Cross-Cultural Familiarity**
-
-        * Prefer associations common worldwide.
-
-      4. **Color Psychology**
-
-        * Use colors with strong emotional or visual identities.
-
-      5. **Visual Balance**
-
-        * No color should dominate too much.
-
-      6. **Accessibility**
-
-        * Remain distinguishable for people with mild color-vision deficiencies.
-
-      7. **Long-Term Memory Encoding**
-
-        * Strong "digit → color" mapping creates an additional retrieval cue.
-
-      ---
-
-      # Recommended Digit → Color System
-
-      | Digit | Color  | Reason                                |
-      | ----- | ------ | ------------------------------------- |
-      | 0     | Gray   | Neutral, empty, nothingness           |
-      | 1     | White  | Beginning, singularity, simplicity    |
-      | 2     | Blue   | Pairing, balance, calm                |
-      | 3     | Green  | Growth, triangle, expansion           |
-      | 4     | Yellow | Stability, square, structure          |
-      | 5     | Orange | Midpoint, energy, movement            |
-      | 6     | Purple | Complexity, richness                  |
-      | 7     | Red    | Strong, memorable, attention-grabbing |
-      | 8     | Brown  | Solidity, weight, abundance           |
-      | 9     | Black  | Completion, finality                  |
-
-      ---
-
-      # Exact Color Palette
-
-      I would use:
-
-      0 → rgb(128, 128, 128)  Gray
-      1 → rgb(255, 255, 255)  White
-      2 → rgb(0, 102, 255)  Blue
-      3 → rgb(0, 168, 67)  Green
-      4 → rgb(255, 215, 0)  Gold/Yellow
-      5 → rgb(255, 127, 0)  Orange
-      6 → rgb(138, 43, 226)  Purple
-      7 → rgb(255, 0, 0)  Red
-      8 → rgb(139, 69, 19)  Brown
-      9 → rgb(0, 0, 0)  Black
-
-      # Why Not Use the Rainbow?
-
-      Many people instinctively do:
-
-      1 = Red
-      2 = Orange
-      3 = Yellow
-      4 = Green
-      5 = Blue
-
-      The problem:
-
-      * Several neighboring colors become similar.
-      * Yellow is hard to read.
-      * Light blue and dark blue get confused.
-      * No natural meaning for some digits.
-
-      For a system you'll use for years, distinctiveness matters more than rainbow order.
-
-      ---
-
-      # A Stronger Alternative: Number Shape Method
-
-      Another philosophy is matching colors to the *shape* or *meaning* of digits.
-
-      Example:
-
-      | Digit | Association        | Color  |
-      | ----- | ------------------ | ------ |
-      | 0     | Empty              | Gray   |
-      | 1     | Light beam         | White  |
-      | 2     | Water wave         | Blue   |
-      | 3     | Plant sprout       | Green  |
-      | 4     | Sunlight           | Yellow |
-      | 5     | Fire               | Orange |
-      | 6     | Magic              | Purple |
-      | 7     | Warning sign       | Red    |
-      | 8     | Tree trunk / earth | Brown  |
-      | 9     | Night              | Black  |
-
-      This creates an extra layer:
-
-      Digit → Color
-      Digit → Concept
-      Color → Concept
-
-      which strengthens memory encoding.
-
-      ---
-
-      # If You Want the Most Memory-Palace-Friendly System
-
-      Many elite memorizers eventually move toward:
-
-      0 = White
-      1 = Black
-      2 = Blue
-      3 = Green
-      4 = Yellow
-      5 = Orange
-      6 = Red
-      7 = Purple
-      8 = Brown
-      9 = Gray
-
-      because:
-
-      * White ↔ zero/blankness
-      * Black ↔ single mark/stroke
-      * Blue ↔ pair/two halves
-      * Green ↔ growth/three branches
-      * Yellow ↔ square stability
-      * Orange ↔ midpoint energy
-      * Red ↔ intensity
-      * Purple ↔ rarity
-      * Brown ↔ earth/weight
-      * Gray ↔ ending/fading
-
-      However, for Anki digit training specifically, I would still choose the first table because it maximizes immediate visual discrimination when scanning long numbers.
-
-      For a deck you expect to use for many years, the key is not finding the objectively perfect colors—it's choosing a set of **highly distinct colors and never changing them again**. The brain becomes remarkably efficient once a digit-color mapping has been reinforced thousands of times.
-      but My rule for long-term memory systems is:
-
-      Never sacrifice readability for symbolism.
-
-      A color that perfectly symbolizes a digit but is hard to see after 100,000 reviews is a poor choice. The best digit-color system is the one that remains effortless to read after years of daily practice.
-      so use:
-
-      for background color you can choose: rgb(32, 33, 36)
+    /*=== DIGIT COLOR PHILOSOPHY ===
       
-      and for digits colors: 
-        0: "rgb(128, 128, 128)", // Gray
-        1: "rgb(0, 122, 255)",   // Blue
-        2: "rgb(0, 199, 255)",   // Cyan
-        3: "rgb(0, 176, 80)",    // Green
-        4: "rgb(255, 215, 0)",   // Gold
-        5: "rgb(255, 140, 0)",   // Orange
-        6: "rgb(155, 89, 182)",  // Purple
-        7: "rgb(255, 59, 48)",   // Red
-        8: "rgb(160, 82, 45)",   // Brown
-        9: "rgb(255, 20, 147)"   // Pink
-   */
-    return `<span style="color: ${colors[char]}">${char}</span>`;
+      0: Neutral foundation. Dark gray represents emptiness, stability, and origin. Heavy shadow + subtle glass background creates a solid, grounded, premium stone-like presence. Serves as visual breathing room between brighter digits.
+      
+      1: Trust, clarity, and new beginnings. Classic blue evokes calmness and reliability. Clean electric glow makes it feel sharp and focused — the natural "leader" digit.
+      
+      2: Your favorite yellow-green — fresh, natural, and vibrant life energy. Brightened for maximum sexiness while staying true to your personal preference. Strong glow symbolizes growth, joy, and high memorability.
+      
+      3: Growth, balance, and harmony (triangle stability). Rich green creates calm strength and natural grounding with layered depth.
+      
+      4: Value, energy, and golden reward (square structure). Bright gold with the strongest radiant glow creates a luxurious, satisfying sparkle.
+      
+      5: Dynamic warmth, movement, and midpoint power. Energetic orange grabs attention with a fiery, alive pulse in the middle of numbers.
+      
+      6: Mystery, creativity, richness, and magic. Vibrant purple adds elegant, hypnotic cosmic depth.
+      
+      7: Intensity, alertness, passion, and strong memory anchoring. Crimson red delivers powerful, dramatic visual impact.
+      
+      8: Earthy solidity, abundance, weight, and reliability (infinity shape). Brown feels heavy and premium with metallic-bronze texture.
+      
+      9: Playful high energy, completion, joy, and flair. Deep pink/magenta provides a fun, seductive, and vibrant ending to number sequences.
+      
+      Overall System Goal: Transform boring number memorization into a visually addictive, premium, and sexy daily experience. Combines color psychology, personal preference (yellow-green on 2), and modern glowing aesthetics while ensuring excellent long-term readability for years of Anki training.
+    */
+    return `<span style="${style[digit]} font-weight: 700; border-radius: 6px;">${replaceChar}</span>`;
   };
+
   addSpaceBetweenDigits = (n) => [...`${n}`].join` `;
 
   removeNoneDigits = (n) => `${n}`.replace(/\D/g, "");

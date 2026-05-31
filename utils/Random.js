@@ -28,7 +28,7 @@ class Random extends Utils {
 
 const random = new Random();
 random.numberOfDigits = 10;
-console.log(random.output) 
+// console.log(random.output) 
 random.outputToFile();
  
 export default Random;
