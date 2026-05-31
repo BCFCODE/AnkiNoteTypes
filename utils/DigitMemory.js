@@ -5,11 +5,9 @@ class Warmup extends Utils {
   #multipleInputs = [];
   #number;
   #digits;
-
-  #getUniqueDigits = (digits) => [...new Set(this.removeNoneDigits(digits))];
-
+ 
   #getSortedUniqueDigits = (digits) => {
-    const uniqueDigits = this.#getUniqueDigits(digits);
+    const uniqueDigits = this.getUniqueDigits(digits);
     return uniqueDigits.sort((a, b) => a - b).join``;
   };
 
@@ -95,10 +93,6 @@ class Warmup extends Utils {
     inputs.forEach(this.#createAndAddInputToMultipleInputs);
   }
 
-  #getReg = (n) => {
-    return new RegExp(`[${this.removeNoneDigits(n)}]`, "g");
-  };
-
   #createColoredAsterisk = (color) => {
     return `<span style="color: ${color}">*</span>`;
   };
@@ -132,14 +126,14 @@ class Warmup extends Utils {
   };
 
   #createFrontField = () => {
-    const reg = this.#getReg(this.#digits);
+    const reg = this.getReg(this.#digits);
     const spacedNumber = this.addSpaceBetweenDigits(this.#number);
     const coloredAsterisk = this.#createColoredAsterisk("rgb(170, 255, 0);");
     return spacedNumber.replace(reg, (digit) => coloredAsterisk);
   };
 
   #createAnswerField = () => {
-    const reg = this.#getReg(this.#digits);
+    const reg = this.getReg(this.#digits);
     const answerFieldDigits = `${this.#number}`.match(reg);
     return answerFieldDigits.join` `;
   };
@@ -162,7 +156,7 @@ class Warmup extends Utils {
   };
 
   #createHiddenStarsTag = () => {
-    const reg = this.#getReg(this.#digits);
+    const reg = this.getReg(this.#digits);
     const answerFieldDigits = `${this.#number}`.match(reg);
     if (answerFieldDigits === null) return "";
     return " " + "*".repeat(answerFieldDigits.length);
