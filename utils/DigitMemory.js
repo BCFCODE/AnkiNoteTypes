@@ -5,7 +5,7 @@ class Warmup extends Utils {
   #multipleInputs = [];
   #number;
   #digits;
- 
+  
   #getSortedUniqueDigits = (digits) => {
     const uniqueDigits = this.getUniqueDigits(digits);
     return uniqueDigits.sort((a, b) => a - b).join``;
