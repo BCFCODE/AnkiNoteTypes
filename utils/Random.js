@@ -2,14 +2,19 @@ import Utils from ".";
 
 class Random extends Utils {
   #output = [];
-  #numberOfDigits = 4;
-  #numberOfOutputs = 1;
+  #numberOfDigits;
+  #isBackward;
+  #numberOfOutputs;
+  #number;
 
-  set numberOfDigits(value) {
-    this.#numberOfDigits = value;
+  set config({ numberOfDigits = 4, isBackward = false, numberOfOutputs = 10 }) {
+    this.#numberOfDigits = numberOfDigits;
+    this.#isBackward = isBackward;
+    this.#numberOfOutputs = numberOfOutputs;
   }
 
   #getRandomNumber = () => {
+    this.#output = [];
     let digits = "";
     for (let i = 0; i < this.#numberOfDigits; i++) {
       if (digits === "") digits = "1234567890";
@@ -18,21 +23,90 @@ class Random extends Utils {
       digits = digits.replace(this.getReg(chosenDigit), "");
       this.#output.push(chosenDigit);
     }
-    return this.#output.join` `;
+    this.#number = this.#output.join``;
   };
 
-  get number() {
-    return this.#getRandomNumber()
-  }
+  #createAnswerField = () => {
+    const spacedNumber = this.addSpaceBetweenDigits(this.#number);
+    const coloredNumber = this.addColorToEachDigit(spacedNumber);
+    return coloredNumber;
+  };
+
+  #createTTSFront = () => {
+    if (this.#isBackward) {
+      const reversedNumber = this.reverseDigits(this.#number);
+      return this.addSpaceBetweenDigits(reversedNumber);
+    }
+    return this.addSpaceBetweenDigits(this.#number);
+  };
+
+  #createTTSBackField = () => {
+    return this.addSpaceBetweenDigits(this.#number);
+  };
+
+  #createTagsField = () =>
+    this.createTagsField(this.#numberOfDigits, this.#isBackward);
+
+  #createAnkiCard = () => {
+    this.#getRandomNumber();
+    const Front = `&nbsp;`;
+    const Answer = this.#createAnswerField();
+    const Back = null;
+    const Image = null;
+    const AudioBothSides = null;
+    const AudioFront = null;
+    const AudioBack = null;
+    const VideoFront = null;
+    const VideoBack = null;
+    const Links = null;
+    const TTSFront = this.#createTTSFront();
+    const TTSBack = this.#createTTSBackField();
+    const FrontPersian = null;
+    const Tags = this.#createTagsField();
+
+    const Fields = [
+      Front,
+      Answer,
+      Back,
+      Image,
+      AudioBothSides,
+      AudioFront,
+      AudioBack,
+      VideoFront,
+      VideoBack,
+      Links,
+      TTSFront,
+      TTSBack,
+      FrontPersian,
+      Tags,
+    ];
+
+    return Fields.join`|`;
+  };
+
+  #createOutput = () => {
+    const ankiCards = [];
+    for (let i = 0; i < this.#numberOfOutputs; i++) {
+      const newAnkiCard = this.#createAnkiCard();
+      ankiCards.push(newAnkiCard);
+    }
+    this.#output = ankiCards.join`\n`;
+  };
 
   get output() {
-    return this.#getRandomNumber();
+    this.#createOutput();
+    return this.#output;
   }
 }
 
 const random = new Random();
-random.numberOfDigits = 10;
-// console.log(random.output) 
-random.outputToFile();
-  
+
+random.config = {
+  numberOfDigits: 10,
+  isBackward: true,
+  numberOfOutputs: 10,
+};
+
+random.outputToFile("random.txt");
+
 export default Random;

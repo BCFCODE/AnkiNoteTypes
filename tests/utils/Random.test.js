@@ -9,12 +9,31 @@ describe("Random", () => {
       (digit) => digits.match(new RegExp(digit, "g")).length > 1,
     );
 
-  it(`\tconst random = new Random();\n\trandom.numberOfDigits = ${randomLength};\n\tconst number = random.number\n>> after set numberOfDigits to ${randomLength}, it number should be a random ${randomLength} digit number with no adjacent same digits (in range of 10 digits)`, () => {
+  it(`after set numberOfDigits to ${randomLength}, it number should be a random ${randomLength} digit number with no adjacent same digits (in range of 10 digits)`, () => {
     const random = new Random();
-    random.numberOfDigits = randomLength;
-    const number = random.number
 
-    const hasNotDuplicatedDigits = !hasDuplicatedDigits(number);
+    random.config = {
+      numberOfDigits: 10,
+      isBackward: false,
+      numberOfOutputs: 10,
+    };
+
+    const [
+      Front,
+      Answer,
+      Back,
+      Image,
+      AudioBothSides,
+      AudioFront,
+      AudioBack,
+      VideoFront,
+      VideoBack,
+      Links,
+      TTSFront,
+      TTSBack,
+    ] = random.output.split`|`;
+
+    const hasNotDuplicatedDigits = !hasDuplicatedDigits(TTSBack);
 
     expect(hasNotDuplicatedDigits).toBe(true);
   });

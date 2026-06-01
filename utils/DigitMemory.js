@@ -130,14 +130,14 @@ class Warmup extends Utils {
   #createAnswerField = () => {
     const reg = this.getReg(this.#digits);
     const answerFieldDigits = `${this.#number}`
-      .match(reg) 
+      .match(reg)
       .map((digit) => this.addColor(digit));
     return answerFieldDigits.join` `;
   };
 
   #createTTSFrontField = () => {
     if (this.#isBackward) {
-      const reversedNumber = [...this.#number.toString()].reverse().join``;
+      const reversedNumber = this.reverseDigits(this.#number);
       return this.addSpaceBetweenDigits(reversedNumber);
     }
     return this.addSpaceBetweenDigits(this.#number);
@@ -147,28 +147,23 @@ class Warmup extends Utils {
     return this.addSpaceBetweenDigits(this.#number);
   };
 
-  #createNumberOfDigitsTag = () => {
-    const numberOf = this.removeNoneDigits(this.#number).toString().length;
-    return ` ${numberOf}Digits`;
-  };
-
   #createHiddenStarsTag = () => {
     const reg = this.getReg(this.#digits);
     const answerFieldDigits = `${this.#number}`.match(reg);
     if (answerFieldDigits === null) return "";
-    return " " + "*".repeat(answerFieldDigits.length);
+    return "*".repeat(answerFieldDigits.length);
   };
 
   #createTagsField = () => {
-    const nOfDigitsTag = this.#createNumberOfDigitsTag();
-    const directionTag = this.#isBackward ? " Backward" : " Forward";
+    const numberOfDigits = this.getNumberOfDigits(this.#number);
+    const generalTags = this.createTagsField(numberOfDigits, this.#isBackward);
     const hiddenStarsTag = this.#createHiddenStarsTag();
-    return `Memo DigitMemory Warmup${directionTag}${nOfDigitsTag}${hiddenStarsTag}`;
+    return `${generalTags} ${hiddenStarsTag} Warmup`;
   };
 
   #createOutput = () => {
     const outputs = this.#multipleInputs.map(
-      ({ number, digits, isBackward = false }) => { 
+      ({ number, digits, isBackward = false }) => {
         this.#number = number;
         this.#digits = digits;
         this.#isBackward = isBackward;
@@ -216,79 +211,78 @@ class Warmup extends Utils {
 export const warmup = new Warmup();
 
 warmup.multipleInputs = [
-  ['1 9 8 3 1 0 2 4 3 2', 3102],
-  ['1 9 8 3 1 0 2 4 3 2', 10],
-  ['4 0 3 8 3 1 9 1 6 7', 6],
-  ['3 8 6 9 2 4 9 7 0', 8],
-  ['1 9 8 3 1 0 2 4 3 2', 10243],
-  '7 5 1 0 3 1 7 3 8', 
-  ['3 8 6 9 2 4 9 7 0', 2768],
-  ['9 8 2 3 3 4 4', 34],
-  ['7 5 1 0 3 1 7 3 8', 70],
-  ['1 9 8 3 1 0 2 4 3 2', 1],
-  ['4 1 0 9 0 8 5 7 9', 8],
-  ['4 7 1 4 5 6 7', 145],
-  ['2 5 0 1 2 0 4 2 7', 120],
-  ['1 9 8 3 1 0 2 4 3 2', 1024],
-  ['4 0 9 7 9 4 0 5 1', 4190],
-  ['6 3 5 1 3 0 7 3', 3703],
-  ['4 9 3 8 7 5 1', 53, true],
-  ['4 1 0 9 0 8 5 7 9', 805],
-  ['1 9 8 3 1 0 2 4 3 2', 8310],
-  '9 4 6 3 7 6 9 8 6 1',
-  ['9 6 0 3 8 2 3 0', 382],
-  ['7 4 0 5 4 0 9 6 1 9', 4096],
-  '1 5 1 0 5 7 4 9 2', 
-  ['9 6 0 3 8 2 3 0', 38230],
-  ['7 4 0 5 4 0 9 6 1 9', 409619],
-  ['3 1 9 5 8 6 2 4 0 7', 8602],
-  ['4 8 7 4 6 4 2 3 1', 64231], 
-  ['7 3 8 5 3 1 3 0', 873],
-  ['9 4 6 3 7 6 9 8 6 1', 861],
-  ['3 7 4 6 5 0 6 8 0', 560],
-  ['7 4 0 5 4 0 9 6 1 9', 40],
-  '3 1 9 5 8 6 2 4 0 7',
-  '4 8 7 4 6 4 2 3 1',
-  ['9 4 6 3 7 6 9 8 6 1', 6],
-  '3 7 4 6 5 0 6 8 0', 
-  ['6 4 3 9 1 7 1 3 6 5', 3],
-  ['2 7 5 3 7 3 1 7 5 4', 731],
-  ['9 7 3 4 1 2 0 2 5 8', 1205],
-  ['7 3 8 5 3 1 3 0', 79],
-  ['6 8 2 5 8 6 4 8 7 5', 586],
-  ['9 4 6 3 7 6 9 8 6 1', 861],
-  ['3 7 4 6 5 0 6 8 0', 680],
-  ['3 1 9 5 8 6 2 4 0 7', 62407],
-  ['6 4 3 9 1 7 1 3 6 5', 6431],
-  '2 7 5 3 7 3 1 7 5 4', 
-  ['9 7 3 4 1 2 0 2 5 8', 4120],
-  ['3 7 4 6 5 0 6 8 0', 5068],
-  ['3 1 9 5 8 6 2 4 0 7', 86240],
-  ['1 6 9 4 3 6 3 8 6', 6386],
-  ['8 3 1 4 5 3 1 2 7', 127],
-  ['7 2 0 3 6 8 3 9', 2036], 
-  ['6 4 3 9 1 7 1 3 6 5', 7136],
-  ['3 6 5 2 3 6 0 6 2', 3602],
-  ['3 1 9 5 8 6 2 4 0 7', 62407],
-  ['1 6 9 4 3 6 3 8 6', 6384],
-  ['7 2 0 3 6 8 3 9', 30],
-  '8 3 1 4 5 3 1 2 7', 
-  ['8 3 1 4 5 3 1 2 7', 147],
-  '1 5 1 2 8 5 8 3 9', 
-  ['6 8 0 6 7 1 5 6', 7106],
-  '8 2 1 4 9 7 5 6', 
-  ['5 9 4 9 1 0 3 5 6', 104],
-  ['5 8 1 5 8 9 7 6 9', 971],
-  ['3 7 4 6 5 0 6 8 0', 680],
-  ['1 0 5 3 6 3 9 8 1', 389],
-  ['5 9 4 9 1 0 3 5 6', 9103],
-  ['5 8 1 5 8 9 7 6 9', 9],
-  ['7 1 2 1 4 3 8', 12, true],
-  '8 6 1 8 4 1 5 8 1',
-  ['1 5 3 6 2 8 3 0 1', 3],
-
+  ["1 9 8 3 1 0 2 4 3 2", 3102],
+  ["1 9 8 3 1 0 2 4 3 2", 10],
+  ["4 0 3 8 3 1 9 1 6 7", 6],
+  ["3 8 6 9 2 4 9 7 0", 8],
+  ["1 9 8 3 1 0 2 4 3 2", 10243],
+  "7 5 1 0 3 1 7 3 8",
+  ["3 8 6 9 2 4 9 7 0", 2768],
+  ["9 8 2 3 3 4 4", 34],
+  ["7 5 1 0 3 1 7 3 8", 70],
+  ["1 9 8 3 1 0 2 4 3 2", 1],
+  ["4 1 0 9 0 8 5 7 9", 8],
+  ["4 7 1 4 5 6 7", 145],
+  ["2 5 0 1 2 0 4 2 7", 120],
+  ["1 9 8 3 1 0 2 4 3 2", 1024],
+  ["4 0 9 7 9 4 0 5 1", 4190],
+  ["6 3 5 1 3 0 7 3", 3703],
+  ["4 9 3 8 7 5 1", 53, true],
+  ["4 1 0 9 0 8 5 7 9", 805],
+  ["1 9 8 3 1 0 2 4 3 2", 8310],
+  "9 4 6 3 7 6 9 8 6 1",
+  ["9 6 0 3 8 2 3 0", 382],
+  ["7 4 0 5 4 0 9 6 1 9", 4096],
+  "1 5 1 0 5 7 4 9 2",
+  ["9 6 0 3 8 2 3 0", 38230],
+  ["7 4 0 5 4 0 9 6 1 9", 409619],
+  ["3 1 9 5 8 6 2 4 0 7", 8602],
+  ["4 8 7 4 6 4 2 3 1", 64231],
+  ["7 3 8 5 3 1 3 0", 873],
+  ["9 4 6 3 7 6 9 8 6 1", 861],
+  ["3 7 4 6 5 0 6 8 0", 560],
+  ["7 4 0 5 4 0 9 6 1 9", 40],
+  "3 1 9 5 8 6 2 4 0 7",
+  "4 8 7 4 6 4 2 3 1",
+  ["9 4 6 3 7 6 9 8 6 1", 6],
+  "3 7 4 6 5 0 6 8 0",
+  ["6 4 3 9 1 7 1 3 6 5", 3],
+  ["2 7 5 3 7 3 1 7 5 4", 731],
+  ["9 7 3 4 1 2 0 2 5 8", 1205],
+  ["7 3 8 5 3 1 3 0", 79],
+  ["6 8 2 5 8 6 4 8 7 5", 586],
+  ["9 4 6 3 7 6 9 8 6 1", 861],
+  ["3 7 4 6 5 0 6 8 0", 680],
+  ["3 1 9 5 8 6 2 4 0 7", 62407],
+  ["6 4 3 9 1 7 1 3 6 5", 6431],
+  "2 7 5 3 7 3 1 7 5 4",
+  ["9 7 3 4 1 2 0 2 5 8", 4120],
+  ["3 7 4 6 5 0 6 8 0", 5068],
+  ["3 1 9 5 8 6 2 4 0 7", 86240],
+  ["1 6 9 4 3 6 3 8 6", 6386],
+  ["8 3 1 4 5 3 1 2 7", 127],
+  ["7 2 0 3 6 8 3 9", 2036],
+  ["6 4 3 9 1 7 1 3 6 5", 7136],
+  ["3 6 5 2 3 6 0 6 2", 3602],
+  ["3 1 9 5 8 6 2 4 0 7", 62407],
+  ["1 6 9 4 3 6 3 8 6", 6384],
+  ["7 2 0 3 6 8 3 9", 30],
+  "8 3 1 4 5 3 1 2 7",
+  ["8 3 1 4 5 3 1 2 7", 147],
+  "1 5 1 2 8 5 8 3 9",
+  ["6 8 0 6 7 1 5 6", 7106],
+  "8 2 1 4 9 7 5 6",
+  ["5 9 4 9 1 0 3 5 6", 104],
+  ["5 8 1 5 8 9 7 6 9", 971],
+  ["3 7 4 6 5 0 6 8 0", 680],
+  ["1 0 5 3 6 3 9 8 1", 389],
+  ["5 9 4 9 1 0 3 5 6", 9103],
+  ["5 8 1 5 8 9 7 6 9", 9],
+  ["7 1 2 1 4 3 8", 12, true],
+  "8 6 1 8 4 1 5 8 1",
+  ["1 5 3 6 2 8 3 0 1", 3],
 ];
 
-warmup.outputToFile();
+warmup.outputToFile("warmup.txt");
 
 export default Warmup;

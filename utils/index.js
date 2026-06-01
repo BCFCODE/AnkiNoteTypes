@@ -43,14 +43,28 @@ class Utils {
     */
   };
 
-  addSpaceBetweenDigits = (n) => [...`${n}`].join` `;
+  addColorToEachDigit = (number) => `${number}`.replace(/\d/g, (digit) => this.addColor(digit));
 
   removeNoneDigits = (n) => `${n}`.replace(/\D/g, "");
 
+  addSpaceBetweenDigits = (n) => [...this.removeNoneDigits(n)].join` `;
+
+  reverseDigits = (n) => [...this.removeNoneDigits(n)].reverse().join``;
+
   getUniqueDigits = (digits) => [...new Set(this.removeNoneDigits(digits))];
 
-  getReg = (n, flag = "g") => {
-    return new RegExp(`[${this.removeNoneDigits(n)}]`, flag);
+  getReg = (n, flag = "g") => new RegExp(`[${this.removeNoneDigits(n)}]`, flag);
+
+  getNumberOfDigits = (n) => this.removeNoneDigits(n).toString().length;
+
+  createNumberOfDigitsTag = (numberOfDigits) => `${numberOfDigits}Digits`;
+
+  createDirectionTag = (isBackward) => (isBackward ? "Backward" : "Forward");
+
+  createTagsField = (numberOfDigits, isBackward) => {
+    const directionTag = this.createDirectionTag(isBackward);
+    const numberOfDigitsTag = this.createNumberOfDigitsTag(numberOfDigits);
+    return `Memo DigitMemory ${directionTag} ${numberOfDigitsTag}`;
   };
 
   outputToFile = (path = "Anki.txt") =>
