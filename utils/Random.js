@@ -9,7 +9,7 @@ class Random extends Utils {
     this.#numberOfDigits = value;
   }
 
-  #createOutput = () => {
+  #getRandomNumber = () => {
     let digits = "";
     for (let i = 0; i < this.#numberOfDigits; i++) {
       if (digits === "") digits = "1234567890";
@@ -21,8 +21,12 @@ class Random extends Utils {
     return this.#output.join` `;
   };
 
+  get number() {
+    return this.#getRandomNumber()
+  }
+
   get output() {
-    return this.#createOutput();
+    return this.#getRandomNumber();
   }
 }
 
@@ -30,5 +34,5 @@ const random = new Random();
 random.numberOfDigits = 10;
 // console.log(random.output) 
 random.outputToFile();
- 
+  
 export default Random;

@@ -168,7 +168,7 @@ class Warmup extends Utils {
 
   #createOutput = () => {
     const outputs = this.#multipleInputs.map(
-      ({ number, digits, isBackward = false }) => {
+      ({ number, digits, isBackward = false }) => { 
         this.#number = number;
         this.#digits = digits;
         this.#isBackward = isBackward;
@@ -286,7 +286,7 @@ warmup.multipleInputs = [
   ['7 1 2 1 4 3 8', 12, true],
   '8 6 1 8 4 1 5 8 1',
   ['1 5 3 6 2 8 3 0 1', 3],
-  
+
 ];
 
 warmup.outputToFile();
