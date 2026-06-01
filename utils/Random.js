@@ -17,7 +17,7 @@ class Random extends Utils {
     this.#output = [];
     let digits = "";
     for (let i = 0; i < this.#numberOfDigits; i++) {
-      if (digits === "") digits = "1234567890"
+      if (digits === "") digits = "1234567890";
       const randomIndex = Math.floor(Math.random() * digits.length);
       const chosenDigit = digits[randomIndex];
       digits = digits.replace(this.getReg(chosenDigit), "");
@@ -54,7 +54,7 @@ class Random extends Utils {
 
   #createAnkiCard = () => {
     this.#getRandomNumber();
-    const Front = this.#createFrontField()
+    const Front = this.#createFrontField();
     const Answer = this.#createAnswerField();
     const Back = null;
     const Image = null;
@@ -95,6 +95,10 @@ class Random extends Utils {
       const newAnkiCard = this.#createAnkiCard();
       ankiCards.push(newAnkiCard);
     }
+
+    const finalCard = `<div style="text-align: center; margin: 30px 0; font-family: system-ui, sans-serif;"><h2 style="color: #00ff9d; text-shadow: 0 0 20px rgba(0, 255, 157, 0.6); margin-bottom: 12px;">🎉 Congratulations! 🎉</h2><p style="color: #e0e0e0; font-size: 1.15rem; margin: 10px 0 25px 0;">You finished all the cards!<br><span style="color: #ffd700;">Ready to add new ones?</span></p><p style="color: #888; font-size: 0.95rem;">Created by <a href="https://x.com/bcfcode" target="_blank" style="color: #00ddff; text-decoration: none;">Morteza Bakhshandeh (@bcfcode)</a> © 2026<br><a href="https://www.bcfcode.com" target="_blank" style="color: #00aaff; text-decoration: none;">www.BCFCODE.com</a></p></div>`;
+
+    ankiCards.push(finalCard);
     this.#output = ankiCards.join`\n`;
   };
 
@@ -107,9 +111,9 @@ class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 7 ,
-  isBackward: true,
-  numberOfOutputs: 5,
+  numberOfDigits: 8,
+  isBackward: false,
+  numberOfOutputs: 100,
 };
 
 random.outputToFile("random.txt");
