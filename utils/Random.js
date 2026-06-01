@@ -17,13 +17,18 @@ class Random extends Utils {
     this.#output = [];
     let digits = "";
     for (let i = 0; i < this.#numberOfDigits; i++) {
-      if (digits === "") digits = "1234567890";
+      if (digits === "") digits = "1234567890"
       const randomIndex = Math.floor(Math.random() * digits.length);
       const chosenDigit = digits[randomIndex];
       digits = digits.replace(this.getReg(chosenDigit), "");
       this.#output.push(chosenDigit);
     }
     this.#number = this.#output.join``;
+  };
+
+  #createFrontField = () => {
+    const spacedNumber = this.addSpaceBetweenDigits(this.#number);
+    return `<span style="opacity: 0">${spacedNumber}</span>`;
   };
 
   #createAnswerField = () => {
@@ -49,7 +54,7 @@ class Random extends Utils {
 
   #createAnkiCard = () => {
     this.#getRandomNumber();
-    const Front = `&nbsp;`;
+    const Front = this.#createFrontField()
     const Answer = this.#createAnswerField();
     const Back = null;
     const Image = null;
@@ -102,9 +107,9 @@ class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 10,
+  numberOfDigits: 7 ,
   isBackward: true,
-  numberOfOutputs: 10,
+  numberOfOutputs: 5,
 };
 
 random.outputToFile("random.txt");
