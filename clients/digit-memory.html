@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digit Memory Client</title>
+    <!-- <script defer type="module" src="../utils/DigitMemory.js"></script> -->
+  </head>
+  <body>
+    <form>
+      <p>Q: <input id="Q" type="text" /></p>
+      <p>A: <input id="A" type="text" /></p>
+
+      <fieldset>
+        <legend>Is Backward?</legend>
+        <input
+          id="false"
+          type="radio"
+          value="false"
+          name="is-backward"
+          checked
+        />
+        <label for="false">False</label>
+
+        <input id="true" type="radio" value="true" name="is-backward" />
+        <label for="true">True</label>
+      </fieldset>
+      <button type="submit">Add</button>
+
+      <button type="button">Output</button>
+    </form>
+  </body>
+</html>
