@@ -113,7 +113,7 @@ class Random extends Utils {
   ">
     <p style="color: #d7fdf0; font-size: 1rem; line-height: 1.7; margin: 0;">
       📚 On <span style="color:#00ff9d; font-weight:700;">${this.currentFormattedDate}</span>,
-      you imported <span style="color:#ffd700; font-weight:700;">100 new cards</span>.
+      you imported <span style="color:#ffd700; font-weight:700;">${this.#numberOfOutputs} new cards</span>.
       <br>
       Today, you completed <span style="color:#00ff9d; font-weight:700;">every single one of them</span>.
       <br><br>
@@ -138,6 +138,7 @@ class Random extends Utils {
     </a>
   </p>
 </div>
+|||||||||||||${this.#createTagsField()}
 `.replace(/\n/g, "");
   };
 
@@ -165,7 +166,7 @@ const random = new Random();
 random.config = {
   numberOfDigits: 8,
   isBackward: true,
-  numberOfOutputs: 100,
+  numberOfOutputs: 30,
 };
 
 random.outputToFile("random.txt");

@@ -214,7 +214,7 @@ warmup.multipleInputs = [
   '5 3 7 6 1 9 4 0',
   '3 9 1 4 0 8 5 2 6', 
   '8 3 6 4 1 2 0 5 7 9', 
-  
+  '3 9 1 4 0 8 5 2 6',
 ];
 
 warmup.outputToFile("warmup.txt");
