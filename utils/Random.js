@@ -111,7 +111,7 @@ class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 8,
+  numberOfDigits: 10,
   isBackward: false,
   numberOfOutputs: 100,
 };

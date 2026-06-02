@@ -154,6 +154,7 @@
       "Fragment",
       "Sentence",
       "Passage",
+      "EnglishMastery",
     ];
     // const infoIvl = " {{info-Ivl:}}";
 
@@ -181,6 +182,7 @@
       Fragment: /Fragment/i.test(TAGS),
       Sentence: /Sentence/i.test(TAGS),
       Passage: /Passage/i.test(TAGS),
+      EnglishMastery: /EnglishMastery/i.test(TAGS),
     };
 
     var avgTimeInSeconds;
@@ -216,6 +218,7 @@
         "1s": "color-pulse-animation-1s",
         "2s": "color-pulse-animation-2s",
       },
+      englishMasteryPlaceholder: "english-mastery-placeholder",
     };
 
     const color = {
@@ -352,9 +355,16 @@
       window.timerTimeouts.push(timerID);
     }
 
-    function setInputPlaceholder(inputId, value) {
+    function setInputPlaceholder(inputId, value, className) {
       const input = document.getElementById(inputId);
-      if (input) input.placeholder = value;
+      if (!input) return;
+
+      input.placeholder = value;
+
+      if (className) {
+        input.classList.remove(className);
+        input.classList.add(className);
+      }
     }
 
     function setCSSstyle(id, property, value) {
@@ -466,8 +476,28 @@
 
     // Deck name etc.
     var deckName = getDeckName();
+
     setInputPlaceholder(ids.typeAnswer, deckName);
-    setInnerHTML(ids.bottomRightLittleLabel, deckName);
+
+    if (isTag.EnglishMastery) {
+      setInnerTextAfterDelay(
+        ids.bottomRightLittleLabel,
+        2000,
+        "English Mastery",
+        () => {
+          setInputPlaceholder(
+            ids.typeAnswer,
+            `English Mastery`,
+            animation.englishMasteryPlaceholder,
+          );
+          addClass(ids.bottomRightLittleLabel, color.warning);
+          addClass(ids.bottomRightLittleLabel, animation.colorPulse["500ms"]);
+          // addClass(ids.bottomRightLittleLabel, animation.sizePulse);
+        },
+      );
+    } else {
+      setInnerHTML(ids.bottomRightLittleLabel, deckName);
+    }
 
     // Deck info
     if (!/\d/.test(INFO_TIME_AVG)) {
