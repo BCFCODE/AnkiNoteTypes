@@ -211,10 +211,14 @@ class Warmup extends Utils {
 export const warmup = new Warmup();
 
 warmup.multipleInputs = [
-  '5 3 7 6 1 9 4 0',
-  '3 9 1 4 0 8 5 2 6', 
-  '8 3 6 4 1 2 0 5 7 9', 
-  '3 9 1 4 0 8 5 2 6',
+  ['2 6 0 4 1 7 9 8 3', 983],
+  '6 1 0 5 8 7 4 3', 
+  ['6 1 0 5 8 7 4 3', 6105],
+  ['5 9 4 9 1 0 3 5 6', 9103],
+  ['3 4 2 0 1 6 9 5 7 8', 1690],
+  ['9 4 6 3 7 6 9 8 6 1', 681],
+  ['9 2 0 8 9 0 7 2 0 5', 90725],
+  
 ];
 
 warmup.outputToFile("warmup.txt");
