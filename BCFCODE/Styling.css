@@ -696,7 +696,7 @@ input#typeans {
     0 0 23px rgba(255, 60, 85, 0.5),
     0 2px 8px rgba(0, 0, 0, 0.75);
    */
-  opacity: 40%;
+  /* opacity: 40%; */
   transition:
     color 3000ms ease,
     text-shadow 3000ms ease,
