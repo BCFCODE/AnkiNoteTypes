@@ -1,38 +1,38 @@
 <br />
 <div class="awesome-tts">{{tts ar_AR voices=AwesomeTTS:AwesomeTTS (Back)}}</div>
 
-<div>{{#Back}}</div>
-
+{{#Back}}
 <div class="front">
+  {{#Answer}}
   <div class="typeBack">
     Check your answer:{{type:Answer}}
     <div class="correct">
       <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
     </div>
   </div>
+  {{/Answer}}
+  <div>{{Front}}</div>
   {{Back}}
 </div>
-
 {{/Back}}
 
 <br />
 
-{{#Answer}}
 <div class="front">
+  {{#Answer}}
   <div class="typeBack">
     Check your answer:{{type:Answer}}
     <div class="correct">
       <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
     </div>
   </div>
+  {{/Answer}}
 
   <div>{{Front}}</div>
 
   <div class="correct-single">
     <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
   </div>
-
-  {{/Answer}}
 
   <div class="hidden">
     {{#Audio (Both Sides)}} {{Audio (Both Sides)}} {{/Audio (Both Sides)}}
