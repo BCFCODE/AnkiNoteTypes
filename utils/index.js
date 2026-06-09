@@ -1,6 +1,18 @@
 import fs from "fs";
 
 class Utils {
+  currentFormattedDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  currentYear = new Date().getFullYear()
+  authorName = "Morteza Bakhshandeh (@BCFCODE)";
+  twitterUrl = "https://x.com/bcfcode";
+  websiteUrl = "https://www.bcfcode.ir";
+  githubUrl = "https://github.com/BCFCODE/AnkiNoteTypes";
+
   addColor = (digit, replaceChar = digit) => {
     const style = {
       0: "color: rgb(115, 115, 115); text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 6px rgba(115,115,115,0.5), 0 0 14px rgba(0,0,0,0.6);",
@@ -43,7 +55,8 @@ class Utils {
     */
   };
 
-  addColorToEachDigit = (number) => `${number}`.replace(/\d/g, (digit) => this.addColor(digit));
+  addColorToEachDigit = (number) =>
+    `${number}`.replace(/\d/g, (digit) => this.addColor(digit));
 
   removeNoneDigits = (n) => `${n}`.replace(/\D/g, "");
 
