@@ -1,6 +1,6 @@
 import Utils from ".";
 
-class Random extends Utils {
+export default class Random extends Utils {
   #output = [];
   #numberOfDigits;
   #isBackward;
@@ -165,10 +165,8 @@ const random = new Random();
 
 random.config = {
   numberOfDigits: 8,
-  isBackward: true,
-  numberOfOutputs: 30,
+  isBackward: false,
+  numberOfOutputs: 200,
 };
 
 random.outputToFile("random.txt");
-
-export default Random;
