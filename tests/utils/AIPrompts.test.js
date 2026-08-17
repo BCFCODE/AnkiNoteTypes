@@ -16,7 +16,7 @@ describe("AIPrompts", () => {
 
       const result = AIPRs.output;
       expect(result).toBe(
-        `AIPR 0: in "There's a small tribe of people who (1w) in the mountains of Spain." how to find the only right answer is "live" and not "lived"? is it??`,
+        `AIPR 1: in "There's a small tribe of people who (1w) in the mountains of Spain." how to find the only right answer is "live" and not "lived"? is it??`,
       );
     });
   });

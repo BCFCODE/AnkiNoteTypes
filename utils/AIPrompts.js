@@ -9,19 +9,20 @@ export default class AIPrompts extends Utils {
 
   #createOutput() {
     const outputs = this.#multipleInputs.map(
-      ([Q, A, error], i) => `AIPR ${i}: in "${Q}" how to find the only right answer is "${A}" and not "${error}"? is it??`,
+      ([Q, A, error], i) =>
+        `AIPR ${i + 1}: in "${Q}" how to find the only right answer is "${A}" and not "${error}"? is it??`,
     );
-    return outputs.join`\n`; 
-  } 
- 
+    return outputs.join`\n`;
+  }
+
   get output() {
-    return this.#createOutput(); 
+    return this.#createOutput();
   }
 }
 
 export const AIPRs = new AIPrompts();
- 
-AIPRs.multipleInputs = [ 
+
+AIPRs.multipleInputs = [
   [
     `There's a small tribe of people who (1w) in the mountains of Spain.`,
     "live",
@@ -33,6 +34,5 @@ AIPRs.multipleInputs = [
     "2",
   ],
 ];
- 
+
 AIPRs.outputToFile("AIPRs.txt");
- 
