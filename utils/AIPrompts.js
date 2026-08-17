@@ -29,10 +29,16 @@ AIPRs.multipleInputs = [
     "lived",
   ],
   [
-    `There's a small tribe of people who (1w) in the mountains of Spain.`,
-    "live",
-    "2",
+    `Bliss is a state of complete happiness.`,
+    'ss',
+    's'
   ],
+  [
+    'A (1w)araoh was a king in ancient Egypt.',
+    'ph',
+    'f'
+  ],
+  
 ];
 
 AIPRs.outputToFile("AIPRs.txt");
