@@ -164,9 +164,9 @@ export default class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 8,
+  numberOfDigits: 7,
   isBackward: false,
-  numberOfOutputs: 200,
+  numberOfOutputs: 400,
 };
 
 random.outputToFile("random.txt");
