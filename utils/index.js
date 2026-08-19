@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class Utils {
+export default class Utils {
   currentFormattedDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -82,6 +82,5 @@ class Utils {
 
   outputToFile = (path = "Anki.txt") =>
     fs.writeFileSync(`outputs/${path}`, this.output, "utf8");
-}
 
-export default Utils;
+}

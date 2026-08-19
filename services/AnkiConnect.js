@@ -19,7 +19,7 @@ export class AnkiConnectionError extends Error {
   }
 }
 
-export class AnkiService {
+export default class AnkiService {
   #url;
   #apiKey;
   #version;
@@ -62,10 +62,7 @@ export class AnkiService {
 
         // Never retry logical AnkiConnect errors.
         // Retry only connection / HTTP-level failures.
-        if (
-          error instanceof AnkiConnectError ||
-          attempt >= this.#retries
-        ) {
+        if (error instanceof AnkiConnectError || attempt >= this.#retries) {
           throw error;
         }
 
@@ -79,10 +76,7 @@ export class AnkiService {
   async #request(action, params) {
     const controller = new AbortController();
 
-    const timeoutId = setTimeout(
-      () => controller.abort(),
-      this.#timeout,
-    );
+    const timeoutId = setTimeout(() => controller.abort(), this.#timeout);
 
     const body = {
       action,
@@ -115,10 +109,9 @@ export class AnkiService {
       try {
         payload = await response.json();
       } catch (cause) {
-        throw new AnkiConnectionError(
-          "AnkiConnect returned invalid JSON.",
-          { cause },
-        );
+        throw new AnkiConnectionError("AnkiConnect returned invalid JSON.", {
+          cause,
+        });
       }
 
       if (!Object.prototype.hasOwnProperty.call(payload, "result")) {
@@ -134,13 +127,10 @@ export class AnkiService {
       }
 
       if (payload.error !== null) {
-        throw new AnkiConnectError(
-          String(payload.error),
-          {
-            action,
-            params,
-          },
-        );
+        throw new AnkiConnectError(String(payload.error), {
+          action,
+          params,
+        });
       }
 
       return payload.result;
@@ -285,12 +275,7 @@ export class AnkiService {
     });
   }
 
-  setSpecificValueOfCard({
-    card,
-    keys,
-    newValues,
-    warningCheck = false,
-  }) {
+  setSpecificValueOfCard({ card, keys, newValues, warningCheck = false }) {
     return this.invoke("setSpecificValueOfCard", {
       card,
       keys,
@@ -378,137 +363,117 @@ export class AnkiService {
     });
   }
 
-  /**
- * Add notes like Anki's text importer with:
- *
- * Import options → Existing notes → Update
- *
- * Existing notes are identified by the first field.
- */
-async upsertNotes({
-  deckName,
-  modelName,
-  notes,
-  matchField,
-  preserveTags = false,
-}) {
-  if (!Array.isArray(notes)) {
-    throw new TypeError("notes must be an array");
-  }
-
-  if (!matchField) {
-    throw new Error("matchField is required");
-  }
-
-  const existingNotes = await this.searchNotes(
-    `deck:"${deckName}"`,
-  );
-
-  const existingByField = new Map();
-
-  for (const note of existingNotes) {
-    const value = note.fields?.[matchField]?.value;
-
-    if (value != null) {
-      existingByField.set(
-        this.#normalizeField(value),
-        note,
+  findExactNote(notes, newNote) {
+    return notes.find((oldNote) => {
+      const oldFields = Object.fromEntries(
+        Object.entries(oldNote.fields).map(([key, value]) => [
+          key,
+          value.value,
+        ]),
       );
-    }
+
+      const sameFront = oldFields.Front === newNote.fields.Front;
+
+      const sameAnswer = oldFields.Answer === newNote.fields.Answer;
+
+      const sameTags =
+        JSON.stringify(oldNote.tags.sort()) ===
+        JSON.stringify(newNote.tags.sort());
+
+      return sameFront && sameAnswer && sameTags;
+    });
   }
 
-  const created = [];
-  const updated = [];
-  const skipped = [];
+  async #findExistingNote(modelName, fields, matchFields) {
+    const strategies = Array.isArray(matchFields[0])
+      ? matchFields
+      : [matchFields];
 
-  for (const note of notes) {
-    const matchValue = note.fields?.[matchField];
+    for (const strategy of strategies) {
+      const queryParts = strategy
+        .filter((field) => {
+          const value = fields[field];
+          return value !== undefined && value !== null && value !== "";
+        })
+        .map((field) => {
+          const value = String(fields[field])
+            .replaceAll("\\", "\\\\")
+            .replaceAll('"', '\\"');
 
-    if (matchValue == null) {
-      skipped.push({
-        note,
-        reason: `Missing match field: ${matchField}`,
+          return `${field}:"${value}"`;
+        });
+
+      if (!queryParts.length) continue;
+
+      const query = `note:${modelName} ${queryParts.join(" ")}`;
+
+      console.log("ANKI SEARCH:", query);
+
+      const noteIds = await this.invoke("findNotes", {
+        query,
       });
 
-      continue;
+      if (noteIds.length > 0) {
+        return noteIds[0];
+      }
     }
 
-    const normalizedValue =
-      this.#normalizeField(matchValue);
+    return null;
+  }
 
-    const existing = existingByField.get(
-      normalizedValue,
-    );
-
-    if (existing) {
-      const fields = {
-        ...note.fields,
-      };
-
-      // Do not modify the field we're matching on.
-      // This mirrors Anki's "first field identifies the note"
-      // behavior.
-      delete fields[matchField];
-
-      await this.updateNoteFields(
-        existing.noteId,
-        fields,
+  /**
+   * Add notes like Anki's text importer with:
+   *
+   * Import options → Existing notes → Update
+   *
+   * Existing notes are identified by the first field.
+   */
+  async upsertNotes({ deckName, modelName, notes, matchFields = ["Front"] }) {
+    for (const note of notes) {
+      const existingNoteId = await this.#findExistingNote(
+        modelName,
+        note.fields,
+        matchFields,
       );
 
-      if (!preserveTags && note.tags) {
-        await this.updateNoteTags(
-          existing.noteId,
-          note.tags,
-        );
+      if (existingNoteId) {
+        await this.updateNote({
+          noteId: existingNoteId,
+          fields: note.fields,
+        });
+
+        continue;
       }
 
-      updated.push({
-        noteId: existing.noteId,
-        matchValue,
+      await this.addNote({
+        deckName, 
+        modelName, 
+        fields: note.fields,
+        tags: note.tags,
       });
-
-      continue;
     }
+  }
 
-    const noteId = await this.addNote({
-      deckName,
-      modelName,
-      fields: note.fields,
-      tags: note.tags ?? [],
-      options: {
-        allowDuplicate: false,
-      },
+  async findNotesByContent(fields) {
+    const query = `"${fields.Front}"`;
+
+    const ids = await this.invoke("findNotes", {
+      query,
     });
 
-    if (noteId == null) {
-      skipped.push({
-        note,
-        reason: "Anki rejected the note as a duplicate",
-      });
+    if (!ids.length) return [];
 
-      continue;
-    }
-
-    created.push({
-      noteId,
-      matchValue,
+    return await this.invoke("notesInfo", {
+      notes: ids,
     });
   }
 
-  return {
-    created,
-    updated,
-    skipped,
-    total: notes.length,
-  };
-}
-
-#normalizeField(value) {
-  return String(value)
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+  #normalizeField(value) {
+    return String(value)
+      .replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
 
   notesInfo(notes) {
     return this.invoke("notesInfo", { notes });
@@ -518,8 +483,13 @@ async upsertNotes({
     return this.invoke("notesModTime", { notes });
   }
 
-  updateNote(note) {
-    return this.invoke("updateNote", { note });
+  async updateNote({ noteId, fields }) {
+    return this.invoke("updateNoteFields", {
+      note: {
+        id: noteId,
+        fields,
+      },
+    });
   }
 
   updateNoteFields(noteId, fields) {
@@ -533,10 +503,8 @@ async upsertNotes({
 
   updateNoteTags(noteId, tags) {
     return this.invoke("updateNoteTags", {
-      note: {
-        id: noteId,
-        tags,
-      },
+      note: noteId,
+      tags,
     });
   }
 
@@ -987,12 +955,7 @@ async upsertNotes({
     });
   }
 
-  exportPackage({
-    deck,
-    path,
-    includeSchedule = true,
-    includeMedia = true,
-  }) {
+  exportPackage({ deck, path, includeSchedule = true, includeMedia = true }) {
     return this.invoke("exportPackage", {
       deck,
       path,
@@ -1031,11 +994,7 @@ async upsertNotes({
     return this.invoke("getLatestReviewId");
   }
 
-  cardReviews({
-    cards,
-    startID,
-    endID,
-  }) {
+  cardReviews({ cards, startID, endID }) {
     return this.invoke("cardReviews", {
       cards,
       ...(startID !== undefined && { startID }),
@@ -1077,9 +1036,7 @@ async upsertNotes({
 
     await this.updateNoteFields(note.noteId, fields);
 
-    return this.notesInfo([note.noteId]).then(
-      ([updated]) => updated,
-    );
+    return this.notesInfo([note.noteId]).then(([updated]) => updated);
   }
 
   /**
@@ -1153,11 +1110,7 @@ async upsertNotes({
     return groups;
   }
 
-  static #sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   #sleep(ms) {
-    return AnkiService.#sleep(ms);
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
