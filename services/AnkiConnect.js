@@ -363,6 +363,30 @@ export default class AnkiService {
     });
   }
 
+  #createMatchKey(fields, matchFields) {
+    return matchFields
+      .map((field) => this.#normalizeField(fields[field] ?? ""))
+      .join("|");
+  }
+
+  async #getExistingNotesMap(modelName, matchFields) {
+    const notes = await this.searchNotes(`note:${modelName}`);
+
+    const map = new Map();
+
+    for (const note of notes) {
+      const fields = Object.fromEntries(
+        Object.entries(note.fields).map(([key, value]) => [key, value.value]),
+      );
+
+      const key = this.#createMatchKey(fields, matchFields);
+
+      map.set(key, note.noteId);
+    }
+
+    return map;
+  }
+
   findExactNote(notes, newNote) {
     return notes.find((oldNote) => {
       const oldFields = Object.fromEntries(
@@ -422,35 +446,70 @@ export default class AnkiService {
   }
 
   /**
-   * Add notes like Anki's text importer with:
+   * Add/update notes like Anki importer:
    *
-   * Import options → Existing notes → Update
+   * Existing notes are matched by matchFields.
    *
-   * Existing notes are identified by the first field.
+   * Example:
+   *
+   * matchFields: ["Front", "Back"]
+   *
+   * means:
+   *
+   * same Front + same Back = update
+   * otherwise = create
    */
   async upsertNotes({ deckName, modelName, notes, matchFields = ["Front"] }) {
+    if (!notes.length) {
+      return;
+    }
+
+    // 1 request:
+    // Get all existing notes once
+    const existingNotes = await this.#getExistingNotesMap(
+      modelName,
+      matchFields,
+    );
+
+    const actions = [];
+    const newNotes = [];
+
     for (const note of notes) {
-      const existingNoteId = await this.#findExistingNote(
-        modelName,
-        note.fields,
-        matchFields,
-      );
+      const key = this.#createMatchKey(note.fields, matchFields);
+
+      const existingNoteId = existingNotes.get(key);
 
       if (existingNoteId) {
-        await this.updateNote({
-          noteId: existingNoteId,
-          fields: note.fields,
+        actions.push({
+          action: "updateNoteFields",
+          version: this.#version,
+          params: {
+            note: {
+              id: existingNoteId,
+              fields: note.fields,
+            },
+          },
         });
-
-        continue;
+      } else {
+        newNotes.push({
+          deckName,
+          modelName,
+          fields: note.fields,
+          tags: note.tags,
+        });
       }
+    }
 
-      await this.addNote({
-        deckName, 
-        modelName, 
-        fields: note.fields,
-        tags: note.tags,
-      });
+    // 1 request:
+    // Update everything together
+    if (actions.length) {
+      await this.multi(actions);
+    }
+
+    // 1 request:
+    // Add everything together
+    if (newNotes.length) {
+      await this.addNotes(newNotes);
     }
   }
 
@@ -461,7 +520,9 @@ export default class AnkiService {
       query,
     });
 
-    if (!ids.length) return [];
+    if (!ids.length) {
+      return [];
+    }
 
     return await this.invoke("notesInfo", {
       notes: ids,
