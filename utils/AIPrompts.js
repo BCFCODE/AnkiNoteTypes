@@ -24,59 +24,95 @@ export const AIPRs = new AIPrompts();
 
 AIPRs.multipleInputs = [
   [
-    `There's a small tribe of people who (1w) in the mountains of Spain.`,
-    "live",
-    "lived",
+    'A mill is a building in which wheat (1w) ground into flour.',
+    'is',
+    "without 'is'"
   ],
   [
-    `There's a small tribe of people who (1w) in the mountains of Spain.`,
-    "live",
-    "2",
+    'Charcoal is a black material that is used as fuel (1w) fire.', 
+    'for',
+    'in'
   ],
   [
-    "A nation is a large area of land that is controlled by its (1w) government.",
-    "own",
-    "''(without 'own')",
-  ],
-  ["An affair is an event or (1w) thing that happened.", "a", "the"],
-  [
-    "They found archeological evidence that proved an ancient species of (1w|1.)",
-    "man",
-    "men",
-  ],
-  ["To ad?pt means to change in order to deal with a new situation.", "a", "e"],
-  [
-    "Lava is the hot substance made of melted rock that comes out (1w) volcanoes.",
-    "of",
-    "from",
+    'Climbing (1w) the giant rock was the biggest obstacle for the hikers.',
+    'over', 
+    'of'
   ],
   [
-    "Relativity teaches that light travels at the same speed (1w) the universe.",
-    "in",
-    "at",
+    `The rebel had enough of the government's unfair (1w|1.)`,
+    'polices.',
+    'policies'
   ],
   [
-    "The child held the erroneous (1w) that time machines were real.",
-    "belief",
-    "believe",
+    'An action done aside is done toward the side of something or (1w|1.)',
+    'someplace.',
+    'some place.'
   ],
   [
-    "Canyons are formed because rivers of (1w) water caused erosion.",
-    "fast-moving",
-    "fast moving",
-  ],
-  ["To (1w) means to quit a job.", "resign", "resigned"],
-  ["A bitter person feels upset or (1w) about something.", "angry", "anger"],
-  [
-    "To acknowledge something is to accept that it is true or that it (1w|1.)",
-    "exists.",
-    "exist.",
+    'To (1w) something or someone is to make them better.',
+    'complement ',
+    'compliment '
   ],
   [
-    "Cereal is a breakfast (2w) from grains that is eaten with milk.",
-    "food made ",
-    "food that is made ",
+    'Thus is used in place of “as a result of something (2w) just mentioned.”',
+    'that was ',
+    'without "that was "'
   ],
+  [
+    'If something is theoretical, it is based on theory rather than (1w|1.)',
+    'experience.',
+    'experiment.'
+  ],
+  [
+    'An awareness (2w) or perception of a situation or fact.',
+    'is knowledge ',
+    'is a knowledge '
+  ],
+  [
+    'To flee is (3w) very quickly in order to escape from danger.',
+    'to leave somewhere ',
+    'to leave to somewhere '
+  ],
+  [
+    'An equivalent is an amount or value that is the same (1w) another amount or value.',
+    'as',
+    'with'
+  ],
+  [
+    'I have a hatred (1w) the taste of medicine.', 
+    'for ', 
+    'from'
+  ],
+  [
+    'A routine is a way of doing things that is the same (2w|1.)',
+    'every time.', 
+    'everytime.'
+  ],
+  [
+    'Flour is a powder made from plants (2w) used to make foods like bread.',
+    'that is ',
+    "without 'that is'"
+  ],
+  [
+    'A deed is a certificate that proves that someone (1w) something.',
+    'owns ',
+    'owned'
+  ],
+  [
+    'He found himself lost because he had (1w) from the tour group.',
+    'strayed ', 
+    'straight'
+  ],
+  [
+    'When a bad thing is a?ute, it is very severe and intense.',
+    'c',
+    'cc'
+  ],
+  [
+    'Proficient (2w) to do something well.', 
+    'means able ',
+    'means be able '
+  ]
 ];
 
 AIPRs.outputToFile("AIPRs.txt");
