@@ -12,6 +12,7 @@
   </div>
   {{/Answer}}
   <div>{{Front}}</div>
+
   <div>{{Back}}</div>
   {{#Back (Persian)}}
   <div style="direction: rtl; text-align: right">{{Back (Persian)}}</div>
@@ -32,6 +33,10 @@
   {{/Answer}}
 
   <div>{{Front}}</div>
+
+  {{#Front (Persian)}}
+  <div style="direction: rtl; text-align: right">{{Front (Persian)}}</div>
+  {{/Front (Persian)}}
 
   <div class="correct-single">
     <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
