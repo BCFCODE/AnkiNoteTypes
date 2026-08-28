@@ -42,8 +42,63 @@ AIPRs.multipleInputs = [
     'An acquisition is something that a person buys or gets in (2w|1.)',
     'some way.',
     'someway.'
+  ],
+  [
+    'The sails harness the (1w) in order to move.',
+    'wind', 
+    'winds'
+  ],
+  [
+    'A deck is a wooden floor built outside of a house or (1w) floor of a ship.',
+    'the',
+    "without 'the'"
+  ],
+  [
+    'When a bad thing is (1w|1,) it is very severe and intense.',
+    'acute, ',
+    'accute, '
+  ],
+  [
+    'A routine is (1w) way of doing things that is the same every time.',
+    'a',
+    'the'
+  ],
+  [
+    'When something is inevitable, it is certain to happen (4w|1.)',
+    'or cannot be avoided.',
+    'and cannot be avoidable.'
+  ],
+  [
+    'Ma? has many clothes inside of her closet.',
+    'rie',
+    'rry'
+  ],
+  [
+    'Marie has many clothes inside (1w) her closet.',
+    'of',
+    "without 'of'"
+  ],
+  [
+    'I did some practice questions (1w) the math exam on the board.',
+    'for',
+    'on'
+  ],
+  [
+    'A courier is (1w) who takes and delivers mail or packages.',
+    'someone',
+    'something'
+  ],
+  [
+    'Dust is (1w) small, dry particles of earth or sand.',
+    'very',
+    'a'
   ]
   /* DON'T FORGET TO ADD EnglishMastery TAG!! */
 ]; 
 
 AIPRs.outputToFile("AIPRs.txt");
+
+/* 
+  AIPR: give me a tongue twister to help me speed of my speaking
+  AIPR: give me a practical and common idiom that natives use in their conversations
+*/
