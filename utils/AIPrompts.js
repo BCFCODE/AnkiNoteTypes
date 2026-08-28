@@ -24,75 +24,26 @@ export const AIPRs = new AIPrompts();
 
 AIPRs.multipleInputs = [
   [
-    'A workout is an exercise routine that helps (1w) health.',
-    'improve ',
-    'increase'
+    'Etiquette is (1w) group of rules about how to be polite.',
+    'the', 
+    'a'
   ],
   [
-    'The development of plants (1w) ongoing because it takes time for them to mature.',
-    'is',
-    'are'
+    'The computers of (1w) 1980s are primitive compared to those of todays.',
+    'the',
+    "without 'the'"
   ],
   [
-    'Moreover is used to introduce information (1w) adds to or supports what has previously been said.',
-    'that', 
-    'to'
+    'When something is erroneous, it is incorrect or (1w) partly correct.',
+    'only',
+    "without 'only'"
   ],
   [
-    'A rule is an official instruction that (1w) how things must be done or what is allowed.',
-    'says', 
-    'said'
-  ],
-  [
-    'An applicant is someone who writes a request to be considered for a job or (1w|1.)',
-    'prize', 
-    'price'
-  ],
-  [
-    'A barn is a large farm building that (1w) crops, equipment, and animals.',
-    'houses ',
-    'uses'
-  ],
-  [
-    'Oil is a smooth, thick liquid made from plants or some animals, and (1w) especially in cooking.',
-    'is',
-    'used'
-  ],
-  [
-    'To conf?rm to rules or laws is to obey them.',
-    'o',
-    'i'
-  ],
-  [
-    'Oil is a smooth, thick liquid made from plants or some animals, and is especially (1w) cooking.', 
-    'in',
-    'for'
-  ],
-  [
-    'Oil is a smooth, thick liquid made from plants or some animals, and is (1w) in cooking.',
-    'especially ',
-    'specially'
-  ],
-  [
-    'An enemy is a country that is (2w) country during a war.',
-    'fighting another ',
-    'fighting in another '
-  ],
-  [
-    'A privilege is a special right given (3w) certain person or group of people.',
-    'only to a ',
-    'to only'
-  ],
-  [
-    'Shutters are wooden or metal (1w) in front of a window.',
-    'covers',
-    'covered'
-  ],
-  [
-    'Sociology is the study of human society, its organizations, (2w|1.)',
-    'and problems.',
-    'and its problems.'
+    'An acquisition is something that a person buys or gets in (2w|1.)',
+    'some way.',
+    'someway.'
   ]
-];
+  /* DON'T FORGET TO ADD EnglishMastery TAG!! */
+]; 
 
 AIPRs.outputToFile("AIPRs.txt");
