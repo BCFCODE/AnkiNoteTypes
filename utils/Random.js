@@ -67,6 +67,7 @@ export default class Random extends Utils {
     const TTSFront = this.#createTTSFront();
     const TTSBack = this.#createTTSBackField();
     const FrontPersian = null;
+    const BackPersian = null;
     const Tags = this.#createTagsField();
 
     const Fields = [
@@ -83,6 +84,7 @@ export default class Random extends Utils {
       TTSFront,
       TTSBack,
       FrontPersian,
+      BackPersian,
       Tags,
     ];
 
@@ -137,8 +139,7 @@ export default class Random extends Utils {
       ⭐ Star on GitHub
     </a>
   </p>
-</div>
-|||||||||||||${this.#createTagsField()}
+||||||||||||||${this.#createTagsField()}
 `.replace(/\n/g, "");
   };
 
@@ -164,9 +165,9 @@ export default class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 8,
-  isBackward: false,
-  numberOfOutputs: 200,
+  numberOfDigits: 6,
+  isBackward: true,
+  numberOfOutputs: 400,
 };
 
 random.outputToFile("random.txt");

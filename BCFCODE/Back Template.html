@@ -12,7 +12,11 @@
   </div>
   {{/Answer}}
   <div>{{Front}}</div>
-  {{Back}}
+
+  <div>{{Back}}</div>
+  {{#Back (Persian)}}
+  <div style="direction: rtl; text-align: right">{{Back (Persian)}}</div>
+  {{/Back (Persian)}}
 </div>
 {{/Back}}
 
@@ -29,6 +33,10 @@
   {{/Answer}}
 
   <div>{{Front}}</div>
+
+  {{#Front (Persian)}}
+  <div style="direction: rtl; text-align: right">{{Front (Persian)}}</div>
+  {{/Front (Persian)}}
 
   <div class="correct-single">
     <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
@@ -88,11 +96,11 @@
 
       <a
         alt="See your Codewars achievements at BCFCODE"
-        href="https://www.codewars.com/users/www.BCFCODE.ir"
+        href="https://www.codewars.com/users/BCFCODE"
       >
         <img
           class="codewarsBadge"
-          src="https://www.codewars.com/users/www.BCFCODE.ir/badges/large"
+          src="https://www.codewars.com/users/BCFCODE/badges/large"
         />
       </a>
 

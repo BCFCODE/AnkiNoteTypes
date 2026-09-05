@@ -16,7 +16,7 @@ describe("AIPrompts", () => {
 
       const result = AIPRs.output;
       expect(result).toBe(
-        `AIPR 1: in "There's a small tribe of people who (1w) in the mountains of Spain." how to find the only right answer is "live" and not "lived"? is it??`,
+        `AIPR 1: in "There's a small tribe of people who (1w) in the mountains of Spain." how to find the only right answer is "live" and not "lived"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English than before. Consider that I want to use it on Back field of my anki card.`,
       );
     });
   });

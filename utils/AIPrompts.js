@@ -10,9 +10,9 @@ export default class AIPrompts extends Utils {
   #createOutput() {
     const outputs = this.#multipleInputs.map(
       ([Q, A, error], i) =>
-        `AIPR ${i + 1}: in "${Q}" how to find the only right answer is "${A}" and not "${error}"? is it??`,
+        `AIPR ${i + 1}: in "${Q}" how to find the only right answer is "${A}" and not "${error}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English than before. Consider that I want to use it on Back field of my anki card.`,
     );
-    return outputs.join`\n`;
+    return outputs.join`\n\n`;
   }
 
   get output() {
@@ -24,21 +24,20 @@ export const AIPRs = new AIPrompts();
 
 AIPRs.multipleInputs = [
   [
-    `There's a small tribe of people who (1w) in the mountains of Spain.`,
-    "live",
-    "lived",
-  ],
-  [
-    `Bliss is a state of complete happiness.`,
-    'ss',
-    's'
-  ],
-  [
-    'A (1w)araoh was a king in ancient Egypt.',
-    'ph',
-    'f'
-  ],
-  
-];
+    '“Inn” means a small hotel or lodging place, especially in (1w) countryside.',
+    'the',
+    'a'
+  ]
+  /* DON'T FORGET TO ADD EnglishMastery TAG!! */
+]; 
 
 AIPRs.outputToFile("AIPRs.txt");
+
+/* 
+  Sentence:
+    AIPR: Use "" in a short memorable sentence that I can use it in my English speaking in the way natives use, and I find what it means in t his context: 
+  TongueTwister:
+    AIPR: give me a tongue twister and its meaning to help me speed up my English speaking
+  Idiom:
+    AIPR: give me a practical and common idiom that natives use in their conversations, and tell me when and where I can use it and where it comes from? what is its story?
+*/
