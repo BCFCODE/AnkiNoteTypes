@@ -21,7 +21,7 @@ export default class AIPrompts extends Utils {
   }
 
   #createSentenceAIPR = (part, context, i) =>
-    `SentenceAIPR${this.#counter(i)}: Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and I find what it means in "${context}"`;
+    `SentenceAIPR${this.#counter(i)}: Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "${part}" means in "${context}" too.`;
 
   set Sentence({ part, context }) {
     const AIPR = this.#createSentenceAIPR(part, context);
@@ -36,7 +36,6 @@ export default class AIPrompts extends Utils {
   }
 
   #createOutput() {
-    console.log(this.#multipleInputs);
     return this.#multipleInputs.join`\n\n`;
   }
 
