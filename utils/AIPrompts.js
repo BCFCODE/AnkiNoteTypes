@@ -34,6 +34,8 @@ AIPRs.multipleInputs = [
 AIPRs.outputToFile("AIPRs.txt");
 
 /* 
+  Sentence:
+    AIPR: Use "" in a short memorable sentence that I can use it in my English speaking in the way natives use, and I find what it means in t his context: 
   TongueTwister:
     AIPR: give me a tongue twister and its meaning to help me speed up my English speaking
   Idiom:
