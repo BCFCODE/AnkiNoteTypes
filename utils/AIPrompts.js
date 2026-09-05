@@ -24,9 +24,9 @@ export const AIPRs = new AIPrompts();
 
 AIPRs.multipleInputs = [
   [
-    'your sentence...',
-    'correct',
-    'your mistake mistake'
+    '“Inn” means a small hotel or lodging place, especially in (1w) countryside.',
+    'the',
+    'a'
   ]
   /* DON'T FORGET TO ADD EnglishMastery TAG!! */
 ]; 
