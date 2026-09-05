@@ -1,18 +1,42 @@
 import Utils from ".";
 
 export default class AIPrompts extends Utils {
-  #multipleInputs;
+  #multipleInputs = [];
 
-  set multipleInputs(inputs) {
-    this.#multipleInputs = inputs;
+  #counter = (i) => (Number.isInteger(i) ? " " + (i + 1) : "");
+
+  #createQAMistakeAIPR = (Q, A, Mistake, i) =>
+    `QAMistakeAIPR${this.#counter(i)}: in "${Q}" how to find the only right answer is "${A}" and not "${Mistake}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.`;
+
+  set QAMistake({ Q, A, Mistake }) {
+    const AIPR = this.#createQAMistakeAIPR(Q, A, Mistake);
+    this.#multipleInputs.push(AIPR);
+  }
+
+  set multipleQAMistake(inputs) {
+    inputs.forEach(([Q, A, Mistake], i) => {
+      const AIPR = this.#createQAMistakeAIPR(Q, A, Mistake, i);
+      this.#multipleInputs.push(AIPR);
+    });
+  }
+
+  #createSentenceAIPR = (part, context, i) =>
+    `SentenceAIPR${this.#counter(i)}: Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "${part}" means in "${context}" too.`;
+
+  set Sentence({ part, context }) {
+    const AIPR = this.#createSentenceAIPR(part, context);
+    this.#multipleInputs.push(AIPR);
+  }
+
+  set multipleSentence(inputs) {
+    inputs.forEach(([part, context], i) => {
+      const AIPR = this.#createSentenceAIPR(part, context, i);
+      this.#multipleInputs.push(AIPR);
+    });
   }
 
   #createOutput() {
-    const outputs = this.#multipleInputs.map(
-      ([Q, A, error], i) =>
-        `AIPR ${i + 1}: in "${Q}" how to find the only right answer is "${A}" and not "${error}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English than before. Consider that I want to use it on Back field of my anki card.`,
-    );
-    return outputs.join`\n\n`;
+    return this.#multipleInputs.join`\n\n`;
   }
 
   get output() {
@@ -21,15 +45,30 @@ export default class AIPrompts extends Utils {
 }
 
 export const AIPRs = new AIPrompts();
-
-AIPRs.multipleInputs = [
+/* 
+  AIPRs.QAMistake = {
+    Q: "“Inn” means a small hotel or lodging place, especially in (1w) countryside.",
+    A: "the",
+    Mistake: "a",
+  };
+*/
+AIPRs.multipleQAMistake = [
   [
-    '“Inn” means a small hotel or lodging place, especially in (1w) countryside.',
-    'the',
-    'a'
-  ]
-  /* DON'T FORGET TO ADD EnglishMastery TAG!! */
-]; 
+    "“Inn” means a small hotel or lodging place, especially in (1w) countryside.",
+    "the",
+    "a",
+  ],
+];
+
+/* 
+  AIPRs.Sentence = {
+    part: "trance",
+    context: "The woman’s powerful eyes often put men in a trance.",
+  };
+*/
+AIPRs.multipleSentence = [
+  ["trance", "The woman’s powerful eyes often put men in a trance."],
+];
 
 AIPRs.outputToFile("AIPRs.txt");
 
