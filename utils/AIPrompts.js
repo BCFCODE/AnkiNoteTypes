@@ -54,10 +54,50 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    "“Inn” means a small hotel or lodging place, especially in (1w) countryside.",
-    "the",
-    "a",
+    "If someone is neutral, then they do not help either of (2w) fighting sides.",
+    "the two",
+    "two"
   ],
+  [
+    'An incentive is what (4w) to do something.',
+    'makes a person want',
+    'make a person wants'
+  ],
+  [
+    'The cat slowly crept (2w) tree.', 
+    'down the',
+    'down on the'
+  ],
+  [
+    'The boy grabbed his shovel and got all of the snow (1w) of the sidewalk.',
+    'off',
+    "without 'off'"
+  ],
+  [
+    'A continent is one of the seven large areas of (1w) on the Earth.',
+    'land',
+    'lands'
+  ],
+  [
+    'When something is spatial, (2w) to the position and size of things.',
+    'it relates',
+    'it is related'
+  ],
+  [
+    `By using calculus, scientists (1w) small changes in the stars' brightness.`,
+    'determined ',
+    'determines'
+  ],
+  [
+    'A hospital is where sick or hurt people (1w) care or treatment.',
+    'receive',
+    'received'
+  ],
+  [
+    'In anthropology class, I learned about (2w) that ancient cultures used.',
+    'simple tools',
+    'the simple tools'
+  ]
 ];
 
 /* 
@@ -67,14 +107,31 @@ AIPRs.multipleQAMistake = [
   };
 */
 AIPRs.multipleSentence = [
-  ["trance", "The woman’s powerful eyes often put men in a trance."],
+  [
+    "trait ",
+    "If something is hereditary, it is a trait passed onto children from their parents.",
+  ],
+  [
+    'ground',
+    'A mill is a building in which wheat is ground into flour.'
+  ],
+  [
+    'impulse',
+    'Because of the scary noise, she had an impulse to run somewhere and hide.'
+  ],
+  [
+    'tenacious',
+    `I'm sure that he'll finish that difficult sale. He is very tenacious.`
+  ],
+  [
+    'overboard',
+    'Tom and Gary slipped on the wet floor and fell overboard.'
+  ]
 ];
 
 AIPRs.outputToFile("AIPRs.txt");
 
 /* 
-  Sentence:
-    AIPR: Use "" in a short memorable sentence that I can use it in my English speaking in the way natives use, and I find what it means in t his context: 
   TongueTwister:
     AIPR: give me a tongue twister and its meaning to help me speed up my English speaking
   Idiom:
