@@ -54,49 +54,44 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    "If someone is neutral, then they do not help either of (2w) fighting sides.",
-    "the two",
-    "two"
+    'She opened the curtains to let (1w) into the room.',
+    'light',
+    'lights'
   ],
   [
-    'An incentive is what (4w) to do something.',
-    'makes a person want',
-    'make a person wants'
+    'Santa Claus proposed that I (1w) to be a good boy all year.',
+    'try ',
+    'tried'
   ],
   [
-    'The cat slowly crept (2w) tree.', 
-    'down the',
-    'down on the'
+    'Sometimes (4w) bed because I am not tired.',
+    'I lay awake in ',
+    'I lay away from my'
   ],
   [
-    'The boy grabbed his shovel and got all of the snow (1w) of the sidewalk.',
-    'off',
-    "without 'off'"
+    'Sometimes I lay awake (2w) because I am not tired.',
+    'in bed ',
+    'in my bed '
   ],
   [
-    'A continent is one of the seven large areas of (1w) on the Earth.',
-    'land',
-    'lands'
+    'Hygiene is (2w) or methods needed for health and cleanliness.',
+    'the conditions ',
+    'the the conditions '
   ],
   [
-    'When something is spatial, (2w) to the position and size of things.',
-    'it relates',
-    'it is related'
+    'A standard is what people (1w) normal or good.',
+    'consider ',
+    'considered'
   ],
   [
-    `By using calculus, scientists (1w) small changes in the stars' brightness.`,
-    'determined ',
-    'determines'
+    `A sector is a part of a country's economy in (1w) specific type of industry.`,
+    'a',
+    'the'
   ],
   [
-    'A hospital is where sick or hurt people (1w) care or treatment.',
-    'receive',
-    'received'
-  ],
-  [
-    'In anthropology class, I learned about (2w) that ancient cultures used.',
-    'simple tools',
-    'the simple tools'
+    'Preserved (2w) in good condition or prevented from spoiling, especially so it can last longer.',
+    'means kept ',
+    'means to kept '
   ]
 ];
 
@@ -108,24 +103,40 @@ AIPRs.multipleQAMistake = [
 */
 AIPRs.multipleSentence = [
   [
-    "trait ",
-    "If something is hereditary, it is a trait passed onto children from their parents.",
+    "rituals",
+    "Ken was very interested to learn about the religious rituals of the natives."
   ],
   [
-    'ground',
-    'A mill is a building in which wheat is ground into flour.'
+    'capitalism',
+    'Most industries in the world today are based on capitalism.'
   ],
   [
-    'impulse',
-    'Because of the scary noise, she had an impulse to run somewhere and hide.'
+    'symptom ',
+    'A symptom of a bad condition or illness is a sign that it is happening.'
   ],
   [
-    'tenacious',
-    `I'm sure that he'll finish that difficult sale. He is very tenacious.`
+    'notorious',
+    'When something is notorious, it is well known because of something bad.'
   ],
   [
-    'overboard',
-    'Tom and Gary slipped on the wet floor and fell overboard.'
+    'commute ',
+    'I usually commute to work on a train.'
+  ],
+  [
+    'ethics',
+    `The act of stealing certainly doesn't go against some people's ethics.`
+  ],
+  [
+    'revenue',
+    `The new products really increased the business's monthly revenue.`
+  ],
+  [
+    'primeval ',
+    'Whatever interrupts the even flow and luxurious monotony of organic life is odious to the primeval animal.'
+  ],
+  [
+    'slippery',
+    'The repairman fell down on the floor because it was too slippery.'
   ]
 ];
 
