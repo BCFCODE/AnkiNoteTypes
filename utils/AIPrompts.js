@@ -54,44 +54,9 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'She opened the curtains to let (1w) into the room.',
-    'light',
-    'lights'
-  ],
-  [
-    'Santa Claus proposed that I (1w) to be a good boy all year.',
-    'try ',
-    'tried'
-  ],
-  [
-    'Sometimes (4w) bed because I am not tired.',
-    'I lay awake in ',
-    'I lay away from my'
-  ],
-  [
-    'Sometimes I lay awake (2w) because I am not tired.',
-    'in bed ',
-    'in my bed '
-  ],
-  [
-    'Hygiene is (2w) or methods needed for health and cleanliness.',
-    'the conditions ',
-    'the the conditions '
-  ],
-  [
-    'A standard is what people (1w) normal or good.',
-    'consider ',
-    'considered'
-  ],
-  [
-    `A sector is a part of a country's economy in (1w) specific type of industry.`,
-    'a',
-    'the'
-  ],
-  [
-    'Preserved (2w) in good condition or prevented from spoiling, especially so it can last longer.',
-    'means kept ',
-    'means to kept '
+    'The doctor (1w) a mandative recommendation that I rest for a week.',
+    'made',
+    'gave'
   ]
 ];
 
@@ -103,43 +68,11 @@ AIPRs.multipleQAMistake = [
 */
 AIPRs.multipleSentence = [
   [
-    "rituals",
-    "Ken was very interested to learn about the religious rituals of the natives."
-  ],
-  [
-    'capitalism',
-    'Most industries in the world today are based on capitalism.'
-  ],
-  [
-    'symptom ',
-    'A symptom of a bad condition or illness is a sign that it is happening.'
-  ],
-  [
-    'notorious',
-    'When something is notorious, it is well known because of something bad.'
-  ],
-  [
-    'commute ',
-    'I usually commute to work on a train.'
-  ],
-  [
-    'ethics',
-    `The act of stealing certainly doesn't go against some people's ethics.`
-  ],
-  [
-    'revenue',
-    `The new products really increased the business's monthly revenue.`
-  ],
-  [
-    'primeval ',
-    'Whatever interrupts the even flow and luxurious monotony of organic life is odious to the primeval animal.'
-  ],
-  [
-    'slippery',
-    'The repairman fell down on the floor because it was too slippery.'
+    'charred ',
+    'While Frank went inside to get the mustard, he accidentally charred the hotdogs.'
   ]
 ];
-
+ 
 AIPRs.outputToFile("AIPRs.txt");
 
 /* 
