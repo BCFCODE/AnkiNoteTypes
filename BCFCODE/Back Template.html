@@ -17,34 +17,15 @@
   {{/Back}} {{#Back (Persian)}}
   <div style="direction: rtl; text-align: right">{{Back (Persian)}}</div>
   {{/Back (Persian)}}
-</div>
-
-<br />
-
-<div class="front">
-  {{#Answer}}
-  <div class="typeBack">
-    Check your answer:{{type:Answer}}
-    <div class="correct">
-      <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
-    </div>
-  </div>
-  {{/Answer}}
-
-  <div>{{Front}}</div>
-
-  {{#Front (Persian)}}
-  <div style="direction: rtl; text-align: right">{{Front (Persian)}}</div>
-  {{/Front (Persian)}}
-
-  <div class="correct-single">
-    <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
-  </div>
 
   <div class="hidden">
     {{#Audio (Both Sides)}} {{Audio (Both Sides)}} {{/Audio (Both Sides)}}
     {{#Audio (Back)}} {{Audio (Back)}} {{/Audio (Back)}} {{#Video (Back)}}
     {{Video (Back)}} {{/Video (Back)}}
+  </div>
+
+  <div class="correct-single">
+    <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
   </div>
 
   <h6>
