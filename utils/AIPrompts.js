@@ -6,7 +6,7 @@ export default class AIPrompts extends Utils {
   #counter = (i) => (Number.isInteger(i) ? " " + (i + 1) : "");
 
   #createQAMistakeAIPR = (Q, A, Mistake, i) =>
-    `QAMistakeAIPR${this.#counter(i)}>${'-'.repeat(50)}
+    `QAMistakeAIPR${this.#counter(i)}>${"-".repeat(50)}
   in "${Q}" how to find the only right answer is "${A}" and not "${Mistake}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.`;
 
   set QAMistake({ Q, A, Mistake }) {
@@ -22,7 +22,7 @@ export default class AIPrompts extends Utils {
   }
 
   #createSentenceAIPR = (part, context, i) =>
-    `SentenceAIPR${this.#counter(i)}>${'-'.repeat(50)}
+    `SentenceAIPR${this.#counter(i)}>${"-".repeat(50)}
   Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "${part}" means in "${context}" too.`;
 
   set Sentence({ part, context }) {
@@ -38,7 +38,7 @@ export default class AIPrompts extends Utils {
   }
 
   #createParaphraseAIPR = (sentence, i) =>
-    `ParaphraseAIPR${this.#counter(i)}>${'-'.repeat(50)}
+    `ParaphraseAIPR${this.#counter(i)}>${"-".repeat(50)}
 Paraphrase the sentence below to help me learn English better.
 
 Rules:
@@ -115,7 +115,7 @@ AIPRs.multipleSentence = [
 AIPRs.multipleParaphrase = [
   "She is a benevolent leader who always helps people in need.",
   "That picture of a crying child deprived of a feeling of sadness.",
-  "We had a huge banquet to celebrate the wedding."
+  "We had a huge banquet to celebrate the wedding.",
 ];
 
 AIPRs.outputToFile("AIPRs.txt");
