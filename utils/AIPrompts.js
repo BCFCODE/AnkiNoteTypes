@@ -6,7 +6,8 @@ export default class AIPrompts extends Utils {
   #counter = (i) => (Number.isInteger(i) ? " " + (i + 1) : "");
 
   #createQAMistakeAIPR = (Q, A, Mistake, i) =>
-    `QAMistakeAIPR${this.#counter(i)}: in "${Q}" how to find the only right answer is "${A}" and not "${Mistake}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.`;
+    `QAMistakeAIPR${this.#counter(i)}>${'-'.repeat(50)}
+  in "${Q}" how to find the only right answer is "${A}" and not "${Mistake}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.`;
 
   set QAMistake({ Q, A, Mistake }) {
     const AIPR = this.#createQAMistakeAIPR(Q, A, Mistake);
@@ -21,7 +22,8 @@ export default class AIPrompts extends Utils {
   }
 
   #createSentenceAIPR = (part, context, i) =>
-    `SentenceAIPR${this.#counter(i)}: Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "${part}" means in "${context}" too.`;
+    `SentenceAIPR${this.#counter(i)}>${'-'.repeat(50)}
+  Use "${part}" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "${part}" means in "${context}" too.`;
 
   set Sentence({ part, context }) {
     const AIPR = this.#createSentenceAIPR(part, context);
@@ -31,6 +33,37 @@ export default class AIPrompts extends Utils {
   set multipleSentence(inputs) {
     inputs.forEach(([part, context], i) => {
       const AIPR = this.#createSentenceAIPR(part, context, i);
+      this.#multipleInputs.push(AIPR);
+    });
+  }
+
+  #createParaphraseAIPR = (sentence, i) =>
+    `ParaphraseAIPR${this.#counter(i)}>${'-'.repeat(50)}
+Paraphrase the sentence below to help me learn English better.
+
+Rules:
+
+* Preserve the original meaning exactly.
+* Use natural, idiomatic English that a native speaker would actually use.
+* Change the wording and, when useful, the sentence structure.
+* Do not make the sentence unnecessarily complicated.
+* Prefer useful vocabulary and grammar patterns that I can reuse in other situations.
+* Keep approximately the same level of difficulty unless a slightly more advanced version sounds significantly more natural.
+* Do not explain the changes unless I ask.
+* Return only the paraphrased sentence.
+
+Sentence:
+${sentence}
+`;
+
+  set Paraphrase(sentence) {
+    const AIPR = this.#createParaphraseAIPR(sentence);
+    this.#multipleInputs.push(AIPR);
+  }
+
+  set multipleParaphrase(inputs) {
+    inputs.forEach((sentence, i) => {
+      const AIPR = this.#createParaphraseAIPR(sentence, i);
       this.#multipleInputs.push(AIPR);
     });
   }
@@ -54,10 +87,15 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'The doctor (1w) a mandative recommendation that I rest for a week.',
-    'made',
-    'gave'
-  ]
+    "Stuff is a word used to refer to things without mentioning (2w) by name.",
+    "the things ",
+    "them",
+  ],
+  [
+    "Intestines are tubes (1w) which food passes after it leaves the stomach.",
+    "through",
+    "in",
+  ],
 ];
 
 /* 
@@ -68,11 +106,18 @@ AIPRs.multipleQAMistake = [
 */
 AIPRs.multipleSentence = [
   [
-    'charred ',
-    'While Frank went inside to get the mustard, he accidentally charred the hotdogs.'
-  ]
+    "charred ",
+    "While Frank went inside to get the mustard, he accidentally charred the hotdogs.",
+  ],
 ];
- 
+
+// AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
+AIPRs.multipleParaphrase = [
+  "She is a benevolent leader who always helps people in need.",
+  "That picture of a crying child deprived of a feeling of sadness.",
+  "We had a huge banquet to celebrate the wedding."
+];
+
 AIPRs.outputToFile("AIPRs.txt");
 
 /* 
