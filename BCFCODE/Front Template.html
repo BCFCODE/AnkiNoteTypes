@@ -398,6 +398,8 @@
       function tick() {
         const leftMs = end - Date.now();
 
+        // setCSSstyle(ids.cardProgressBar, "opacity", 1);
+
         if (cardProgressEl) {
           const progress = (leftMs / totalMs) * 100;
           const newWidth = Math.abs(progress - 100) + "%";
