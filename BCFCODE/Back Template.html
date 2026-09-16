@@ -3,12 +3,7 @@
 
 <div class="front">
   {{#Answer}}
-  <div class="typeBack">
-    Check your answer:{{type:Answer}}
-    <div class="correct">
-      <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
-    </div>
-  </div>
+  <div class="typeBack">Check your answer:{{type:Answer}}</div>
   {{/Answer}} {{#Front}}
   <div>{{Front}}</div>
   {{/Front}}
@@ -17,8 +12,8 @@
     <div class="card-progress-bar" id="card-progress-bar"></div>
   </div>
 
-  <div class="correct-single">
-    <span style="color: hsl(120, 100%, 50%)">Right answer:</span> {{Answer}}
+  <div class="correct">
+    <span style="color: hsl(120, 100%, 50%)">Correct:</span> {{Answer}}
   </div>
 
   {{#Back}}
