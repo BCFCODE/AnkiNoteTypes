@@ -87,15 +87,10 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    "Stuff is a word used to refer to things without mentioning (2w) by name.",
-    "the things ",
-    "them",
-  ],
-  [
-    "Intestines are tubes (1w) which food passes after it leaves the stomach.",
-    "through",
-    "in",
-  ],
+    'A contingent is a (2w) people that are part of a larger group.',
+    'part', 
+    'set'
+  ]
 ];
 
 /* 
@@ -105,17 +100,21 @@ AIPRs.multipleQAMistake = [
   };
 */
 AIPRs.multipleSentence = [
+  ["wicked ", "The judge had contempt for the wicked criminal."],
   [
-    "charred ",
-    "While Frank went inside to get the mustard, he accidentally charred the hotdogs.",
+    "conspiracy ",
+    "Some people think that there was a conspiracy to kill American president John Kennedy.",
   ],
 ];
 
 // AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
 AIPRs.multipleParaphrase = [
-  "She is a benevolent leader who always helps people in need.",
-  "That picture of a crying child deprived of a feeling of sadness.",
-  "We had a huge banquet to celebrate the wedding.",
+  "The judge had contempt for the wicked criminal.",
+  "To inspire is to encourage someone by making them feel confident and eager to do something.",
+  // 'Courtesy is the excellence of manners or social conduct.'
+  // "She is a benevolent leader who always helps people in need.",
+  // "That picture of a crying child deprived of a feeling of sadness.",
+  // "We had a huge banquet to celebrate the wedding.",
 ];
 
 AIPRs.outputToFile("AIPRs.txt");
