@@ -118,10 +118,10 @@ pre {
   margin-top: 3%;
 }
 
-.question,
-.correct {
-  padding: 2%;
+.question {
+  padding: 3%;
 }
+
 .question {
   color: white;
   color: #f8f8f8; /* Light text on dark background */
@@ -137,6 +137,12 @@ pre {
   align-self: center;
   transition: transform 200ms;
   min-width: 30%;
+}
+
+.correct {
+  padding: 3%;
+  box-shadow: 0 0 30px var(--color-success);
+  animation: box-shadow-color-pulse-animation 1s infinite;
 }
 
 .correct-single {
@@ -555,6 +561,12 @@ input#typeans {
 @keyframes color-pulse-animation {
   50% {
     color: var(--initial-text-color);
+  }
+}
+
+@keyframes box-shadow-color-pulse-animation {
+  50% {
+    box-shadow: 0 0 5px var(--initial-text-color);
   }
 }
 
