@@ -115,6 +115,7 @@ pre {
 
 .front-field,
 .back-field {
+  text-align: center;
   margin: 30px auto;
 }
 
@@ -148,7 +149,7 @@ pre {
   text-align: center;
   color: var(--initial-text-color);
   padding: 3%;
-  box-shadow: 0 0 30px var(--color-success);
+  box-shadow: 0 0 40px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;
 }
 
