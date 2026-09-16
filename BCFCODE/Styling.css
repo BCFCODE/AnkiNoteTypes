@@ -91,7 +91,7 @@ pre {
   display: none;
 }
 
-.front {
+.front-field {
   /* background-color: #ffd90077; */
   position: relative;
   display: flex;
@@ -113,7 +113,11 @@ pre {
     margin 500ms;
 }
 
-.front:hover {
+.back-field {
+  margin: 30px auto;
+}
+
+.front-field:hover {
   transform: scale(1.02);
   margin-top: 3%;
 }
@@ -144,7 +148,6 @@ pre {
   padding: 3%;
   box-shadow: 0 0 30px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;
-  margin-bottom: 3%;
 }
 
 .correct-single {
@@ -182,7 +185,7 @@ pre {
   transform: scale(1.02);
 }
 
-.front-footer-container {
+.front-field-footer-container {
   /* background-color: rgba(255, 0, 0, 0.526); */
   display: flex;
   flex-direction: column;
@@ -190,7 +193,7 @@ pre {
   gap: 10px;
 }
 
-.front-footer {
+.front-field-footer {
   /* background-color: rgba(255, 0, 0, 0.526); */
   /* position: relative; */
   width: 100%;
@@ -655,14 +658,14 @@ input#typeans {
 }
 
 /* Here I want to opacity of these top timers be 0, but why doesn't work? */
-.front:focus-within .top-right-box,
-.front:focus-within .top-left-box,
-.front:focus-within .card-progress-bar,
-.front:focus-within .number-of-reviews {
+.front-field:focus-within .top-right-box,
+.front-field:focus-within .top-left-box,
+.front-field:focus-within .card-progress-bar,
+.front-field:focus-within .number-of-reviews {
   opacity: 0;
 }
 
-/* .front:focus-within .card-progress-bar {
+/* .front-field:focus-within .card-progress-bar {
   opacity: 1;
 } */
 
@@ -843,7 +846,7 @@ input#typeans {
     padding: 2%;
   }
   /* 
-  .front {
+  .front-field {
     font-size: 35px;
     padding: 3% 2%;
     min-width: auto;

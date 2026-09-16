@@ -1,4 +1,4 @@
-<div class="front">
+<div class="front-field">
   <div class="image">{{Image}}</div>
   <div class="awesome-tts">
     {{tts ar_AR voices=AwesomeTTS:AwesomeTTS (Front)}}
@@ -12,7 +12,7 @@
   {{#Front (Persian)}}
   <div style="direction: rtl; text-align: right">{{Front (Persian)}}</div>
   {{/Front (Persian)}} {{#Front}}
-  <div id="front">{{Front}}</div>
+  <div id="front-field">{{Front}}</div>
   {{/Front}}
 
   <div id="console"></div>
@@ -85,8 +85,8 @@
   </div>
   {{/Answer}}
 
-  <div style="direction: ltr; text-align: left" class="front-footer-container">
-    <div class="front-footer">
+  <div style="direction: ltr; text-align: left" class="front-field-footer-container">
+    <div class="front-field-footer">
       <a
         href="https://bcfcode.ir/"
         alt="Explore the powerful and elegant digital world of BCFCODE"
@@ -189,7 +189,7 @@
 
     var avgTimeInSeconds;
     const ids = {
-      Fields: { Front: "front" },
+      Fields: { Front: "front-field" },
       cardProgressBar: "card-progress-bar",
       inputProgressBar: "input-progress-bar",
       countUpTimer: ["type-answer-bottom-left-box", "top-left-box"],
