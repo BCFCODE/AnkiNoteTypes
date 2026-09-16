@@ -119,7 +119,7 @@ pre {
 }
 
 .front-field {
-  text-align: center;
+  /* text-align: center; */
   margin: 25px auto;
 }
 
@@ -153,8 +153,9 @@ pre {
 .correct {
   text-align: center;
   color: var(--initial-text-color);
-  padding: 3%;
-  box-shadow: 0 0 40px var(--color-success);
+  background-color: hsla(220, 20%, 8%, 0.05);
+  padding: 2%;
+  box-shadow: 0 0 50px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;
 }
 
@@ -366,7 +367,7 @@ input {
   /* margin-bottom: -15px; */
   background: transparent;
   color: hsla(20, 39%, 80%, 0.758);
-  background-color: hsla(20, 20%, 8%, 0.05);
+  background-color: hsla(220, 20%, 8%, 0.05);
   font-family: "Montserrat" !important;
   text-shadow: 0 0 15px hsla(0, 100%, 0%, 1);
   font-weight: 600;
