@@ -91,7 +91,7 @@ pre {
   display: none;
 }
 
-.front-field {
+.front-field-container {
   /* background-color: #ffd90077; */
   position: relative;
   display: flex;
@@ -113,11 +113,12 @@ pre {
     margin 500ms;
 }
 
+.front-field,
 .back-field {
   margin: 30px auto;
 }
 
-.front-field:hover {
+.front-field-container:hover {
   transform: scale(1.02);
   margin-top: 3%;
 }
@@ -511,7 +512,7 @@ input#typeans {
   justify-content: center;
   width: 100%;
   height: auto;
-  margin: 35px 0px;
+  /* margin: 35px 0px; */
   transition: opacity 500ms;
 }
 
@@ -658,14 +659,14 @@ input#typeans {
 }
 
 /* Here I want to opacity of these top timers be 0, but why doesn't work? */
-.front-field:focus-within .top-right-box,
-.front-field:focus-within .top-left-box,
-.front-field:focus-within .card-progress-bar,
-.front-field:focus-within .number-of-reviews {
+.front-field-container:focus-within .top-right-box,
+.front-field-container:focus-within .top-left-box,
+.front-field-container:focus-within .card-progress-bar,
+.front-field-container:focus-within .number-of-reviews {
   opacity: 0;
 }
 
-/* .front-field:focus-within .card-progress-bar {
+/* .front-field-container:focus-within .card-progress-bar {
   opacity: 1;
 } */
 
@@ -845,13 +846,7 @@ input#typeans {
     margin-left: 0;
     padding: 2%;
   }
-  /* 
-  .front-field {
-    font-size: 35px;
-    padding: 3% 2%;
-    min-width: auto;
-  }
- */
+
   input#typeans,
   input {
     font-size: 40px !important;
