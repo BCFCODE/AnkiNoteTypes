@@ -143,6 +143,7 @@ pre {
   padding: 3%;
   box-shadow: 0 0 30px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;
+  margin-bottom: 3%;
 }
 
 .correct-single {
