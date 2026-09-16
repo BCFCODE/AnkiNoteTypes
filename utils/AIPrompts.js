@@ -90,6 +90,21 @@ AIPRs.multipleQAMistake = [
     'A contingent is a (2w) people that are part of a larger group.',
     'part', 
     'set'
+  ],
+  [
+    `John's skin was burned (2w) overdose of sunshine.`,
+    'from an',
+    'from the'
+  ],
+  [
+    'Mike was upset because of the omission of his name during (1w) ceremony.',
+    'the',
+    "without 'the'"
+  ],
+  [
+    'To sting is to cause pain by pushing (2w) part into the skin.',
+    'a sharp ',
+    'the hard'
   ]
 ];
 
