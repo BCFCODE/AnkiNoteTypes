@@ -115,8 +115,12 @@ pre {
 
 .front-field,
 .back-field {
-  text-align: center;
   margin: 30px auto;
+}
+
+.front-field {
+  text-align: center;
+  margin: 25px auto;
 }
 
 .front-field-container:hover {
@@ -138,7 +142,8 @@ pre {
   color: white;
   border-radius: 10%;
   border: 2px solid hsl(210, 100%, 50%, 0.12);
-  box-shadow: 0 0 18px hsla(60, 100%, 100%, 0.6);
+  box-shadow: 0 0 18px hsla(0, 0%, 99%, 0.6);
+  background-color: hsla(20, 20%, 8%, 0.05);
   margin-top: 3%;
   align-self: center;
   transition: transform 200ms;
@@ -361,7 +366,7 @@ input {
   /* margin-bottom: -15px; */
   background: transparent;
   color: hsla(20, 39%, 80%, 0.758);
-  background-color: hsla(300, 100%, 50%, 0.05);
+  background-color: hsla(20, 20%, 8%, 0.05);
   font-family: "Montserrat" !important;
   text-shadow: 0 0 15px hsla(0, 100%, 0%, 1);
   font-weight: 600;
