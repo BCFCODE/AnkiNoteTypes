@@ -145,6 +145,7 @@ pre {
 }
 
 .correct {
+  text-align: center;
   color: var(--initial-text-color);
   padding: 3%;
   box-shadow: 0 0 30px var(--color-success);
