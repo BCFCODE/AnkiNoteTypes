@@ -161,7 +161,7 @@ pre {
   text-align: center;
   color: var(--initial-text-color);
   background-color: hsla(220, 20%, 8%, 0.05);
-  padding: 3%;
+  padding: 3% 5%;
   margin: 50px auto;
   box-shadow: 0 0 50px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;

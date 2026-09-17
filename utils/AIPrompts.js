@@ -120,6 +120,11 @@ AIPRs.multipleQAMistake = [
     'An interval is the time between two things (1w|1.)',
     'happening',
     'happened'
+  ],
+  [
+    'To multiply is to increase (1w) number.',
+    'in',
+    'a'
   ]
 ];
 
