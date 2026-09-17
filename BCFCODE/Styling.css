@@ -127,7 +127,7 @@ pre {
 
 .front-field {
   /* text-align: center; */
-  margin: 25px auto;
+  margin: 1% auto;
 }
 
 .front-field-container:hover {
@@ -530,7 +530,7 @@ input#typeans {
   justify-content: center;
   width: 100%;
   height: auto;
-  /* margin: 35px 0px; */
+  margin: 1.5% auto;
   transition: opacity 500ms;
 }
 

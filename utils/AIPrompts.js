@@ -125,6 +125,16 @@ AIPRs.multipleQAMistake = [
     'To multiply is to increase (1w) number.',
     'in',
     'a'
+  ],
+  [
+    'To appeal to someone is to be (3w|1.)',
+    'interesting or attractive.',
+    'interested or attracted'
+  ],
+  [
+    'An impact is the (2w) or something has.',
+    'effect someone ',
+    'effect that someone '
   ]
 ];
 
