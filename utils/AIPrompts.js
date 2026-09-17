@@ -87,94 +87,29 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'A contingent is a (2w) people that are part of a larger group.',
-    'part', 
-    'set'
-  ],
-  [
     `John's skin was burned (2w) overdose of sunshine.`,
     'from an',
-    'from the'
+    'from'
   ],
   [
-    'Mike was upset because of the omission of his name during (1w) ceremony.',
-    'the',
-    "without 'the'"
+    'Deceptive means misleading or giving a false )(3w) something is really like.',
+    'impression of what ',
+    'impression of'
   ],
   [
-    'To sting is to cause pain by pushing (2w) part into the skin.',
-    'a sharp ',
-    'the hard'
+    'If you describe (1w) as sheer, it is complete and total.',
+    'something ',
+    'someone'
   ],
   [
-    'A field is (1w) subject that people study or an area of activity that they are involved in as part of their work.',
-    'a',
-    'the'
-  ],
-  [
-    'To manipulate something means (2w) or unfairly control or affect it.',
-    'to skillfully ',
-    'skillfully '
-  ],
-  [
-    'To chew is to (2w) food by using the mouth and teeth.',
-    'break up ' ,
-    'break of'
-  ],
-  [
-    'Leather is a material made from animal skin that is used (2w) clothing.',
-    'to make ',
-    'for'
-  ],
-  [
-    `A temper is someone's mood or (2w) that they might get angry.`,
-    'a chance ',
-    'chance '
-  ],
-  [
-    'Dignity is the ability (2w) calm and worthy of respect.',
-    'to be', 
+    'When you put an emphasis (1w) prevention, you give special attention to prevention.',
+    'on',
     'to'
   ],
   [
-    'To critique (2w) an opinion about the good and the bad parts of something.',
-    'means express ',
-    'means to express '
-  ],
-  [
-    'To flank is to be (1w) at the side of something or someone.',
-    'positioned ',
-    'position'
-  ],
-  [
-    'Peas are a vegetable that (1w) small, round, and green.', 
-    'is', 
-    'are '
-  ],
-  [
-    'A review of something is a formal inspection of it by people in (1w|1.)',
-    'authority.',
-    'society'
-  ],
-  [
-    'The teacher degraded Bob when (1w) announced his poor performance to the class.',
-    'she',
-    'he'
-  ],
-  [
-    'If someone is pessimistic, they believe that the (1w) will happen.',
-    'worst ', 
-    'worse '
-  ],
-  [
-    'When something happened prior to something else, it happened (1w|1.)',
-    'earlier.',
-    'early'
-  ],
-  [
-    'The air was thin (1w) such a high altitude on the mountain.', 
-    'at',
-    "without 'at'"
+    'We are inclined to confuse freedom and democracy, which we regard as moral principles, with the way in which these are (1w) in America—with capitalism, federalism and the two-party system, which are not moral principles, but simply the accepted practices of the American people. (James William Fulbright)',
+    'practiced ',
+    'practices'
   ]
 ];
 

@@ -3,22 +3,20 @@
 
 <div class="front-field-container">
   {{#Answer}}
-  <div class="typeBack">Check your answer:{{type:Answer}}</div>
+  <div class="typeBack">{{type:Answer}}</div>
+  {{/Answer}} {{#Answer}}
+  <div class="correct">{{Answer}}</div>
   {{/Answer}} {{#Front}}
   <div class="front-field">{{Front}}</div>
   {{/Front}}
-
   <div class="card-progress-bar-container-in-back">
     <div class="card-progress-bar" id="card-progress-bar"></div>
   </div>
-
-  {{#Answer}}
-  <div class="correct">{{Answer}}</div>
-  {{/Answer}} {{#Back}}
+  {{#Back}}
   <div class="back-field">{{Back}}</div>
   <div class="correct">{{Answer}}</div>
   {{/Back}} {{#Back (Persian)}}
-  <div style="direction: rtl; text-align: right">{{Back (Persian)}}</div>
+  <div class="right-to-left-for-persian-language">{{Back (Persian)}}</div>
   {{/Back (Persian)}}
 
   <div class="hidden">
@@ -59,7 +57,7 @@
   <div class="front-field-footer-container">
     <div class="front-field-footer">
       <a
-        href="https://bcfcode.ir/"
+        href="https://www.BCFCODE.com/"
         alt="Explore the powerful and elegant digital world of BCFCODE"
         class="bcfcode"
         ><p>&copy;BCFCODE</p></a

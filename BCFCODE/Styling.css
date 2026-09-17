@@ -6,6 +6,11 @@
   --color-warning: rgb(255, 235, 40);
 }
 
+.right-to-left-for-persian-language {
+  direction: rtl;
+  text-align: right;
+}
+
 .color-danger {
   color: var(--color-danger);
   text-shadow:
@@ -46,6 +51,7 @@
   background-color: white;
   padding: 10%;
   padding-top: 1%;
+  direction: ltr;
 }
 
 /* If you wanted a lighter grey background, you could use something like: */
@@ -111,6 +117,7 @@ pre {
   transition:
     transform 400ms,
     margin 500ms;
+  direction: ltr;
 }
 
 .front-field,
@@ -154,7 +161,8 @@ pre {
   text-align: center;
   color: var(--initial-text-color);
   background-color: hsla(220, 20%, 8%, 0.05);
-  padding: 2%;
+  padding: 3%;
+  margin: 50px auto;
   box-shadow: 0 0 50px var(--color-success);
   animation: box-shadow-color-pulse-animation 1s infinite;
 }
@@ -170,14 +178,14 @@ pre {
   border-radius: 10%;
   border: 2px solid hsl(210, 100%, 50%, 0.12);
   box-shadow: 0 0 18px hsla(60, 100%, 100%, 0.6);
-  padding: 3%;
+  padding: 20px 40px;
   text-align: center;
-  min-width: 300px;
+  min-width: 350px;
 }
 
 .typeBack {
   transition: margin 10s;
-  margin-bottom: 30px;
+  margin: 40px auto 20px;
 }
 /* 
 .typeBack:hover {
@@ -308,6 +316,8 @@ pre:hover {
 .typeMissed,
 .typePass,
 .typeGood {
+  line-height: 0%;
+  font-size: 3.5rem;
   /*padding: 2%;
   border-radius: 40%*/
   background: transparent;
