@@ -110,6 +110,16 @@ AIPRs.multipleQAMistake = [
     'We are inclined to confuse freedom and democracy, which we regard as moral principles, with the way in which these are (1w) in America—with capitalism, federalism and the two-party system, which are not moral principles, but simply the accepted practices of the American people. (James William Fulbright)',
     'practiced ',
     'practices'
+  ],
+  [
+    'Charity is (1w) act of giving help, usually money, to those who need it.',
+    'an',
+    'the'
+  ],
+  [
+    'An interval is the time between two things (1w|1.)',
+    'happening',
+    'happened'
   ]
 ];
 
