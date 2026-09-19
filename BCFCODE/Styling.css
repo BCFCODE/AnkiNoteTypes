@@ -377,7 +377,7 @@ input {
   /* margin-bottom: -15px; */
   background: transparent;
   color: hsla(20, 39%, 80%, 0.758);
-  background-color: hsla(220, 20%, 8%, 0.05);
+  background-color: hsla(220, 20%, 8%, 0.1);
   font-family: "Montserrat" !important;
   text-shadow: 0 0 15px hsla(0, 100%, 0%, 1);
   font-weight: 600;
@@ -398,7 +398,7 @@ input:hover {
 
 input:focus {
   /* min-width: 700px; */
-  font-size: 90px !important;
+  font-size: 100px !important;
   /* transform: translate(0, 0%); */
   box-shadow: 0 0 50px hsla(60, 100%, 50%, 0.4);
   border: 10px solid hsla(30, 100%, 50%, 0.3);
@@ -424,7 +424,7 @@ input#typeans {
   position: relative;
   display: flex;
   justify-content: center;
-  width: 950px;
+  width: 1200px;
   transition: margin 3s;
   margin-top: -6rem;
 }
@@ -447,7 +447,7 @@ input#typeans {
   /* background-color: rgba(255, 255, 0, 0.629); */
   justify-content: space-between;
   width: 70%;
-  bottom: 330px;
+  bottom: 380px;
 }
 
 .type-answer-middle-container {
@@ -705,7 +705,7 @@ input#typeans {
 }
 
 .type-answer:focus-within .type-answer-input-container {
-  margin-top: 10rem;
+  margin-top: 2rem;
   /* margin-bottom: 3rem; */
 }
 

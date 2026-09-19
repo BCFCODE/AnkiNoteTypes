@@ -36,7 +36,10 @@ export default class AIPrompts extends Utils {
       this.#multipleInputs.push(AIPR);
     });
   }
-
+/* 
+  ADD THIS PART: 
+   Preserve the original meaning exactly and consider I don't know what (your word) means in this sentence, make your sentence to help me find out.
+*/
   #createParaphraseAIPR = (sentence, i) =>
     `ParaphraseAIPR${this.#counter(i)}>${"-".repeat(50)}
 Paraphrase the sentence below to help me learn English better.
@@ -87,54 +90,74 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    `John's skin was burned (2w) overdose of sunshine.`,
-    'from an',
-    'from'
+    'Vanity is an excessive feeling (1w) being proud of yourself, especially about your appearance or the things you have done.',
+    'of',
+    'about'
   ],
   [
-    'Deceptive means misleading or giving a false )(3w) something is really like.',
-    'impression of what ',
-    'impression of'
+    'When something is toxic, it is poisonous and very (1w|1.)',
+    'dangerous.',
+    'danger.'
   ],
   [
-    'If you describe (1w) as sheer, it is complete and total.',
-    'something ',
+    'If (1w) is susceptible to something like a disease, they are easily harmed by it.',
+    'one',
     'someone'
   ],
   [
-    'When you put an emphasis (1w) prevention, you give special attention to prevention.',
-    'on',
+    'When someone is envious, they want something (1w) another person has.',
+    'that',
+    "without 'that'"
+  ],
+  [
+    'If something is sacred, then (2w) worshipped and respected.',
+    'it is', 
+    'they are'
+  ],
+  [
+    'Along means to (1w) from one part of a road, river etc. to another.',
+    'move',
+    'go'
+  ],
+  [
+    'A component is a part of a (1w) machine.',
+    'larger',
+    'large'
+  ],
+  [
+    'A grain is a food (1w) such as wheat, corn, rice, or oats.',
+    'crop ',
+    'crops'
+  ],
+  [
+    'To warn someone is to make them know (1w) possible danger in the future.',
+    'of',
+    "without 'of'"
+  ],
+  [
+    'When something is habitual, it is a behavior that (2w) usually does or has.',
+    'a person ',
+    'someone'
+  ],
+  [
+    'When something is (1w|1,) it has been owned by someone else.',
+    'secondhand,',
+    'second-hand,'
+  ],
+  [
+    'To found something on an idea or (1w) is to base it on that idea.',
+    'principal ',
+    'principle'
+  ],
+  [
+    'To equate one thing (1w) another is to compare them and consider them very similar.',
+    'with', 
     'to'
   ],
   [
-    'We are inclined to confuse freedom and democracy, which we regard as moral principles, with the way in which these are (1w) in America—with capitalism, federalism and the two-party system, which are not moral principles, but simply the accepted practices of the American people. (James William Fulbright)',
-    'practiced ',
-    'practices'
-  ],
-  [
-    'Charity is (1w) act of giving help, usually money, to those who need it.',
-    'an',
-    'the'
-  ],
-  [
-    'An interval is the time between two things (1w|1.)',
-    'happening',
-    'happened'
-  ],
-  [
-    'To multiply is to increase (1w) number.',
-    'in',
-    'a'
-  ],
-  [
-    'To appeal to someone is to be (3w|1.)',
-    'interesting or attractive.',
-    'interested or attracted'
-  ],
-  [
-    'An impact is the (2w) or something has.',
-    'effect someone ',
-    'effect that someone '
+    'To search for something or someone means to look for (1w) carefully.',
+    'them',
+    'it '
   ]
 ];
 
@@ -145,17 +168,20 @@ AIPRs.multipleQAMistake = [
   };
 */
 AIPRs.multipleSentence = [
-  ["wicked ", "The judge had contempt for the wicked criminal."],
   [
-    "conspiracy ",
-    "Some people think that there was a conspiracy to kill American president John Kennedy.",
+    "point out ",
+    "When we indicate something, we show or point out our thoughts or plans.",
   ],
 ];
 
 // AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
 AIPRs.multipleParaphrase = [
-  "The judge had contempt for the wicked criminal.",
-  "To inspire is to encourage someone by making them feel confident and eager to do something.",
+  `Vanity is excessive pride or love of one's own appearance or things one has done.`,
+  'A novelty is something that is new, original, or strange.',
+  'Unrest is a state of anger about something among the people in a place.',
+  'To manipulate something means to skillfully or unfairly control or affect it.'
+  // "The judge had contempt for the wicked criminal.",
+  // "To inspire is to encourage someone by making them feel confident and eager to do something.",
   // 'Courtesy is the excellence of manners or social conduct.'
   // "She is a benevolent leader who always helps people in need.",
   // "That picture of a crying child deprived of a feeling of sadness.",

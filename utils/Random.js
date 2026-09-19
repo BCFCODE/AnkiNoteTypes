@@ -165,8 +165,8 @@ export default class Random extends Utils {
 const random = new Random();
 
 random.config = {
-  numberOfDigits: 6,
-  isBackward: true,
+  numberOfDigits: 8,
+  isBackward: false,
   numberOfOutputs: 400,
 };
 
