@@ -213,6 +213,12 @@ export default class Warmup extends Utils {
 export const warmup = new Warmup();
 
 warmup.multipleInputs = [
+  ['4 9 6 7 8 0 5 3 1 2', 150], 
+  ['9 1 0 4 5 6 2 8 7 3', 2870], 
+  ['7 2 5 3 8 4 1 0 6', 340], 
+  ['0 2 8 6 4 1 5 7 3 9', 253], 
+  ['8 7 6 4 0 1 3 9 5 2', 345],
+  ['2 6 5 4 7 1 3 9 8 0', 138], 
   
 
 ];

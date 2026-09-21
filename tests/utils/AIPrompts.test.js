@@ -3,7 +3,7 @@ import AIPrompts from "../../utils/AIPrompts";
 
 describe("AIPrompts", () => {
   const expectedQAMistakeAIPR =
-    'QAMistakeAIPR 1>--------------------------------------------------\n  in "“Inn” means a small hotel or lodging place, especially in (1w) countryside." how to find the only right answer is "the" and not "a"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don\'t know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.';
+    'QAMistakeAIPR 1>--------------------------------------------------\n\nIn "“Inn” means a small hotel or lodging place, especially in (1w) countryside.", determine whether "the" is truly the only correct answer, and explain why "a" is wrong, less natural, or less appropriate.\n\nRules:\n- Do NOT assume "the" is the only correct answer. Check this first.\n- If "a" is also grammatical or natural, say so clearly and explain the difference.\n- Distinguish grammar, meaning, collocation, naturalness, and the exercise\'s intended answer.\n- Explain the key clue that lets a learner choose the best answer.\n- Keep the entire explanation under 60 seconds when read aloud.\n- Only if it adds genuinely useful new knowledge, give ONE concise grammar, usage, or Latin tip for the Anki Back field; otherwise omit the tip.\n- Make the explanation clear, practical, and reusable for future English questions.\n';
 
   const expectedSentenceAIPR =
     'SentenceAIPR 1>--------------------------------------------------\n  Use "trance" in a short memorable sentence that I can use it in my English speaking in the way natives use, and also that sentence helps me to find what "trance" means in "The woman’s powerful eyes often put men in a trance." too.';
@@ -24,6 +24,7 @@ describe("AIPrompts", () => {
       ];
 
       const result = AIPRs.output;
+      console.log(JSON.stringify(result));
       expect(result).toBe(expectedQAMistakeAIPR);
     });
 

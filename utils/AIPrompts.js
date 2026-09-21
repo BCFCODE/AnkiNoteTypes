@@ -5,9 +5,20 @@ export default class AIPrompts extends Utils {
 
   #counter = (i) => (Number.isInteger(i) ? " " + (i + 1) : "");
 
-  #createQAMistakeAIPR = (Q, A, Mistake, i) =>
+  #createQAMistakeAIPR = (Q, A, mistake, i) =>
     `QAMistakeAIPR${this.#counter(i)}>${"-".repeat(50)}
-  in "${Q}" how to find the only right answer is "${A}" and not "${Mistake}"? is it?? Only and only if it helps (not when it is unnecessary!), give me a grammar or Latin tip you think that I don't know in order to make my English better than before. Consider that I want to use it on Back field of my anki card as English tip or lesson.`;
+
+In "${Q}", determine whether "${A}" is truly the only correct answer, and explain why "${mistake}" is wrong, less natural, or less appropriate.
+
+Rules:
+- Do NOT assume "${A}" is the only correct answer. Check this first.
+- If "${mistake}" is also grammatical or natural, say so clearly and explain the difference.
+- Distinguish grammar, meaning, collocation, naturalness, and the exercise's intended answer.
+- Explain the key clue that lets a learner choose the best answer.
+- Keep the entire explanation under 60 seconds when read aloud.
+- Only if it adds genuinely useful new knowledge, give ONE concise grammar, usage, or Latin tip for the Anki Back field; otherwise omit the tip.
+- Make the explanation clear, practical, and reusable for future English questions.
+`;
 
   set QAMistake({ Q, A, Mistake }) {
     const AIPR = this.#createQAMistakeAIPR(Q, A, Mistake);
@@ -36,7 +47,7 @@ export default class AIPrompts extends Utils {
       this.#multipleInputs.push(AIPR);
     });
   }
-/* 
+  /* 
   ADD THIS PART: 
    Preserve the original meaning exactly and consider I don't know what (your word) means in this sentence, make your sentence to help me find out.
 */
@@ -90,75 +101,65 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'Vanity is an excessive feeling (1w) being proud of yourself, especially about your appearance or the things you have done.',
-    'of',
-    'about'
+    "Insomnia is a condition in which a person has (1w) sleeping.",
+    "difficulty ",
+    "a difficult",
   ],
   [
-    'When something is toxic, it is poisonous and very (1w|1.)',
-    'dangerous.',
-    'danger.'
+    "To (2w) or something is to have an influence over them.",
+    "affect someone ",
+    "affect to someone ",
   ],
   [
-    'If (1w) is susceptible to something like a disease, they are easily harmed by it.',
-    'one',
-    'someone'
+    "To affect someone or something is to have (1w) influence over them.",
+    "an",
+    "without 'an'",
   ],
   [
-    'When someone is envious, they want something (1w) another person has.',
-    'that',
-    "without 'that'"
+    "A shiver is a shaking movement the body makes when someone (1w) cold or scared.",
+    "is",
+    "feels",
   ],
   [
-    'If something is sacred, then (2w) worshipped and respected.',
-    'it is', 
-    'they are'
+    "If someone is skillful at something, they are very good at (1w) it.",
+    "doing",
+    "without 'doing'",
   ],
   [
-    'Along means to (1w) from one part of a road, river etc. to another.',
-    'move',
-    'go'
+    "To adhere means to act in the way that a rule or (1w) says is right.",
+    "agreement ",
+    "idea",
   ],
   [
-    'A component is a part of a (1w) machine.',
-    'larger',
-    'large'
+    "A choir is a group of people who (1w) together.",
+    "sing",
+    'sings (may be because of "a group")',
   ],
   [
-    'A grain is a food (1w) such as wheat, corn, rice, or oats.',
-    'crop ',
-    'crops'
+    "A parade is a series of things or people that come or are shown (2w) another.",
+    "one after",
+    "after one",
   ],
   [
-    'To warn someone is to make them know (1w) possible danger in the future.',
-    'of',
-    "without 'of'"
+    "To con someone is to trick that person into (1w) something or giving up money.",
+    "doing",
+    "without 'doing'",
   ],
   [
-    'When something is habitual, it is a behavior that (2w) usually does or has.',
-    'a person ',
-    'someone'
+    "When a poem is considered lyric, it (1w) a lot of emotion.",
+    "expresses ",
+    "consists",
   ],
   [
-    'When something is (1w|1,) it has been owned by someone else.',
-    'secondhand,',
-    'second-hand,'
+    "A rite is a traditional ceremony (2w) by a particular group or society.",
+    "carried out ",
+    "carried",
   ],
   [
-    'To found something on an idea or (1w) is to base it on that idea.',
-    'principal ',
-    'principle'
+    "(3w) deliberate murder of a whole group or race of people.",
+    "Genocide is the ",
+    "Genocide a the ",
   ],
-  [
-    'To equate one thing (1w) another is to compare them and consider them very similar.',
-    'with', 
-    'to'
-  ],
-  [
-    'To search for something or someone means to look for (1w) carefully.',
-    'them',
-    'it '
-  ]
 ];
 
 /* 
@@ -177,9 +178,9 @@ AIPRs.multipleSentence = [
 // AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
 AIPRs.multipleParaphrase = [
   `Vanity is excessive pride or love of one's own appearance or things one has done.`,
-  'A novelty is something that is new, original, or strange.',
-  'Unrest is a state of anger about something among the people in a place.',
-  'To manipulate something means to skillfully or unfairly control or affect it.'
+  "A novelty is something that is new, original, or strange.",
+  "Unrest is a state of anger about something among the people in a place.",
+  "To manipulate something means to skillfully or unfairly control or affect it.",
   // "The judge had contempt for the wicked criminal.",
   // "To inspire is to encourage someone by making them feel confident and eager to do something.",
   // 'Courtesy is the excellence of manners or social conduct.'
