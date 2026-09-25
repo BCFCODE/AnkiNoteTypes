@@ -162,7 +162,30 @@
       "Passage",
       "EnglishMastery",
     ];
-    // const infoIvl = " {{info-Ivl:}}";
+
+    function setInfoLastReview(id) {
+      const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
+
+      const isNew = nOfDaysAgo === -1;
+
+      if (isNew) setNewStyle(id);
+
+      if (nOfDaysAgo <= 1) {
+        const timeAgoText = !isNew
+          ? getSecondBasedTimeAgoText(INFO_LAST_REVIEW)
+          : "New";
+        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+      } else {
+        const lastReviewText = getDayBasedTimeAgoText(nOfDaysAgo, {
+          daysAgo: "d",
+          weeksAgo: "w",
+          monthAgo: "mo",
+          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+          nOfDecimals: 2,
+        });
+        setInnerText(ids.typeAnswerTopLeftBox, lastReviewText);
+      }
+    }
 
     function summarizeTotalTime(parsed) {
       const summarized = /hours?/.test(parsed.string)
@@ -589,27 +612,8 @@
 
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
-      const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
 
-      const isNew = nOfDaysAgo === -1;
-
-      if (isNew) setNewStyle(id);
-
-      if (nOfDaysAgo <= 1) {
-        const timeAgoText = !isNew
-          ? getSecondBasedTimeAgoText(INFO_LAST_REVIEW)
-          : "New";
-        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
-      } else {
-        const lastReviewText = getDayBasedTimeAgoText(nOfDaysAgo, {
-          daysAgo: "d",
-          weeksAgo: "w",
-          monthAgo: "mo",
-          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
-          nOfDecimals: 2,
-        });
-        setInnerText(ids.typeAnswerTopLeftBox, lastReviewText);
-      }
+      setInfoLastReview(id);
 
       if (isTag.Sentence) {
         if (nOfDaysAgo < 1) {
