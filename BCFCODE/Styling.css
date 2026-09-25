@@ -130,10 +130,6 @@ pre {
 
 .front-field,
 .back-field {
-  margin: 30px auto;
-}
-
-.front-field {
   margin: 1% 0;
   width: 100%;
   box-sizing: border-box;
