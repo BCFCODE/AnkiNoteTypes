@@ -163,7 +163,7 @@
       "EnglishMastery",
     ];
 
-    function setInfoLastReview(id) {
+    function setInfoLastReview(id, delay = 0, afterDelay = () => {}) {
       const nOfDaysAgo = convertDateToDaysAgo(INFO_LAST_REVIEW);
 
       const isNew = nOfDaysAgo === -1;
@@ -174,7 +174,7 @@
         const timeAgoText = !isNew
           ? getSecondBasedTimeAgoText(INFO_LAST_REVIEW)
           : "New";
-        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+        setInnerTextAfterDelay(id, delay, timeAgoText, afterDelay);
       } else {
         const lastReviewText = getDayBasedTimeAgoText(nOfDaysAgo, {
           daysAgo: "d",
@@ -183,7 +183,7 @@
           yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
           nOfDecimals: 2,
         });
-        setInnerText(ids.typeAnswerTopLeftBox, lastReviewText);
+        setInnerTextAfterDelay(id, delay, lastReviewText, afterDelay);
       }
     }
 
@@ -378,7 +378,12 @@
       if (el) el.innerText = innerText;
     }
 
-    function setInnerTextAfterDelay(id, delay, innerText, afterDelay) {
+    function setInnerTextAfterDelay(
+      id,
+      delay,
+      innerText,
+      afterDelay = () => {},
+    ) {
       const timerID = setTimeout(() => {
         setInnerText(id, innerText);
         afterDelay();
@@ -771,6 +776,10 @@
           setNewStyle(id);
           setInnerText(id, "New");
         }
+
+        setInfoLastReview(id, 3000, () => {
+          classCleanUp(id);
+        });
       });
     }
 
