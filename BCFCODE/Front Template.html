@@ -228,6 +228,7 @@
     };
 
     const color = {
+      initial: "color-initial",
       danger: "color-danger",
       orange: "color-orange",
       success: "color-success",
@@ -387,6 +388,42 @@
     function removeClass(id, className) {
       const el = document.getElementById(id);
       if (el) el.classList.remove(className);
+    }
+
+    function classCleanUp(id) {
+      removeClass(id, color.initial);
+      removeClass(id, color.warning);
+      removeClass(id, color.danger);
+      removeClass(id, color.orange);
+      removeClass(id, color.success);
+      removeClass(id, animation.colorPulse["500ms"]);
+      removeClass(id, animation.colorPulse["1s"]);
+      removeClass(id, animation.colorPulse["2s"]);
+      removeClass(id, animation.sizePulse);
+    }
+
+    function setDangerStyle(id) {
+      classCleanUp(id);
+      addClass(id, color.danger);
+      addClass(id, animation.colorPulse["500ms"]);
+    }
+
+    function setWarningStyle(id) {
+      classCleanUp(id);
+      addClass(id, color.warning);
+      addClass(id, animation.colorPulse["1s"]);
+    }
+
+    function setSuccessStyle(id) {
+      classCleanUp(id);
+      addClass(id, color.success);
+      addClass(id, animation.colorPulse["2s"]);
+    }
+
+    function setNewStyle(id) {
+      classCleanUp(id);
+      addClass(id, color.success);
+      addClass(id, animation.sizePulse);
     }
 
     // Countdown timer
@@ -556,25 +593,23 @@
 
       const isNew = nOfDaysAgo === -1;
 
-      if (isNew) {
-        addClass(id, color.success);
-        addClass(id, animation.sizePulse);
-      }
+      if (isNew) setNewStyle(id);
+
       if (nOfDaysAgo <= 1) {
         const timeAgoText = !isNew
           ? getSecondBasedTimeAgoText(INFO_LAST_REVIEW)
           : "New";
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       } else {
-        const interval = INFO_INTERVAL;
-        const timeAgoText = getDayBasedTimeAgoText(interval, {
+        const intervalDays = Number(INFO_INTERVAL);
+        const infoIntervalText = getDayBasedTimeAgoText(intervalDays, {
           daysAgo: "d",
           weeksAgo: "w",
           monthAgo: "mo",
-          yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+          yearsAgo: `y${intervalDays >= 2 * 365 ? "s" : ""}`,
           nOfDecimals: 2,
         });
-        setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
+        setInnerText(ids.typeAnswerTopLeftBox, infoIntervalText);
       }
 
       if (isTag.Sentence) {
@@ -746,16 +781,28 @@
       if (isTag.Fragment || isTag.Sentence || isTag.Passage)
         setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
       else if (isTag.DigitMemory) {
-        if (numberOfLapses >= 15) {
-          addClass(id, color.danger);
-          addClass(id, animation.colorPulse["500ms"]);
-        } else if (numberOfLapses > 5) {
-          addClass(id, color.warning);
-          addClass(id, animation.colorPulse["1s"]);
-        } else {
-          addClass(id, color.success);
-          addClass(id, animation.colorPulse["2s"]);
-        }
+        if (numberOfLapses >= 15) setDangerStyle(id);
+        else if (numberOfLapses > 5) setWarningStyle(id);
+        else setSuccessStyle(id);
+
+        const infoIntervalText = getDayBasedTimeAgoText(INFO_INTERVAL, {
+          daysAgo: "d",
+          weeksAgo: "w",
+          monthAgo: "mo",
+          yearsAgo: `y${INFO_INTERVAL >= 2 * 365 ? "s" : ""}`,
+          nOfDecimals: 2,
+        });
+        setInnerTextAfterDelay(id, 3000, infoIntervalText, () => {
+          const intervalDays = Number(INFO_INTERVAL);
+
+          if (intervalDays === 1) setDangerStyle(id);
+          else if (intervalDays === 2) setWarningStyle(id);
+          else if (intervalDays > 2) setSuccessStyle(id);
+          else {
+            setNewStyle(id);
+            setInnerText(id, "New");
+          }
+        });
       } else setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
     }
 
