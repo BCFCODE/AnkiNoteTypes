@@ -101,65 +101,35 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    "Insomnia is a condition in which a person has (1w) sleeping.",
-    "difficulty ",
-    "a difficult",
+    'To certify something means to (1w) that its results are true.',
+    'confirm',
+    'prove'
   ],
   [
-    "To (2w) or something is to have an influence over them.",
-    "affect someone ",
-    "affect to someone ",
+    'A dolphin is a large sea mammal that (1w) air.',
+    'breathes ',
+    'breathe'
   ],
   [
-    "To affect someone or something is to have (1w) influence over them.",
-    "an",
-    "without 'an'",
+    'If you illuminate something, you shine (2w) or brighten it.',
+    'light on ',
+    'bright on '
   ],
   [
-    "A shiver is a shaking movement the body makes when someone (1w) cold or scared.",
-    "is",
-    "feels",
+    'To enrich means to make someone rich or (1w) their wealth.',
+    'increase ',
+    'improve'
   ],
   [
-    "If someone is skillful at something, they are very good at (1w) it.",
-    "doing",
-    "without 'doing'",
+    'To enrich means to make someone rich or increase their (1w|1.)',
+    'wealth', 
+    'health'
   ],
   [
-    "To adhere means to act in the way that a rule or (1w) says is right.",
-    "agreement ",
-    "idea",
-  ],
-  [
-    "A choir is a group of people who (1w) together.",
-    "sing",
-    'sings (may be because of "a group")',
-  ],
-  [
-    "A parade is a series of things or people that come or are shown (2w) another.",
-    "one after",
-    "after one",
-  ],
-  [
-    "To con someone is to trick that person into (1w) something or giving up money.",
-    "doing",
-    "without 'doing'",
-  ],
-  [
-    "When a poem is considered lyric, it (1w) a lot of emotion.",
-    "expresses ",
-    "consists",
-  ],
-  [
-    "A rite is a traditional ceremony (2w) by a particular group or society.",
-    "carried out ",
-    "carried",
-  ],
-  [
-    "(3w) deliberate murder of a whole group or race of people.",
-    "Genocide is the ",
-    "Genocide a the ",
-  ],
+    'The reckless driver posed a threat (1w) everyone else on the road.',
+    'to',
+    'with'
+  ]
 ];
 
 /* 
@@ -177,10 +147,11 @@ AIPRs.multipleSentence = [
 
 // AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
 AIPRs.multipleParaphrase = [
-  `Vanity is excessive pride or love of one's own appearance or things one has done.`,
-  "A novelty is something that is new, original, or strange.",
-  "Unrest is a state of anger about something among the people in a place.",
-  "To manipulate something means to skillfully or unfairly control or affect it.",
+  'She was going to bring treats to the party: cookies, muffins, cake, etc.'
+  // `Vanity is excessive pride or love of one's own appearance or things one has done.`,
+  // "A novelty is something that is new, original, or strange.",
+  // "Unrest is a state of anger about something among the people in a place.",
+  // "To manipulate something means to skillfully or unfairly control or affect it.",
   // "The judge had contempt for the wicked criminal.",
   // "To inspire is to encourage someone by making them feel confident and eager to do something.",
   // 'Courtesy is the excellence of manners or social conduct.'

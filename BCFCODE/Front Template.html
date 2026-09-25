@@ -150,6 +150,7 @@
     const INFO_REVIEWS = "{{info-Reviews:}}";
     const INFO_LAPSES = "{{info-Lapses:}}";
     const INFO_LAST_REVIEW = "{{info-LastReview:}}";
+    const INFO_INTERVAL = "{{info-Ivl:}}";
     const TAGS = "{{Tags}}";
     const tagNames = [
       "DigitMemory",
@@ -280,11 +281,12 @@
         weeksAgo: ` week${nOfDaysAgo >= 2 * 7 ? "s" : ""}`,
         monthAgo: ` month${nOfDaysAgo >= 2 * 30 ? "s" : ""}`,
         yearsAgo: ` year${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+        nOfDecimals: 0,
       },
     ) {
-      const nOfWeeks = Math.round(nOfDaysAgo / 7);
-      const nOfMonths = Math.round(nOfDaysAgo / 30.4);
-      const nOfYears = Math.round(nOfDaysAgo / 365.25);
+      const nOfWeeks = (nOfDaysAgo / 7).toFixed(textFormat.nOfDecimals);
+      const nOfMonths = (nOfDaysAgo / 30.4).toFixed(textFormat.nOfDecimals);
+      const nOfYears = (nOfDaysAgo / 365.25).toFixed(textFormat.nOfDecimals);
       return nOfDaysAgo < 0
         ? textFormat.dateIsNotValid
         : nOfDaysAgo === 0
@@ -564,11 +566,13 @@
           : "New";
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       } else {
-        const timeAgoText = getDayBasedTimeAgoText(nOfDaysAgo, {
+        const interval = INFO_INTERVAL;
+        const timeAgoText = getDayBasedTimeAgoText(interval, {
           daysAgo: "d",
           weeksAgo: "w",
           monthAgo: "mo",
           yearsAgo: `y${nOfDaysAgo >= 2 * 365 ? "s" : ""}`,
+          nOfDecimals: 2,
         });
         setInnerText(ids.typeAnswerTopLeftBox, timeAgoText);
       }
