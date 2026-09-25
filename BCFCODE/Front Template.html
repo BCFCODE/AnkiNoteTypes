@@ -355,8 +355,12 @@
 
     if (/\d/.test(INFO_TIME_AVG)) {
       const { number } = parseString(INFO_TIME_AVG);
-      if (/minute/i.test(INFO_TIME_AVG)) number *= 60;
-      if (number > 0) avgTimeInSeconds = Math.round(number);
+
+      const timeInSeconds = /minute/i.test(INFO_TIME_AVG)
+        ? number * 60
+        : number;
+
+      if (timeInSeconds > 0) avgTimeInSeconds = Math.round(timeInSeconds);
     }
 
     function twoDigits(n) {
