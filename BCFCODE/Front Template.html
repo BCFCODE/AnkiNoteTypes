@@ -768,9 +768,10 @@
         else setSuccessStyle(id);
       } else setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
 
-      const intervalDays = Number(INFO_INTERVAL) || 0;
+      const intervalDays = Number(INFO_INTERVAL)
 
       const infoIntervalText = getDayBasedTimeAgoText(intervalDays, {
+        yesterday: '1d',
         daysAgo: "d",
         weeksAgo: "w",
         monthAgo: "mo",

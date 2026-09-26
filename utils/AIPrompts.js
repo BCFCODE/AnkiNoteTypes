@@ -101,34 +101,19 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'To certify something means to (1w) that its results are true.',
-    'confirm',
-    'prove'
+    'In anthropology class, I learned about simple tools that ancient (1w) used.',
+    'cultures ',
+    'people'
   ],
   [
-    'A dolphin is a large sea mammal that (1w) air.',
-    'breathes ',
-    'breathe'
+    `We don't know if Aunt Mildred's visit will (2w) permanent one.`,
+    'be a',
+    'the'
   ],
   [
-    'If you illuminate something, you shine (2w) or brighten it.',
-    'light on ',
-    'bright on '
-  ],
-  [
-    'To enrich means to make someone rich or (1w) their wealth.',
-    'increase ',
-    'improve'
-  ],
-  [
-    'To enrich means to make someone rich or increase their (1w|1.)',
-    'wealth', 
-    'health'
-  ],
-  [
-    'The reckless driver posed a threat (1w) everyone else on the road.',
-    'to',
-    'with'
+    'I was horrified when I read about the old lady (1w) was attacked.',
+    'who',
+    'that'
   ]
 ];
 
