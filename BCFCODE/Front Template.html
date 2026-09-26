@@ -379,7 +379,12 @@
 
     function setInnerText(id, innerText) {
       const el = document.getElementById(id);
-      if (el) el.innerText = innerText;
+      if (!el) return;
+
+      el.innerText =
+        innerText === null || innerText === undefined
+          ? "⚠️ EMPTY"
+          : String(innerText);
     }
 
     function setInnerTextAfterDelay(
@@ -634,7 +639,7 @@
 
       if (isTag.DigitMemory) {
         if (isTag.Forward) {
-          const digitsText = TAGS.match(/\b\d+Digits\b/);
+          const digitsText = TAGS.match(/\b\d+Digits\b/)?.[0] ?? "xDigits";
           setInnerText(id, digitsText);
 
           classCleanUp(id);
@@ -697,7 +702,7 @@
           addClass(id, color.danger);
           addClass(id, animation.colorPulse["1s"]);
         } else if (isTag.Backward) {
-          const digitsText = TAGS.match(/\b\d+Digits\b/);
+          const digitsText = TAGS.match(/\b\d+Digits\b/)?.[0] ?? "xDigits";
           setInnerText(id, digitsText);
 
           const parsed = parseString(INFO_TIME_TOTAL);
@@ -763,16 +768,17 @@
         else setSuccessStyle(id);
       } else setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
 
-      const infoIntervalText = getDayBasedTimeAgoText(INFO_INTERVAL, {
+      const intervalDays = Number(INFO_INTERVAL) || 0;
+
+      const infoIntervalText = getDayBasedTimeAgoText(intervalDays, {
         daysAgo: "d",
         weeksAgo: "w",
         monthAgo: "mo",
-        yearsAgo: `y${INFO_INTERVAL >= 2 * 365 ? "s" : ""}`,
-        nOfDecimals: 2,
+        yearsAgo: `y${intervalDays >= 2 * 365 ? "s" : ""}`,
+        nOfDecimals: 3,
       });
-      setInnerTextAfterDelay(id, 2500, infoIntervalText, () => {
-        const intervalDays = Number(INFO_INTERVAL);
 
+      setInnerTextAfterDelay(id, 2500, infoIntervalText, () => {
         if (intervalDays === 1) setDangerStyle(id);
         else if (intervalDays === 2) setWarningStyle(id);
         else if (intervalDays > 2) setSuccessStyle(id);
@@ -781,10 +787,11 @@
           setInnerText(id, "New");
         }
 
-        if (isTag.DigitMemory)
+        if (isTag.DigitMemory) {
           setInfoLastReview(id, 2000, () => {
             classCleanUp(id);
           });
+        }
       });
     }
 
