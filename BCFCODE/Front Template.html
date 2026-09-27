@@ -768,10 +768,10 @@
         else setSuccessStyle(id);
       } else setDefaultTypeAnswerBottomMiddleBox(numberOfLapses);
 
-      const intervalDays = Number(INFO_INTERVAL)
+      const intervalDays = Number(INFO_INTERVAL);
 
       const infoIntervalText = getDayBasedTimeAgoText(intervalDays, {
-        yesterday: '1d',
+        yesterday: "1d",
         daysAgo: "d",
         weeksAgo: "w",
         monthAgo: "mo",
@@ -788,7 +788,7 @@
           setInnerText(id, "New");
         }
 
-        if (isTag.DigitMemory) {
+        if (isTag.DigitMemory && intervalDays > 0) {
           setInfoLastReview(id, 2000, () => {
             classCleanUp(id);
           });

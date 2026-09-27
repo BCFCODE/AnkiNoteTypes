@@ -101,19 +101,24 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'In anthropology class, I learned about simple tools that ancient (1w) used.',
-    'cultures ',
-    'people'
+    'To vary means to be different (1w) another thing in size or amount.',
+    'from',
+    'with'
   ],
   [
-    `We don't know if Aunt Mildred's visit will (2w) permanent one.`,
-    'be a',
-    'the'
+    'To wipe something is to slide (4w) over it to clean it.',
+    'a piece of cloth ',
+    'a soft piece of cloth '
   ],
   [
-    'I was horrified when I read about the old lady (1w) was attacked.',
-    'who',
-    'that'
+    'Domestic refers to (3w) within a particular country.',
+    'something that happens ',
+    'something happens '
+  ],
+  [
+    'A plantation is a big farm that only grows certain (1w) of crops.',
+    'kinds',
+    'types'
   ]
 ];
 
