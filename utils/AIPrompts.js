@@ -101,24 +101,14 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'To vary means to be different (1w) another thing in size or amount.',
-    'from',
-    'with'
+    'To thrive means to (1w) well and be successful, healthy, or strong.',
+    'do',
+    'doing'
   ],
   [
-    'To wipe something is to slide (4w) over it to clean it.',
-    'a piece of cloth ',
-    'a soft piece of cloth '
-  ],
-  [
-    'Domestic refers to (3w) within a particular country.',
-    'something that happens ',
-    'something happens '
-  ],
-  [
-    'A plantation is a big farm that only grows certain (1w) of crops.',
-    'kinds',
-    'types'
+    'To critique means to (1w) an opinion about the good and the bad parts of something.',
+    'express',
+    'give'
   ]
 ];
 

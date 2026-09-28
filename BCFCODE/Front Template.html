@@ -308,9 +308,15 @@
         nOfDecimals: 0,
       },
     ) {
-      const nOfWeeks = (nOfDaysAgo / 7).toFixed(textFormat.nOfDecimals);
-      const nOfMonths = (nOfDaysAgo / 30.4).toFixed(textFormat.nOfDecimals);
-      const nOfYears = (nOfDaysAgo / 365.25).toFixed(textFormat.nOfDecimals);
+      const nOfWeeks = Number.isInteger(nOfDaysAgo / 7)
+        ? nOfDaysAgo / 7
+        : (nOfDaysAgo / 7).toFixed(textFormat.nOfDecimals);
+      const nOfMonths = Number.isInteger(nOfDaysAgo / 30.4)
+        ? nOfDaysAgo / 30.4
+        : (nOfDaysAgo / 30.4).toFixed(textFormat.nOfDecimals);
+      const nOfYears = Number.isInteger(nOfDaysAgo / 365.25)
+        ? nOfDaysAgo / 365.25
+        : (nOfDaysAgo / 365.25).toFixed(textFormat.nOfDecimals);
       return nOfDaysAgo < 0
         ? textFormat.dateIsNotValid
         : nOfDaysAgo === 0
