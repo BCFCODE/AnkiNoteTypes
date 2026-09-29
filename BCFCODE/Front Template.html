@@ -185,6 +185,8 @@
         });
         setInnerTextAfterDelay(id, delay, lastReviewText, afterDelay);
       }
+
+      return { nOfDaysAgo };
     }
 
     function summarizeTotalTime(parsed) {
@@ -633,7 +635,7 @@
     if (ids.typeAnswerTopLeftBox) {
       const id = ids.typeAnswerTopLeftBox;
 
-      setInfoLastReview(id);
+      const { nOfDaysAgo } = setInfoLastReview(id);
 
       if (isTag.Sentence) {
         if (nOfDaysAgo < 1) {

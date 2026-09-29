@@ -109,6 +109,11 @@ AIPRs.multipleQAMistake = [
     'To critique means to (1w) an opinion about the good and the bad parts of something.',
     'express',
     'give'
+  ],
+  [
+    'The workers waited (2w) compound for the gates to the factory to open.',
+    'outside the ',
+    'outside of the '
   ]
 ];
 
