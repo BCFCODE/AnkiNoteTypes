@@ -101,19 +101,9 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'To thrive means to (1w) well and be successful, healthy, or strong.',
-    'do',
-    'doing'
-  ],
-  [
-    'To critique means to (1w) an opinion about the good and the bad parts of something.',
-    'express',
-    'give'
-  ],
-  [
-    'The workers waited (2w) compound for the gates to the factory to open.',
-    'outside the ',
-    'outside of the '
+    'Jane has two siblings, an older brother and a (1w) sister.',
+    'younger ',
+    'young'
   ]
 ];
 

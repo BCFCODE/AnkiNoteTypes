@@ -811,6 +811,386 @@
     // Initial visual reset
     ids.countUpTimer.forEach((id) => setInnerHTML(id, "00:00"));
     ids.countDownTimer.forEach((id) => setInnerHTML(id, "00:00"));
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) {
+      console.warn("Web Audio API is not supported.");
+      return;
+    }
+
+    const audioContext = new AudioContext();
+
+    /*
+     * Standard 12-tone equal temperament.
+     *
+     * A4 = 440 Hz
+     */
+    const A4_FREQUENCY = 440;
+
+    const NATURAL_OFFSETS = {
+      C: 0,
+      D: 2,
+      E: 4,
+      F: 5,
+      G: 7,
+      A: 9,
+      B: 11,
+    };
+
+    /*
+     * pointerId -> active sound
+     *
+     * A sound contains one or more oscillators:
+     *
+     * one oscillator  = note
+     * multiple        = chord
+     */
+    const activeSounds = new Map();
+
+    /*
+     * ----------------------------------------------------
+     * Parse note without octave
+     *
+     * C
+     * C#
+     * Ebb
+     * F###
+     * E♭♭
+     * F♯♯♯
+     *
+     * Any number of accidentals is supported.
+     * ----------------------------------------------------
+     */
+    function parseNote(note) {
+      const match = note.trim().match(/^([A-Ga-g])([#♯b♭]*)$/);
+
+      if (!match) {
+        throw new Error(`Invalid note: "${note}"`);
+      }
+
+      const [, rawLetter, rawAccidentals] = match;
+
+      const letter = rawLetter.toUpperCase();
+
+      let alteration = 0;
+
+      for (const accidental of rawAccidentals) {
+        if (accidental === "#" || accidental === "♯") {
+          alteration += 1;
+        } else {
+          alteration -= 1;
+        }
+      }
+
+      return {
+        letter,
+        accidentals: rawAccidentals,
+        alteration,
+      };
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Parse complete note
+     *
+     * C4
+     * C#4
+     * Ebb4
+     * F###4
+     * ----------------------------------------------------
+     */
+    function parseFullNote(noteName) {
+      const match = noteName.trim().match(/^([A-Ga-g])([#♯b♭]*)(-?\d+)$/);
+
+      if (!match) {
+        throw new Error(`Invalid full note: "${noteName}"`);
+      }
+
+      return {
+        note: `${match[1]}${match[2]}`,
+        octave: Number(match[3]),
+      };
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Note + octave → MIDI
+     * ----------------------------------------------------
+     */
+    function noteToMidi(note, octave) {
+      const parsed = parseNote(note);
+
+      if (!(parsed.letter in NATURAL_OFFSETS)) {
+        throw new Error(`Unknown note: "${note}"`);
+      }
+
+      if (!Number.isInteger(octave)) {
+        throw new Error(`Invalid octave: "${octave}"`);
+      }
+
+      return (
+        (octave + 1) * 12 + NATURAL_OFFSETS[parsed.letter] + parsed.alteration
+      );
+    }
+
+    /*
+     * ----------------------------------------------------
+     * MIDI → frequency
+     *
+     * f = 440 × 2^((n - 69) / 12)
+     * ----------------------------------------------------
+     */
+    function midiToFrequency(midi) {
+      return A4_FREQUENCY * Math.pow(2, (midi - 69) / 12);
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Convert note to pretty notation.
+     *
+     * F###4 → F♯♯♯4
+     * Ebb4  → E♭♭4
+     * Bb4   → B♭4
+     * ----------------------------------------------------
+     */
+    function formatNote(noteName) {
+      const { note, octave } = parseFullNote(noteName);
+
+      const parsed = parseNote(note);
+
+      const accidentals = [...parsed.accidentals]
+        .map((accidental) => {
+          if (accidental === "#" || accidental === "♯") {
+            return "♯";
+          }
+
+          return "♭";
+        })
+        .join("");
+
+      return `${parsed.letter}${accidentals}${octave}`;
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Create one pure sine-wave oscillator.
+     * ----------------------------------------------------
+     */
+    function createVoice(frequency, volume) {
+      const oscillator = audioContext.createOscillator();
+
+      const gain = audioContext.createGain();
+
+      /*
+       * Pure sine wave.
+       */
+      oscillator.type = "sine";
+
+      const now = audioContext.currentTime;
+
+      oscillator.frequency.setValueAtTime(frequency, now);
+
+      /*
+       * Small attack prevents clicking.
+       */
+      const attack = 0.015;
+
+      gain.gain.setValueAtTime(0.0001, now);
+
+      gain.gain.exponentialRampToValueAtTime(volume, now + attack);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start(now);
+
+      return {
+        oscillator,
+        gain,
+      };
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Start note or chord.
+     *
+     * notes="C4"
+     *     → one oscillator
+     *
+     * notes="C4 E4 G4"
+     *     → three oscillators
+     * ----------------------------------------------------
+     */
+    function startSound(element, pointerId) {
+      if (activeSounds.has(pointerId)) {
+        return;
+      }
+
+      const notesAttribute = element.getAttribute("notes");
+
+      if (!notesAttribute) {
+        return;
+      }
+
+      const noteNames = notesAttribute.trim().split(/\s+/).filter(Boolean);
+
+      if (!noteNames.length) {
+        return;
+      }
+
+      /*
+       * Reduce volume as more voices are added
+       * to reduce clipping with large chords.
+       */
+      const volume = 0.18 / Math.sqrt(noteNames.length);
+
+      const voices = [];
+
+      try {
+        for (const noteName of noteNames) {
+          const { note, octave } = parseFullNote(noteName);
+
+          const midi = noteToMidi(note, octave);
+
+          const frequency = midiToFrequency(midi);
+
+          voices.push(createVoice(frequency, volume));
+        }
+
+        activeSounds.set(pointerId, {
+          element,
+          voices,
+          released: false,
+        });
+
+        element.classList.add("playing");
+      } catch (error) {
+        console.warn(error.message);
+
+        for (const voice of voices) {
+          try {
+            voice.oscillator.stop();
+          } catch {}
+        }
+      }
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Release note or chord.
+     * ----------------------------------------------------
+     */
+    function releaseSound(pointerId) {
+      const sound = activeSounds.get(pointerId);
+
+      if (!sound || sound.released) {
+        return;
+      }
+
+      sound.released = true;
+
+      const now = audioContext.currentTime;
+
+      const release = 0.35;
+
+      for (const voice of sound.voices) {
+        const currentGain = Math.max(voice.gain.gain.value, 0.0001);
+
+        voice.gain.gain.cancelScheduledValues(now);
+
+        voice.gain.gain.setValueAtTime(currentGain, now);
+
+        voice.gain.gain.exponentialRampToValueAtTime(0.0001, now + release);
+
+        voice.oscillator.stop(now + release + 0.02);
+      }
+
+      sound.element.classList.remove("playing");
+
+      window.setTimeout(
+        () => {
+          activeSounds.delete(pointerId);
+        },
+        (release + 0.05) * 1000,
+      );
+    }
+
+    /*
+     * ----------------------------------------------------
+     * Initialize MusicMap notes.
+     * ----------------------------------------------------
+     */
+    document.querySelectorAll(".note[notes]").forEach((element) => {
+      const notesAttribute = element.getAttribute("notes");
+
+      /*
+       * `notes` is the ONLY source of truth
+       * for the audio.
+       */
+
+      /*
+       * IMPORTANT:
+       *
+       * If the element already contains text,
+       * KEEP IT.
+       *
+       * Example:
+       *
+       * <span class="note" notes="C4 E4 G4">
+       *     Cmaj
+       * </span>
+       *
+       * The display remains "Cmaj".
+       *
+       * If it is empty, automatically generate
+       * a default display name.
+       */
+      if (element.textContent.trim() === "") {
+        const noteNames = notesAttribute.trim().split(/\s+/).filter(Boolean);
+
+        try {
+          element.textContent = noteNames.map(formatNote).join(" · ");
+        } catch (error) {
+          console.warn(error.message);
+        }
+      }
+
+      /*
+       * Mouse + touch + pen.
+       */
+      element.addEventListener("pointerdown", async (event) => {
+        event.preventDefault();
+
+        try {
+          element.setPointerCapture(event.pointerId);
+        } catch {}
+
+        /*
+         * Activate AudioContext from
+         * the user's interaction.
+         */
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+
+        startSound(element, event.pointerId);
+      });
+
+      element.addEventListener("pointerup", (event) => {
+        event.preventDefault();
+
+        releaseSound(event.pointerId);
+      });
+
+      element.addEventListener("pointercancel", (event) => {
+        releaseSound(event.pointerId);
+      });
+
+      element.addEventListener("lostpointercapture", (event) => {
+        releaseSound(event.pointerId);
+      });
+    });
   })();
 </script>
 
@@ -969,4 +1349,310 @@ If you enable it in the settings of this add-on you can also show some deck opti
 
   // Now you can use infoFields['info-last-review'] etc.
 </script>
+-->
+
+<!--
+╔══════════════════════════════════════════════════════════════════════╗
+║                        NOTE GENERATOR GUIDE                          ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+The MusicMap JavaScript turns every `.note[notes]` element into a
+clickable/touchable pure-tone note or chord.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BASIC SYNTAX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    <span class="note" notes="C4"></span>
+
+→ Plays one note: C4
+→ Since there is no inner text, the displayed name is automatically:
+  C4
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHORDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Put multiple notes inside `notes`, separated by spaces:
+
+    <span class="note" notes="C4 E4 G4"></span>
+
+→ Plays C4 + E4 + G4 simultaneously
+→ Automatically displays:
+  C4 · E4 · G4
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CUSTOM DISPLAY NAME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The `notes` attribute controls the SOUND.
+
+The text inside the element controls the DISPLAY.
+
+Example:
+
+    <span class="note" notes="C4 E4 G4">Cmaj</span>
+
+→ Displays: Cmaj
+→ Plays: C4 + E4 + G4
+
+
+Another example:
+
+    <span class="note" notes="C4">Middle C</span>
+
+→ Displays: Middle C
+→ Plays: C4
+
+
+IMPORTANT:
+`notes` is the ONLY source of truth for the audio.
+The inner text is ONLY a display label.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ACCIDENTALS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Any number of sharps or flats is supported.
+
+Sharp:
+    C#
+    C##
+    C###
+    C####
+
+Flat:
+    Eb
+    Ebb
+    Ebbb
+    Ebbbb
+
+Unicode accidentals are also supported:
+
+    C♯
+    C♯♯
+    E♭
+    E♭♭
+
+
+Examples:
+
+    <span class="note" notes="F###4"></span>
+
+    <span class="note" notes="Ebb4 G4 Bb4"></span>
+
+    <span class="note" notes="F♯♯♯4 A♯4 C♯5"></span>
+
+
+The JavaScript automatically displays ASCII accidentals as musical
+symbols when it generates a default display name:
+
+    F###4 → F♯♯♯4
+    Ebb4  → E♭♭4
+    Bb4   → B♭4
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SINGLE NOTE vs CHORD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ONE note:
+
+    <span class="note" notes="C4">C</span>
+
+→ Single oscillator → single pitch
+
+
+MULTIPLE notes:
+
+    <span class="note" notes="C4 E4 G4">Cmaj</span>
+
+→ Multiple oscillators → chord
+
+
+The same `.note` element is used for both.
+There is NO separate `.chord` class.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXAMPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Natural note:
+
+    <span class="note" notes="A4">A4</span>
+
+
+Sharp:
+
+    <span class="note" notes="C#4">C♯4</span>
+
+
+Flat:
+
+    <span class="note" notes="Bb4">B♭4</span>
+
+
+Double flat:
+
+    <span class="note" notes="Ebb4">E♭♭4</span>
+
+
+Triple sharp:
+
+    <span class="note" notes="F###4">F♯♯♯4</span>
+
+
+Major chord:
+
+    <span class="note" notes="C4 E4 G4">Cmaj</span>
+
+
+Minor chord:
+
+    <span class="note" notes="C4 Eb4 G4">Cm</span>
+
+
+Dominant 7th:
+
+    <span class="note" notes="G3 B3 D4 F4">G7</span>
+
+
+Complex chord:
+
+    <span class="note" notes="F#4 A#4 C#5 E5">F#7</span>
+
+
+Unnamed chord:
+
+    <span class="note" notes="C4 Eb4 G4 Bb4"></span>
+
+→ Automatically displays:
+  C4 · E♭4 · G4 · B♭4
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PLAYBACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Click / tap → starts the sound
+• Hold → sustains the sound
+• Release → smooth fade-out
+• Mouse, touch and pen are supported
+• Multiple notes in one chord play simultaneously
+• Multiple MusicMap elements can be played independently
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SOUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The sound is generated entirely with the Web Audio API.
+
+• Pure sine wave
+• No piano samples
+• No MP3/WAV files
+• No external libraries
+• No internet connection required
+• Standard 12-tone equal temperament
+• A4 = 440 Hz
+
+Frequency formula:
+
+    f = 440 × 2^((n - 69) / 12)
+
+where `n` is the MIDI note number.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IMPORTANT DESIGN RULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use this pattern:
+
+    <span class="note" notes="SOUND">DISPLAY</span>
+
+Examples:
+
+    <span class="note" notes="C4">Middle C</span>
+
+    <span class="note" notes="C4 E4 G4">Cmaj</span>
+
+    <span class="note" notes="F#4 A#4 C#5 E5">F#7</span>
+
+
+Think of it as:
+
+    notes="..."   → WHAT TO PLAY
+    inner text    → WHAT TO DISPLAY
+
+
+If inner text is empty:
+
+    <span class="note" notes="C4 E4 G4"></span>
+
+the script automatically generates the display name.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENHARMONIC SPELLINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Different spellings can produce the same pitch:
+
+    C#4 = Db4
+    C##4 = D4
+    Ebb4 = D4
+    F##4 = G4
+    B#3 = C4
+
+This is intentional.
+
+The JavaScript calculates the actual pitch mathematically from the
+written note rather than relying on pre-recorded samples.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RANGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The parser is not limited to the physical 88-key piano range.
+
+The standard piano range is:
+
+    A0 → C8
+
+But theoretical notes outside that range can still be calculated.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Single note:
+
+    <span class="note" notes="C4">C4</span>
+
+
+Chord:
+
+    <span class="note" notes="C4 E4 G4">Cmaj</span>
+
+
+Automatic display:
+
+    <span class="note" notes="C4 E4 G4"></span>
+
+
+Arbitrary accidentals:
+
+    <span class="note" notes="Ebbb4"></span>
+
+    <span class="note" notes="F###4"></span>
+
+
+The `notes` attribute is always the audio source of truth.
 -->
