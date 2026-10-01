@@ -600,6 +600,12 @@ input#typeans {
   }
 }
 
+@keyframes text-shadow-color-pulse-animation {
+  50% {
+    text-shadow: 0 0 5px var(--initial-text-color);
+  }
+}
+
 .top-right-box,
 .number-of-reviews,
 .top-left-box {
@@ -919,6 +925,10 @@ input#typeans {
   transition:
     transform 60ms ease,
     opacity 60ms ease;
+
+  text-shadow: 0 0 10px var(--color-danger);
+
+  animation: text-shadow-color-pulse-animation 1s infinite;
 }
 
 .note:hover {
