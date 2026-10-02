@@ -101,9 +101,39 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'Jane has two siblings, an older brother and a (1w) sister.',
-    'younger ',
-    'young'
+    `There's a stereotype that (1w) are dirty animals. But they are rather clean.`,
+    'pigs',
+    'the pigs'
+  ],
+  [
+    'All the citizens came together (4w) solidarity to create change.',
+    'in a show of ',
+    'to show the'
+  ],
+  [
+    'Privacy is the (1w) of being happily away from other people.',
+    'state', 
+    'way'
+  ],
+  [
+    'A ball is a round object that is thrown, kicked, or hit in a game or (1w|1.)',
+    'sport',
+    'sports'
+  ],
+  [
+    'An ideology is a system of (1w|1.)',
+    'belief',
+    'beliefs'
+  ],
+  [
+    'When something is subtle, it is not easy to see or (1w|1.)',
+    'notice.',
+    'noticed' 
+  ],
+  [
+    'Transport is the system or method of ca?ing passengers or goods from one place to another.',
+    'rry',
+    'r'
   ]
 ];
 

@@ -911,7 +911,14 @@ input#typeans {
   gap: 12px;
 }
 
+/*
+ * ============================================================
+ * BASE NOTE
+ * ============================================================
+ */
 .note {
+  --note-color: inherit;
+
   cursor: pointer;
 
   display: inline-block;
@@ -922,20 +929,73 @@ input#typeans {
 
   touch-action: none;
 
+  font-weight: 600;
+
   transition:
     transform 60ms ease,
-    opacity 60ms ease;
+    opacity 60ms ease,
+    filter 60ms ease;
 
-  text-shadow: 0 0 10px var(--color-danger);
-
-  animation: text-shadow-color-pulse-animation 1s infinite;
+  /* animation: text-shadow-color-pulse-animation 1s infinite; */
 }
 
+/*
+ * ============================================================
+ * SINGLE NOTE
+ * ============================================================
+ */
+.note-single {
+  color: var(--note-color);
+}
+
+/*
+ * ============================================================
+ * CHORD
+ *
+ * The chord name receives a gradient containing all
+ * pitch colors.
+ * ============================================================
+ */
+.note-chord {
+  background: var(--note-gradient);
+
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+ * ============================================================
+ * HOVER
+ * ============================================================
+ */
 .note:hover {
-  opacity: 0.7;
+  filter: brightness(1.08);
 }
 
+/*
+ * ============================================================
+ * PLAYING
+ * ============================================================
+ */
 .note.playing {
   transform: scale(1.08);
-  opacity: 0.55;
+  filter: brightness(1.12);
+}
+
+/*
+ * ============================================================
+ * ACCESSIBILITY FALLBACK
+ * ============================================================
+ *
+ * If text clipping is unavailable, the chord still gets
+ * the first note's color.
+ * ============================================================
+ */
+@supports not (background-clip: text) {
+  .note-chord {
+    color: var(--note-color);
+  }
 }
