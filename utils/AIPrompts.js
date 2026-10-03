@@ -101,39 +101,54 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    `There's a stereotype that (1w) are dirty animals. But they are rather clean.`,
-    'pigs',
-    'the pigs'
+    'The man made a raft (2w) bamboo and floated out to sea.',
+    'out of ',
+    'on'
   ],
   [
-    'All the citizens came together (4w) solidarity to create change.',
-    'in a show of ',
-    'to show the'
+    'The man made a raft out of bamboo and (3w) sea.',
+    'floated out to ',
+    'float out the'
+  ],  
+  [
+    'The man made a raft out of bamboo and floated out (2w|1.)',
+    'to sea',
+    'to the sea'
   ],
   [
-    'Privacy is the (1w) of being happily away from other people.',
-    'state', 
-    'way'
+    'Because it never got cold that winter, many stores (1w) an excess of coats.',
+    'had',
+    'have'
   ],
   [
-    'A ball is a round object that is thrown, kicked, or hit in a game or (1w|1.)',
-    'sport',
-    'sports'
+    'The man made a raft out of bamboo and floated out (1w) sea.',
+    'to',
+    'in the'
   ],
   [
-    'An ideology is a system of (1w|1.)',
-    'belief',
-    'beliefs'
+    'Later means after (1w) present, expected, or usual time.',
+    'the',
+    "without 'the'"
   ],
   [
-    'When something is subtle, it is not easy to see or (1w|1.)',
-    'notice.',
-    'noticed' 
+    'To beware means to be careful of something or someone that (1w) dangerous.',
+    'is',
+    'can be'
   ],
   [
-    'Transport is the system or method of ca?ing passengers or goods from one place to another.',
-    'rry',
-    'r'
+    'The man made a raft (1w) of bamboo and floated (1w) to sea.',
+    'out',
+    "without 'out'"
+  ],
+  [
+    'An attempt is an act of (3w) something, especially something difficult.',
+    'trying to do ',
+    'doing' 
+  ],
+  [
+    'Karen and Brian often have (1w) about silly things.',
+    'disputes ',
+    'dispute'
   ]
 ];
 
