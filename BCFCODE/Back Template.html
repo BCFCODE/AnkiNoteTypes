@@ -3,7 +3,7 @@
 <div class="front-field-container">
   {{#Answer}}
   <div class="typeBack">{{type:Answer}}</div>
-  {{/Answer}} {{#Answer}} 
+  {{/Answer}} {{#Answer}}
   <div class="correct">{{Answer}}</div>
   {{/Answer}} {{#Front}}
   <div class="front-field">{{Front}}</div>
@@ -78,3 +78,494 @@
     </div>
   </div>
 </div>
+<script>
+  (() => {
+    /*
+     * ============================================================
+     * MUSICMAP
+     * ============================================================
+     *
+     * Safe to run on BOTH Front and Back templates.
+     *
+     * - Single source of truth: `notes`
+     * - One note  = one tone
+     * - Multiple notes = chord
+     * - Inner text = display name
+     * - Automatic pitch color
+     * - Pure sine wave
+     * - A4 = 440 Hz
+     * - Supports arbitrary # / b accidentals
+     * - Safe to initialize repeatedly
+     *
+     * IMPORTANT:
+     * This script is intentionally wrapped in an IIFE so that
+     * variables do not collide when Anki reuses the same webview.
+     */
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) {
+      console.warn("MusicMap: Web Audio API is not supported.");
+
+      return;
+    }
+
+    /*
+     * Reuse the same AudioContext if the script runs again.
+     */
+    window.__musicMapAudioContext ??= new AudioContext();
+
+    const audioContext = window.__musicMapAudioContext;
+
+    /*
+     * ============================================================
+     * CONSTANTS
+     * ============================================================
+     */
+
+    const A4_FREQUENCY = 440;
+
+    const NATURAL_OFFSETS = {
+      C: 0,
+      D: 2,
+      E: 4,
+      F: 5,
+      G: 7,
+      A: 9,
+      B: 11,
+    };
+
+    /*
+     * Chromatic pitch colors.
+     *
+     * C   → Red
+     * C#  → Red-orange
+     * D   → Orange
+     * D#  → Yellow-orange
+     * E   → Yellow
+     * F   → Green
+     * F#  → Green-teal
+     * G   → Teal
+     * G#  → Blue
+     * A   → Indigo
+     * A#  → Violet
+     * B   → Magenta
+     */
+
+    const NOTE_COLORS = [
+      "#E53935",
+      "#F4511E",
+      "#FB8C00",
+      "#F9A825",
+      "#FDD835",
+      "#7CB342",
+      "#43A047",
+      "#00897B",
+      "#1E88E5",
+      "#3949AB",
+      "#8E24AA",
+      "#D81B60",
+    ];
+
+    /*
+     * Store currently playing notes/chords globally so
+     * repeated script initialization doesn't lose track
+     * of active audio.
+     */
+    window.__musicMapActiveSounds ??= new Map();
+
+    const activeSounds = window.__musicMapActiveSounds;
+
+    /*
+     * ============================================================
+     * PARSE NOTE
+     * ============================================================
+     */
+
+    function parseNote(note) {
+      const match = note.trim().match(/^([A-Ga-g])([#♯b♭]*)$/);
+
+      if (!match) {
+        throw new Error(`MusicMap: Invalid note "${note}"`);
+      }
+
+      const [, rawLetter, rawAccidentals] = match;
+
+      const letter = rawLetter.toUpperCase();
+
+      let alteration = 0;
+
+      for (const accidental of rawAccidentals) {
+        if (accidental === "#" || accidental === "♯") {
+          alteration++;
+        } else {
+          alteration--;
+        }
+      }
+
+      return {
+        letter,
+        accidentals: rawAccidentals,
+        alteration,
+      };
+    }
+
+    /*
+     * ============================================================
+     * PARSE FULL NOTE
+     * ============================================================
+     */
+
+    function parseFullNote(noteName) {
+      const match = noteName.trim().match(/^([A-Ga-g])([#♯b♭]*)(-?\d+)$/);
+
+      if (!match) {
+        throw new Error(`MusicMap: Invalid full note "${noteName}"`);
+      }
+
+      return {
+        note: `${match[1]}${match[2]}`,
+
+        octave: Number(match[3]),
+      };
+    }
+
+    /*
+     * ============================================================
+     * NOTE → MIDI
+     * ============================================================
+     */
+
+    function noteToMidi(note, octave) {
+      const parsed = parseNote(note);
+
+      return (
+        (octave + 1) * 12 + NATURAL_OFFSETS[parsed.letter] + parsed.alteration
+      );
+    }
+
+    /*
+     * ============================================================
+     * MIDI → FREQUENCY
+     * ============================================================
+     */
+
+    function midiToFrequency(midi) {
+      return A4_FREQUENCY * Math.pow(2, (midi - 69) / 12);
+    }
+
+    /*
+     * ============================================================
+     * MIDI → PITCH CLASS
+     * ============================================================
+     */
+
+    function midiToPitchClass(midi) {
+      return ((midi % 12) + 12) % 12;
+    }
+
+    /*
+     * ============================================================
+     * NOTE → COLOR
+     * ============================================================
+     */
+
+    function noteToColor(noteName) {
+      const { note, octave } = parseFullNote(noteName);
+
+      const midi = noteToMidi(note, octave);
+
+      const pitchClass = midiToPitchClass(midi);
+
+      return NOTE_COLORS[pitchClass];
+    }
+
+    /*
+     * ============================================================
+     * FORMAT NOTE
+     * ============================================================
+     */
+
+    function formatNote(noteName) {
+      const { note, octave } = parseFullNote(noteName);
+
+      const parsed = parseNote(note);
+
+      const accidentals = [...parsed.accidentals]
+        .map((accidental) => {
+          return accidental === "#" || accidental === "♯" ? "♯" : "♭";
+        })
+        .join("");
+
+      return `${parsed.letter}` + `${accidentals}` + `${octave}`;
+    }
+
+    /*
+     * ============================================================
+     * APPLY COLOR
+     * ============================================================
+     */
+
+    function applyColor(element, noteNames) {
+      try {
+        const colors = noteNames.map(noteToColor);
+
+        if (colors.length === 1) {
+          element.style.setProperty("--note-color", colors[0]);
+
+          element.style.removeProperty("--note-gradient");
+
+          element.classList.add("note-single");
+
+          element.classList.remove("note-chord");
+
+          return;
+        }
+
+        const gradient = `linear-gradient(
+                    90deg,
+                    ${colors.join(", ")}
+                )`;
+
+        element.style.setProperty("--note-gradient", gradient);
+
+        element.style.setProperty("--note-color", colors[0]);
+
+        element.classList.add("note-chord");
+
+        element.classList.remove("note-single");
+      } catch (error) {
+        console.warn(error.message);
+      }
+    }
+
+    /*
+     * ============================================================
+     * CREATE OSCILLATOR
+     * ============================================================
+     */
+
+    function createVoice(frequency, volume) {
+      const oscillator = audioContext.createOscillator();
+
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+
+      const now = audioContext.currentTime;
+
+      oscillator.frequency.setValueAtTime(frequency, now);
+
+      const attack = 0.015;
+
+      gain.gain.setValueAtTime(0.0001, now);
+
+      gain.gain.exponentialRampToValueAtTime(volume, now + attack);
+
+      oscillator.connect(gain);
+
+      gain.connect(audioContext.destination);
+
+      oscillator.start(now);
+
+      return {
+        oscillator,
+        gain,
+      };
+    }
+
+    /*
+     * ============================================================
+     * START NOTE / CHORD
+     * ============================================================
+     */
+
+    function startSound(element, pointerId) {
+      if (activeSounds.has(pointerId)) {
+        return;
+      }
+
+      const notesAttribute = element.getAttribute("notes");
+
+      if (!notesAttribute) {
+        return;
+      }
+
+      const noteNames = notesAttribute.trim().split(/\s+/).filter(Boolean);
+
+      if (!noteNames.length) {
+        return;
+      }
+
+      const volume = 0.18 / Math.sqrt(noteNames.length);
+
+      const voices = [];
+
+      try {
+        noteNames.forEach((fullNote) => {
+          const { note, octave } = parseFullNote(fullNote);
+
+          const midi = noteToMidi(note, octave);
+
+          const frequency = midiToFrequency(midi);
+
+          voices.push(createVoice(frequency, volume));
+        });
+
+        activeSounds.set(pointerId, {
+          element,
+          voices,
+          released: false,
+        });
+
+        element.classList.add("playing");
+      } catch (error) {
+        console.warn(error.message);
+
+        voices.forEach((voice) => {
+          try {
+            voice.oscillator.stop();
+          } catch {}
+        });
+      }
+    }
+
+    /*
+     * ============================================================
+     * RELEASE NOTE / CHORD
+     * ============================================================
+     */
+
+    function releaseSound(pointerId) {
+      const sound = activeSounds.get(pointerId);
+
+      if (!sound || sound.released) {
+        return;
+      }
+
+      sound.released = true;
+
+      const now = audioContext.currentTime;
+
+      const release = 0.35;
+
+      sound.voices.forEach((voice) => {
+        const currentGain = Math.max(voice.gain.gain.value, 0.0001);
+
+        voice.gain.gain.cancelScheduledValues(now);
+
+        voice.gain.gain.setValueAtTime(currentGain, now);
+
+        voice.gain.gain.exponentialRampToValueAtTime(0.0001, now + release);
+
+        voice.oscillator.stop(now + release + 0.02);
+      });
+
+      sound.element.classList.remove("playing");
+
+      window.setTimeout(
+        () => {
+          activeSounds.delete(pointerId);
+        },
+        (release + 0.05) * 1000,
+      );
+    }
+
+    /*
+     * ============================================================
+     * INITIALIZE MUSICMAP ELEMENT
+     * ============================================================
+     */
+
+    document.querySelectorAll(".note[notes]").forEach((element) => {
+      const notesAttribute = element.getAttribute("notes");
+
+      const noteNames = notesAttribute.trim().split(/\s+/).filter(Boolean);
+
+      /*
+       * Keep custom display text.
+       *
+       * Only generate default text when empty.
+       */
+      if (element.textContent.trim() === "") {
+        try {
+          element.textContent = noteNames.map(formatNote).join(" · ");
+        } catch (error) {
+          console.warn(error.message);
+        }
+      }
+
+      /*
+       * COLOR MUST BE APPLIED EVERY TIME
+       * THE SCRIPT INITIALIZES.
+       *
+       * This fixes the back-side problem.
+       */
+      applyColor(element, noteNames);
+
+      /*
+       * Accessibility.
+       */
+      element.setAttribute("role", "button");
+
+      element.setAttribute("aria-label", noteNames.map(formatNote).join(", "));
+
+      /*
+       * ====================================================
+       * IMPORTANT:
+       *
+       * Don't attach listeners twice.
+       *
+       * Anki can keep the same webview alive when switching
+       * between front/back or cards.
+       * ====================================================
+       */
+
+      if (element.dataset.musicMapInitialized === "true") {
+        return;
+      }
+
+      element.dataset.musicMapInitialized = "true";
+
+      /*
+       * POINTER DOWN
+       */
+      element.addEventListener("pointerdown", async (event) => {
+        event.preventDefault();
+
+        try {
+          element.setPointerCapture(event.pointerId);
+        } catch {}
+
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+
+        startSound(element, event.pointerId);
+      });
+
+      /*
+       * POINTER UP
+       */
+      element.addEventListener("pointerup", (event) => {
+        event.preventDefault();
+
+        releaseSound(event.pointerId);
+      });
+
+      /*
+       * POINTER CANCEL
+       */
+      element.addEventListener("pointercancel", (event) => {
+        releaseSound(event.pointerId);
+      });
+
+      /*
+       * LOST POINTER CAPTURE
+       */
+      element.addEventListener("lostpointercapture", (event) => {
+        releaseSound(event.pointerId);
+      });
+    });
+  })();
+</script>
