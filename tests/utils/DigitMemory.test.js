@@ -2,16 +2,6 @@ import { it, describe, vi, expect } from "vitest";
 import Warmup from "../../utils/DigitMemory";
 
 describe("DigitMemory", () => {
-  const Back = null;
-  const Image = null;
-  const AudioBothSides = null;
-  const AudioFront = null;
-  const AudioBack = null;
-  const VideoFront = null;
-  const VideoBack = null;
-  const Links = null;
-  const FrontPersian = null;
-
   describe("input cleaners (clean input before use)", () => {
     it.each([
       {

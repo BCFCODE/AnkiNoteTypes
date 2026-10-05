@@ -8,16 +8,74 @@ export default class AIPrompts extends Utils {
   #createQAMistakeAIPR = (Q, A, mistake, i) =>
     `QAMistakeAIPR${this.#counter(i)}>${"-".repeat(50)}
 
-In "${Q}", determine whether "${A}" is truly the only correct answer, and explain why "${mistake}" is wrong, less natural, or less appropriate.
+In "${Q}", determine whether "${A}" is truly the best/correct answer, and analyze why you might choose "${mistake}".
+Your goal is not only to correct the answer, but to discover the hidden English knowledge gap behind this mistake and teach you the concept needed to avoid similar mistakes in the future.
 
 Rules:
 - Do NOT assume "${A}" is the only correct answer. Check this first.
-- If "${mistake}" is also grammatical or natural, say so clearly and explain the difference.
-- Distinguish grammar, meaning, collocation, naturalness, and the exercise's intended answer.
-- Explain the key clue that lets a learner choose the best answer.
-- Keep the entire explanation under 60 seconds when read aloud.
-- Only if it adds genuinely useful new knowledge, give ONE concise grammar, usage, or Latin tip for the Anki Back field; otherwise omit the tip.
-- Make the explanation clear, practical, and reusable for future English questions.
+- If "${mistake}" is also grammatical, natural, or acceptable in another context, clearly say so and explain the difference.
+- If "${A}" is preferred because of context, collocation, naturalness, or the exercise's intended meaning, explain why.
+- Distinguish carefully between:
+  - grammar correctness
+  - meaning differences
+  - collocation and common word combinations
+  - natural/native usage
+  - context and register (formal, informal, spoken, written)
+  - the exercise's intended answer
+- Explain the key clue(s) in the sentence that help you choose the best answer.
+- Analyze why you might have chosen "${mistake}":
+  - What misunderstanding most likely caused this mistake?
+  - What English concept, pattern, or rule is missing?
+  - Is the problem related to grammar, vocabulary, collocation, pronunciation, word origin, Latin roots, or another language-learning aspect?
+  - Focus on the root cause, not only this single question.
+- Teach you how to recognize similar situations in future questions.
+- Prefer explaining reusable patterns instead of memorizing isolated answers.
+- Help you develop natural English intuition, not only exam-solving ability.
+
+Communication style:
+- Speak directly to me using second person ("you", "your").
+- Always address me directly using "you" and "your".
+- Never refer to me as "the learner", "the student", or "they".
+- Avoid third-person explanations about my mistake.
+- Instead of saying:
+  "The learner needs to learn that many English verbs have fixed preposition partnerships."
+  Say:
+  "You need to learn that many English verbs have fixed preposition partnerships."
+
+Output format:
+
+Write the explanation naturally as a continuous response.
+
+Do NOT use headings such as:
+- "Verdict:"
+- "Why:"
+- "Hidden Learning Gap:"
+- "Learning Insight:"
+
+Do NOT use numbered sections, labels, or section titles. Write it as a natural explanation.
+
+Instead, integrate these ideas naturally into the explanation:
+- First, clearly state whether "${A}" is the best answer and whether "${mistake}" is wrong or simply less appropriate.
+- Then explain the difference between "${A}" and "${mistake}".
+- Then explain what misunderstanding caused this mistake and what concept you need to learn.
+- End with one short, highly relevant, reusable learning insight only if it genuinely helps you make better decisions in future English questions.
+- Do not label the final insight as "Learning Insight"; integrate it naturally into the final sentence or paragraph.
+- The insight may be about grammar, vocabulary, collocation, usage, pronunciation, etymology, or Latin roots.
+- Include a tiny example only if it improves understanding.
+- Do not add unrelated facts.
+- Omit the insight if there is no genuinely useful extra knowledge.
+
+Length and style:
+- Keep the explanation concise, clear, and practical.
+- Aim for under 60 seconds when read aloud.
+- Exceed 60 seconds only when genuinely necessary to explain an important distinction, hidden learning gap, or reusable English concept.
+- Never add length just for extra details.
+- Avoid unnecessary technical terminology.
+- If a technical term is used, briefly explain it.
+- Make every explanation useful for future English learning.
+
+${"-".repeat(50)}<QAMistakeAIPR${this.#counter(i)}
+
 `;
 
   set QAMistake({ Q, A, Mistake }) {
@@ -101,55 +159,28 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'The man made a raft (2w) bamboo and floated out to sea.',
-    'out of ',
-    'on'
+    "My role at work is to check the quality of (2w|1.)",
+    "the products.",
+    "product.",
   ],
   [
-    'The man made a raft out of bamboo and (3w) sea.',
-    'floated out to ',
-    'float out the'
-  ],  
+    "I quietly passed on a hint (6w|1.)",
+    "to my sister about the test.",
+    "about the test to my sister.",
+  ],
+  ["To collaborate means to work together (1w) something.", "on", "in"],
+  ["We left the fruit out too long, and (1w) spoiled.", "it", "it's"],
+  ["There were a few daisies (1w) in the field.", "growing ", "grown"],
   [
-    'The man made a raft out of bamboo and floated out (2w|1.)',
-    'to sea',
-    'to the sea'
+    "Having plenty of clean water is necessary for the ?fare of people.",
+    "wel",
+    "well",
   ],
   [
-    'Because it never got cold that winter, many stores (1w) an excess of coats.',
-    'had',
-    'have'
+    "If something is (4w|1,) has a rough texture.",
+    "coarse, that means it ",
+    "coarse, then it means",
   ],
-  [
-    'The man made a raft out of bamboo and floated out (1w) sea.',
-    'to',
-    'in the'
-  ],
-  [
-    'Later means after (1w) present, expected, or usual time.',
-    'the',
-    "without 'the'"
-  ],
-  [
-    'To beware means to be careful of something or someone that (1w) dangerous.',
-    'is',
-    'can be'
-  ],
-  [
-    'The man made a raft (1w) of bamboo and floated (1w) to sea.',
-    'out',
-    "without 'out'"
-  ],
-  [
-    'An attempt is an act of (3w) something, especially something difficult.',
-    'trying to do ',
-    'doing' 
-  ],
-  [
-    'Karen and Brian often have (1w) about silly things.',
-    'disputes ',
-    'dispute'
-  ]
 ];
 
 /* 
@@ -167,7 +198,7 @@ AIPRs.multipleSentence = [
 
 // AIPRs.Paraphrase = "The painting conveys a sense of peace and warmth.";
 AIPRs.multipleParaphrase = [
-  'She was going to bring treats to the party: cookies, muffins, cake, etc.'
+  "She was going to bring treats to the party: cookies, muffins, cake, etc.",
   // `Vanity is excessive pride or love of one's own appearance or things one has done.`,
   // "A novelty is something that is new, original, or strange.",
   // "Unrest is a state of anger about something among the people in a place.",
