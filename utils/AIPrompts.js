@@ -74,10 +74,8 @@ Length and style:
 - If a technical term is used, briefly explain it.
 - Make every explanation useful for future English learning.
 
-${"-".repeat(50)}<QAMistakeAIPR${this.#counter(i)}
-
-`;
-
+${"-".repeat(50)}<QAMistakeAIPR${this.#counter(i)}${'\n'.repeat(15)}`;
+ 
   set QAMistake({ Q, A, Mistake }) {
     const AIPR = this.#createQAMistakeAIPR(Q, A, Mistake);
     this.#multipleInputs.push(AIPR);
@@ -159,28 +157,60 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    "My role at work is to check the quality of (2w|1.)",
-    "the products.",
-    "product.",
+    'We use notwithstanding when we want to (2w|1,) although something has been done, it is not enough. A similar term is “in spite of”.',
+    'show that,',
+    'show'
   ],
   [
-    "I quietly passed on a hint (6w|1.)",
-    "to my sister about the test.",
-    "about the test to my sister.",
-  ],
-  ["To collaborate means to work together (1w) something.", "on", "in"],
-  ["We left the fruit out too long, and (1w) spoiled.", "it", "it's"],
-  ["There were a few daisies (1w) in the field.", "growing ", "grown"],
-  [
-    "Having plenty of clean water is necessary for the ?fare of people.",
-    "wel",
-    "well",
+    'The giraffe turned its head to (3w) angle.',
+    'see from another ',
+    'see another '
   ],
   [
-    "If something is (4w|1,) has a rough texture.",
-    "coarse, that means it ",
-    "coarse, then it means",
+    'They won the sea battle because of (2w) great leadership.',
+    `the admiral's `,
+    'their admiral'
   ],
+  [
+    'If someone (3w|1,) he or she does something bad that can be punished by law.',
+    'commits a crime, ',
+    'commits crime, '
+  ],
+  [
+    'Cyberspace is the imaginary place (1w) the Internet where activities occur.',
+    'on ' ,
+    'in'
+  ],
+  [
+    'Cyberspace is the imaginary place on the Internet (2w) occur.',
+    'where activities ',
+    'where that activities '
+  ],
+  [
+    'When the army arrived, they built a big fort (1w) the top of the hill.',
+    'on ',
+    'at'
+  ],
+  [
+    'A system is a group of related parts that (3w) together.',
+    'move or work ',
+    'moved or worked'
+  ],
+  [
+    'To tend to do something is to be (3w) it or to do it often.',
+    'likely to do ',
+    'likely do '
+  ],
+  [
+    'To sigh is to breathe out loudly (1w) show that you are tired or sad. ',
+    'and', 
+    'to'
+  ],
+  [
+    'That life is worth living is the most necessary of assumptions, and, were (1w) not assumed, the most impossible of conclusions.',
+    'it',
+    'is'
+  ]
 ];
 
 /* 
