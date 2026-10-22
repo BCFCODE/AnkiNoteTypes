@@ -157,59 +157,59 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'We use notwithstanding when we want to (2w|1,) although something has been done, it is not enough. A similar term is “in spite of”.',
-    'show that,',
-    'show'
+    'The devil is a powerful evil (1w) in some religions.',
+    'spirit',
+    'person'
   ],
   [
-    'The giraffe turned its head to (3w) angle.',
-    'see from another ',
-    'see another '
+    'If you escape from a place, you (4w) from it.',
+    'succeed in getting away ',
+    'agree to be free'
   ],
   [
-    'They won the sea battle because of (2w) great leadership.',
-    `the admiral's `,
-    'their admiral'
+    'To clash means to fight or argue (1w) something.',
+    'over ',
+    'for'
   ],
   [
-    'If someone (3w|1,) he or she does something bad that can be punished by law.',
-    'commits a crime, ',
-    'commits crime, '
+    'A deed is a certificate that (4w) something.',
+    'proves that someone owns ',
+    'prove that someone own'
   ],
   [
-    'Cyberspace is the imaginary place (1w) the Internet where activities occur.',
-    'on ' ,
-    'in'
+    'Glamour is a quality (1w) to riches, wealth, and beauty.',
+    'relating ',
+    'related'
   ],
   [
-    'Cyberspace is the imaginary place on the Internet (2w) occur.',
-    'where activities ',
-    'where that activities '
+    'To rehearse means to practice and prepare (3w) in front of people.',
+    'for a performance ',
+    'for performance '
   ],
   [
-    'When the army arrived, they built a big fort (1w) the top of the hill.',
-    'on ',
-    'at'
+    `After a long day of fishing, Glen (1w) his boat ashore, so it wouldn't float away.`,
+    'pulled ',
+    'put'
   ],
   [
-    'A system is a group of related parts that (3w) together.',
-    'move or work ',
-    'moved or worked'
+    `After a long day of fishing, Glen pulled his boat ashore, so it wouldn't (1w) away.`,
+    'float ',
+    'flow'
   ],
   [
-    'To tend to do something is to be (3w) it or to do it often.',
-    'likely to do ',
-    'likely do '
+    `All this will not (1w) finished in the first one hundred days. Nor will it be finished in the first one thousand days, nor in the life of this Administration, nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)`,
+    'be ',
+    "without 'be'"
   ],
   [
-    'To sigh is to breathe out loudly (1w) show that you are tired or sad. ',
-    'and', 
-    'to'
+    `All this will not be finished in the first one hundred days. Nor will it be finished in the first one thousand days, nor in the life of this (1w|1,) nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)`,
+    'Administration, ',
+    'administration, '
   ],
   [
-    'That life is worth living is the most necessary of assumptions, and, were (1w) not assumed, the most impossible of conclusions.',
-    'it',
-    'is'
+    'All this will not be finished in the first one hundred days. Nor will it be finished in the first (2w) days, nor in the life of this Administration, nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)',
+    'one thousand ',
+    'thousand '
   ]
 ];
 
