@@ -88,7 +88,7 @@
     const TAGS = "{{Tags}}";
 
     const isTag = {
-      DigitMemory: /DigitMemory/i.test(TAGS),
+      DigitMemory: /DigitMemory/i.test("{{Tags}}"),
     };
 
     function setCSSstyle(id, property, value) {
@@ -101,7 +101,8 @@
     };
 
     if (isTag.DigitMemory) {
-      setCSSstyle(ids.Fields.Front, "textAlign", "center");
+      if (ids.Fields.Front)
+        setCSSstyle(ids.Fields.Front, "textAlign", "center");
     }
 
     /*
