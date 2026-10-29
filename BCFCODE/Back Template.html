@@ -10,7 +10,7 @@
   {{/Answer}} {{#Answer}}
   <div class="correct">{{Answer}}</div>
   {{/Answer}} {{#Front}}
-  <div class="front-field">{{Front}}</div>
+  <div id="front-field-in-back" class="front-field">{{Front}}</div>
   {{/Front}}
   <div class="card-progress-bar-container-in-back">
     <div class="card-progress-bar" id="card-progress-bar"></div>
@@ -85,6 +85,25 @@
 </div>
 <script>
   (() => {
+    const TAGS = "{{Tags}}";
+
+    const isTag = {
+      DigitMemory: /DigitMemory/i.test(TAGS),
+    };
+
+    function setCSSstyle(id, property, value) {
+      const el = document.getElementById(id);
+      if (el) el.style[property] = value;
+    }
+
+    const ids = {
+      Fields: { Front: "front-field-in-back" },
+    };
+
+    if (isTag.DigitMemory) {
+      setCSSstyle(ids.Fields.Front, "textAlign", "center");
+    }
+
     /*
      * ============================================================
      * MUSICMAP

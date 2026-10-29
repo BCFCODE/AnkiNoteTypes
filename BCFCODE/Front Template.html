@@ -155,6 +155,18 @@
     const INFO_LAST_REVIEW = "{{info-LastReview:}}";
     const INFO_INTERVAL = "{{info-Ivl:}}";
     const TAGS = "{{Tags}}";
+
+    const isTag = {
+      DigitMemory: /DigitMemory/i.test(TAGS),
+      Forward: /Forward/i.test(TAGS),
+      Backward: /Backward/i.test(TAGS),
+      Warmup: /Warmup/i.test(TAGS),
+      Fragment: /Fragment/i.test(TAGS),
+      Sentence: /Sentence/i.test(TAGS),
+      Passage: /Passage/i.test(TAGS),
+      EnglishMastery: /EnglishMastery/i.test(TAGS),
+    };
+
     const tagNames = [
       "DigitMemory",
       "Forward",
@@ -207,17 +219,6 @@
     }
 
     const SUMMARIZED_TOTAL_TIME = createSummarizeTotalTime();
-
-    const isTag = {
-      DigitMemory: /DigitMemory/i.test(TAGS),
-      Forward: /Forward/i.test(TAGS),
-      Backward: /Backward/i.test(TAGS),
-      Warmup: /Warmup/i.test(TAGS),
-      Fragment: /Fragment/i.test(TAGS),
-      Sentence: /Sentence/i.test(TAGS),
-      Passage: /Passage/i.test(TAGS),
-      EnglishMastery: /EnglishMastery/i.test(TAGS),
-    };
 
     var avgTimeInSeconds;
     const ids = {

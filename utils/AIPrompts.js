@@ -157,59 +157,24 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'The devil is a powerful evil (1w) in some religions.',
-    'spirit',
-    'person'
+    'A premise is an idea (1w) which something is based.',
+    'on',
+    'in'
   ],
   [
-    'If you escape from a place, you (4w) from it.',
-    'succeed in getting away ',
-    'agree to be free'
+    '(2w) about the different aspects of owning two dogs.',
+    'I thought ',
+    "I've thought "
   ],
   [
-    'To clash means to fight or argue (1w) something.',
-    'over ',
-    'for'
+    "A diagnosis is a doctor's decision about the cause of (2w|1.)",
+    'an illness.',
+    'illness.'
   ],
   [
-    'A deed is a certificate that (4w) something.',
-    'proves that someone owns ',
-    'prove that someone own'
-  ],
-  [
-    'Glamour is a quality (1w) to riches, wealth, and beauty.',
-    'relating ',
-    'related'
-  ],
-  [
-    'To rehearse means to practice and prepare (3w) in front of people.',
-    'for a performance ',
-    'for performance '
-  ],
-  [
-    `After a long day of fishing, Glen (1w) his boat ashore, so it wouldn't float away.`,
-    'pulled ',
-    'put'
-  ],
-  [
-    `After a long day of fishing, Glen pulled his boat ashore, so it wouldn't (1w) away.`,
-    'float ',
-    'flow'
-  ],
-  [
-    `All this will not (1w) finished in the first one hundred days. Nor will it be finished in the first one thousand days, nor in the life of this Administration, nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)`,
-    'be ',
-    "without 'be'"
-  ],
-  [
-    `All this will not be finished in the first one hundred days. Nor will it be finished in the first one thousand days, nor in the life of this (1w|1,) nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)`,
-    'Administration, ',
-    'administration, '
-  ],
-  [
-    'All this will not be finished in the first one hundred days. Nor will it be finished in the first (2w) days, nor in the life of this Administration, nor even perhaps in our lifetime on this planet. But let us begin. (John Fitzgerald Kennedy)',
-    'one thousand ',
-    'thousand '
+    'Slate is a dark grey rock that can easily (2w) into layers.',
+    'be split ',
+    'split '
   ]
 ];
 
