@@ -157,24 +157,29 @@ export const AIPRs = new AIPrompts();
 */
 AIPRs.multipleQAMistake = [
   [
-    'A premise is an idea (1w) which something is based.',
-    'on',
-    'in'
+    'Karen had (1w) writing her report.',
+    'trouble ',
+    'a problem'
   ],
   [
-    '(2w) about the different aspects of owning two dogs.',
-    'I thought ',
-    "I've thought "
+    'A respirator is a machine that helps weak or sick people (1w|1.)',
+    'breathe.',
+    'to breathe.'
   ],
   [
-    "A diagnosis is a doctor's decision about the cause of (2w|1.)",
-    'an illness.',
-    'illness.'
+    'A plea is a request that is (1w) or emotional.',
+    'urgent ',
+    'urging'
   ],
   [
-    'Slate is a dark grey rock that can easily (2w) into layers.',
-    'be split ',
-    'split '
+    'It was obvious that he was tired. He kept falling (1w|1.)',
+    'asleep.',
+    'sleep.'
+  ],
+  [
+    `A navy is the part of a (1w)'s military that fights at sea.`, 
+    'country', 
+    'government'
   ]
 ];
 

@@ -1,6 +1,7 @@
 {{#HyperTTS (Front)}}
 <div class="tts">
-  {{tts en_US hypertts_preset=Front_realtime_3 voices=HyperTTS:HyperTTS (Front)}}
+  {{tts en_US hypertts_preset=Front_realtime_3 voices=HyperTTS:HyperTTS
+  (Front)}}
 </div>
 {{/HyperTTS (Front)}}
 
@@ -17,6 +18,8 @@
   {{/Front (Persian)}} {{#Front}}
   <div id="front-field" class="front-field">{{Front}}</div>
   {{/Front}}
+
+  <p id="mirror-typed-answer"></p>
 
   <div id="console"></div>
 
@@ -239,6 +242,7 @@
       typeAnswerTopRightBox: "type-answer-top-right-box",
       typeAnswerTopMiddleBox: "type-answer-top-middle-box",
       typeAnswerBottomMiddleBox: "type-answer-bottom-middle-box",
+      mirrorTypedAnswer: "mirror-typed-answer",
       console: "console",
     };
 
@@ -423,6 +427,20 @@
         input.classList.add(className);
       }
     }
+
+    // Live mirror of the type-in answer
+    (function mirrorTypedAnswer() {
+      const input = document.getElementById(ids.typeAnswer); // "typeans"
+      const output = document.getElementById(ids.mirrorTypedAnswer);
+      if (!input || !output) return;
+
+      const update = () => {
+        output.textContent = input.value; // textContent, so typed HTML is never interpreted
+      };
+
+      input.oninput = update; // assigning a property avoids stacking duplicate listeners on re-render
+      update();
+    })();
 
     function setCSSstyle(id, property, value) {
       const el = document.getElementById(id);
