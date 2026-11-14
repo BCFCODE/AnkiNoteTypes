@@ -151,6 +151,7 @@ pre {
 }
 
 .correct-single,
+.mirror-typed-answer,
 .correct {
   color: white;
   border-radius: 10%;
@@ -163,6 +164,9 @@ pre {
   min-width: 30%;
 }
 
+.typeBack-single,
+.typeBack,
+.mirror-typed-answer,
 .correct {
   text-align: center;
   color: var(--initial-text-color);
@@ -170,29 +174,31 @@ pre {
   padding: 3% 5%;
   margin: 50px auto;
   box-shadow: 0 0 50px var(--color-success);
-  animation: box-shadow-color-pulse-animation 1s infinite;
+  animation: box-shadow-color-pulse-animation 2s infinite;
 }
 
+.mirror-typed-answer {
+  display: none;
+  box-shadow: 0 0 16px var(--color-danger);
+  animation-duration: 500ms;
+}
+
+.typeBack-single,
 .correct-single {
   padding: 2% 5%;
   font-size: 0.5em;
 }
 
-.typeBack-single,
-.typeBack {
-  color: white;
-  border-radius: 10%;
-  border: 2px solid hsl(210, 100%, 50%, 0.12);
-  box-shadow: 0 0 18px hsla(60, 100%, 100%, 0.6);
-  padding: 30px 60px;
-  text-align: center;
-  min-width: 350px;
-}
 
 .typeBack {
-  transition: margin 10s;
+  border-radius: 10%;
+    transition: margin 10s;
   margin: 40px auto 20px;
+  box-shadow: 0 0 40px var(--color-danger);
+  min-width: 350px;
+  animation-duration: 1s;
 }
+
 /* 
 .typeBack:hover {
     
